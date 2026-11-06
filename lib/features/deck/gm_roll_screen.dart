@@ -49,6 +49,13 @@ class _GmRollScreenState extends State<GmRollScreen> {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
+          // Декоративный заголовок
+          const Text(
+            'STABILITY CALCULATOR',
+            style: TextStyle(color: gold, letterSpacing: 2, fontSize: 12, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
           TextField(
             controller: _breadthCtrl,
             decoration: const InputDecoration(labelText: 'Breadth (m)', border: OutlineInputBorder()),
@@ -73,18 +80,38 @@ class _GmRollScreenState extends State<GmRollScreen> {
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _calculate,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: accent,
-              foregroundColor: navy,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+          Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: [accentDark, accent]),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [BoxShadow(color: accent.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 4))],
             ),
-            child: const Text('CALCULATE', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: ElevatedButton(
+              onPressed: _calculate,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: const Text('CALCULATE', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+            ),
           ),
           const SizedBox(height: 24),
           if (_result.isNotEmpty)
-            Text(_result, style: const TextStyle(fontSize: 18, color: accent), textAlign: TextAlign.center),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                border: Border.all(color: accent),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                _result,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 14, color: Color(0xFF4ADE80), height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+            ),
         ],
       ),
     );
