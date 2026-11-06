@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../features/deck/deck_menu_screen.dart';
+import '../features/deck/gm_roll_screen.dart';
 import '../features/engine_log/engine_log_screen.dart';
 
 final appRouter = GoRouter(
@@ -13,6 +14,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/deck',
       builder: (context, state) => const DeckMenuScreen(),
+      routes: [
+        GoRoute(
+          path: 'gm_roll',
+          builder: (context, state) => const GmRollScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: '/engine',

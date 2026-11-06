@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DeckMenuScreen extends StatelessWidget {
   const DeckMenuScreen({super.key});
@@ -7,7 +8,15 @@ class DeckMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Deck Tools')),
-      body: const Center(child: Text('Палубные модули')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          ElevatedButton(
+            onPressed: () => context.push('/deck/gm_roll'),
+            child: const Text('GM Estimate'),
+          ),
+        ],
+      ),
     );
   }
 }
