@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class EngineLogScreen extends StatelessWidget {
   const EngineLogScreen({super.key});
@@ -6,8 +7,24 @@ class EngineLogScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('EngineLog')),
-      body: const Center(child: Text('Модули машинного отделения')),
+      appBar: AppBar(
+        title: const Text('Engine Operations'),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          ListTile(
+            tileColor: const Color(0xFF0D1627),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: const Icon(Icons.storage, color: Color(0xFF38BDF8)),
+            title: const Text('Tank Status', style: TextStyle(color: Colors.white)),
+            subtitle: const Text('Volumes & ROB', style: TextStyle(color: Color(0xFF8B9BB4))),
+            trailing: const Icon(Icons.chevron_right, color: Color(0xFF38BDF8)),
+            onTap: () => context.push('/engine/tanks'),
+          ),
+        ],
+      ),
     );
   }
 }
