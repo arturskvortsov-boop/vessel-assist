@@ -23,7 +23,7 @@ class _OrbScreenState extends State<OrbScreen> {
   String _generatedText = '';
   
   // Список для динамических танков при бункеровке (H_FUEL, H_LUBE)
-  final List<Map<String, dynamic>> _bunkerTanks = [];
+  List<Map<String, dynamic>> _bunkerTanks = [];
   
   // Дата
   DateTime _selectedDate = DateTime.now();
@@ -79,7 +79,7 @@ class _OrbScreenState extends State<OrbScreen> {
   void _generate() {
     final dateStr = _formatDate(_selectedDate);
     String text = 'Date: $dateStr\n';
-    String v(String key) => _ctrls[key]?.text ?? '';
+    final v = (String key) => _ctrls[key]?.text ?? '';
 
     switch (_selectedCode) {
       case 'C11.1':
@@ -205,7 +205,7 @@ class _OrbScreenState extends State<OrbScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         DropdownButtonFormField<String>(
-          initialValue: _selectedCode,
+          value: _selectedCode,
           dropdownColor: cardSolid,
           decoration: const InputDecoration(labelText: 'Operation Code'),
           items: _codes.map((c) => DropdownMenuItem(value: c['code'], child: Text(c['name']!, style: const TextStyle(fontSize: 12)))).toList(),
@@ -279,7 +279,7 @@ class _OrbScreenState extends State<OrbScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
-        initialValue: _ctrls[key]!.text.isEmpty ? tanks.first : _ctrls[key]!.text,
+        value: _ctrls[key]!.text.isEmpty ? tanks.first : _ctrls[key]!.text,
         decoration: InputDecoration(labelText: label),
         dropdownColor: cardSolid,
         items: tanks.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
@@ -405,7 +405,7 @@ class _OrbScreenState extends State<OrbScreen> {
         break;
       case 'I_VALVE':
         fields = [DropdownButtonFormField<String>(
-          initialValue: _ctrls['action']!.text.isEmpty ? 'UNSEALED' : _ctrls['action']!.text,
+          value: _ctrls['action']!.text.isEmpty ? 'UNSEALED' : _ctrls['action']!.text,
           decoration: const InputDecoration(labelText: 'Action'),
           dropdownColor: cardSolid,
           items: const [DropdownMenuItem(value: 'UNSEALED', child: Text('UNSEALED')), DropdownMenuItem(value: 'SEALED', child: Text('SEALED'))],
@@ -489,7 +489,7 @@ class _OrbScreenState extends State<OrbScreen> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      initialValue: t['name'],
+                      value: t['name'],
                       isExpanded: true,
                       dropdownColor: cardSolid,
                       decoration: const InputDecoration(labelText: 'Tank', isDense: true),

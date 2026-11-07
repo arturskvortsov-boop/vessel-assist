@@ -15,6 +15,7 @@ void main() async {
   await Hive.openBox('bunker_checklists'); // База для чек-листов бункеровки
   await Hive.openBox('tasks'); // База для задач экипажу
   await Hive.openBox('lube_rob'); // База для остатков масел
+  await Hive.openBox('night_orders'); // База для ночных приказов
   
   runApp(
     const ProviderScope(

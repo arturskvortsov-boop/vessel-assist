@@ -14,6 +14,7 @@ import '../features/engine_log/bunkering/bunker_checklist_screen.dart';
 import '../features/engine_log/bunkering/lop_screen.dart';
 import '../features/engine_log/tasks/tasks_screen.dart';
 import '../features/engine_log/lube/lube_screen.dart';
+import '../features/engine_log/night_orders/night_orders_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -70,6 +71,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'lube',
           builder: (context, state) => const LubeScreen(),
+        ),
+        GoRoute(
+          path: 'night_orders',
+          builder: (context, state) => const NightOrdersScreen(),
         ),
       ],
     ),

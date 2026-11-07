@@ -96,11 +96,11 @@ class _TanksScreenState extends State<TanksScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: volCtrl, decoration: const InputDecoration(labelText: 'Current Volume (m³)'), keyboardType: TextInputType.number),
+            TextField(controller: volCtrl, decoration: const InputDecoration(labelText: 'Current Volume (m³)', helperText: 'Actual liquid volume'), keyboardType: TextInputType.number),
             const SizedBox(height: 10),
-            TextField(controller: densCtrl, decoration: const InputDecoration(labelText: 'Density (t/m³)'), keyboardType: TextInputType.number),
+            TextField(controller: densCtrl, decoration: const InputDecoration(labelText: 'Density (t/m³)', helperText: 'At 15°C (from BDN or lab)'), keyboardType: TextInputType.number),
             const SizedBox(height: 10),
-            TextField(controller: tempCtrl, decoration: const InputDecoration(labelText: 'Temperature (°C)'), keyboardType: TextInputType.number),
+            TextField(controller: tempCtrl, decoration: const InputDecoration(labelText: 'Temperature (°C)', helperText: 'Current cargo temp'), keyboardType: TextInputType.number),
           ],
         ),
         actions: [
@@ -143,6 +143,14 @@ class _TanksScreenState extends State<TanksScreen> {
       ),
       body: Column(
         children: [
+          // --- ПОДСКАЗКА ---
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Text(
+              'Enter Volume, Density, and Temp for each tank. The app automatically calculates mass (MT) and free space to 85%.',
+              style: TextStyle(color: textMuted, fontSize: 12, fontStyle: FontStyle.italic),
+            ),
+          ),
           // --- ВКЛАДКИ (TABS) ---
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

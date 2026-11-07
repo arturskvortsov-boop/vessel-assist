@@ -55,7 +55,7 @@ class _LopScreenState extends State<LopScreen> {
   };
 
   void _generateText() {
-    String v(TextEditingController c) => c.text;
+    final v = (TextEditingController c) => c.text;
     final date = v(_dateCtrl);
     final vessel = v(_vesselCtrl);
     final port = v(_portCtrl);
@@ -347,7 +347,7 @@ class _LopScreenState extends State<LopScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           DropdownButtonFormField<String>(
-            initialValue: _selectedType,
+            value: _selectedType,
             dropdownColor: cardSolid,
             decoration: const InputDecoration(labelText: 'Protest Reason'),
             items: _lopTypes.entries.map((e) => DropdownMenuItem(value: e.key, child: Text(e.value, style: const TextStyle(fontSize: 13)))).toList(),
