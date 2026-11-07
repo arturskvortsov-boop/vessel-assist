@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../domain/models/fuel_log.dart';
 import '../../../domain/calculators/vcf_calculator.dart';
+import '../../../core/utils/time_input_formatter.dart';
 
 class FuelLogScreen extends StatefulWidget {
   const FuelLogScreen({super.key});
@@ -177,6 +178,8 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                   child: TextField(
                     controller: _timeCtrl, 
                     decoration: const InputDecoration(labelText: 'Time (HH:MM)'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [TimeInputFormatter()],
                   ),
                 ),
                 const SizedBox(width: 10),

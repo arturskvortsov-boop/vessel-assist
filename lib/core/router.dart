@@ -9,7 +9,10 @@ import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
 import '../features/engine_log/fuel_log/fuel_log_screen.dart';
 
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
 final appRouter = GoRouter(
+  navigatorKey: rootNavigatorKey, // <--- Привязываем ключ
   initialLocation: '/',
   routes: [
     GoRoute(
