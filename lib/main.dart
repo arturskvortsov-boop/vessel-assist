@@ -12,6 +12,7 @@ void main() async {
   await Hive.openBox('fuel_logs');
   await Hive.openBox('orb_history');
   await Hive.openBox('settings'); // База для настроек часов
+  await Hive.openBox('bunker_checklists'); // База для чек-листов бункеровки
   
   runApp(
     const ProviderScope(

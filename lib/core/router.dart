@@ -9,6 +9,7 @@ import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
 import '../features/engine_log/fuel_log/fuel_log_screen.dart';
 import '../features/engine_log/orb/orb_screen.dart';
+import '../features/engine_log/bunkering/bunker_checklist_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -45,6 +46,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'orb',
           builder: (context, state) => const OrbScreen(),
+        ),
+        GoRoute(
+          path: 'bunker_checklist',
+          builder: (context, state) => const BunkerChecklistScreen(),
         ),
       ],
     ),
