@@ -53,6 +53,16 @@ class EngineLogScreen extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right, color: Color(0xFF38BDF8)),
             onTap: () => context.push('/engine/bunker_checklist'),
           ),
+          const SizedBox(height: 12),
+          ListTile(
+            tileColor: const Color(0xFF0D1627),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: const Icon(Icons.gavel, color: Color(0xFF38BDF8)),
+            title: const Text('Letter of Protest', style: TextStyle(color: Colors.white)),
+            subtitle: const Text('Bunkering disputes & claims', style: TextStyle(color: Color(0xFF8B9BB4))),
+            trailing: const Icon(Icons.chevron_right, color: Color(0xFF38BDF8)),
+            onTap: () => context.push('/engine/lop'),
+          ),
         ],
       ),
     );

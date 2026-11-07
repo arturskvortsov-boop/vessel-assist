@@ -43,6 +43,8 @@ dependencies:
   # Экспорт отчетов (понадобится позже)
   excel: ^4.0.6
   file_saver: ^0.2.14
+  file_picker: ^8.0.5
+  open_filex: ^4.4.0
   pdf: ^3.11.3
   printing: ^5.13.2
   signature: ^5.4.1
