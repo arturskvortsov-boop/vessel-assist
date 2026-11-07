@@ -84,7 +84,7 @@ class _GmRollScreenState extends State<GmRollScreen> {
             decoration: BoxDecoration(
               gradient: const LinearGradient(colors: [accentDark, accent]),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [BoxShadow(color: accent.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 4))],
+              boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.2), blurRadius: 15, offset: const Offset(0, 4))],
             ),
             child: ElevatedButton(
               onPressed: _calculate,
@@ -102,7 +102,7 @@ class _GmRollScreenState extends State<GmRollScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 border: Border.all(color: accent),
                 borderRadius: BorderRadius.circular(12),
               ),

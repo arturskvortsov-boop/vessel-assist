@@ -99,7 +99,7 @@ class _GlobalClockState extends State<GlobalClock> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('LOCAL (UTC${offset >= 0 ? '+' : ''}${offset})', style: const TextStyle(color: textMuted, fontSize: 10, letterSpacing: 1)),
+                      Text('LOCAL (UTC${offset >= 0 ? '+' : ''}$offset)', style: const TextStyle(color: textMuted, fontSize: 10, letterSpacing: 1)),
                       Text(_formatTime(_now, offset), style: const TextStyle(color: gold, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
                     ],
                   ),

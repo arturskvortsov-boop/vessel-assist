@@ -44,7 +44,7 @@ class _TanksScreenState extends State<TanksScreen> {
               TextField(controller: capCtrl, decoration: const InputDecoration(labelText: 'Capacity (m³)'), keyboardType: TextInputType.number),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
-                value: selectedType,
+                initialValue: selectedType,
                 dropdownColor: cardSolid,
                 decoration: const InputDecoration(labelText: 'Type'),
                 items: const [
@@ -227,9 +227,9 @@ class _TanksScreenState extends State<TanksScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                                 decoration: BoxDecoration(
-                                  color: accent.withOpacity(0.1),
+                                  color: accent.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: accent.withOpacity(0.3)),
+                                  border: Border.all(color: accent.withValues(alpha: 0.3)),
                                 ),
                                 child: Text(
                                   'Free to 85%: ${freeTo85.toStringAsFixed(1)} m³ (~${(freeTo85 * t.density).toStringAsFixed(1)} MT)',
@@ -241,9 +241,9 @@ class _TanksScreenState extends State<TanksScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                                 decoration: BoxDecoration(
-                                  color: Colors.redAccent.withOpacity(0.1),
+                                  color: Colors.redAccent.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
+                                  border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
                                 ),
                                 child: const Text(
                                   '⚠️ No space to 85% limit',
@@ -276,7 +276,7 @@ class _TankTabButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
-          color: isActive ? accent.withOpacity(0.15) : Colors.transparent,
+          color: isActive ? accent.withValues(alpha: 0.15) : Colors.transparent,
           border: Border.all(color: isActive ? accent : border),
           borderRadius: BorderRadius.circular(20),
         ),

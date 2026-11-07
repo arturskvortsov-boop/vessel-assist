@@ -38,7 +38,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.black.withOpacity(0.2),
+        fillColor: Colors.black.withValues(alpha: 0.2),
         labelStyle: const TextStyle(color: textMuted, fontSize: 12, fontWeight: FontWeight.w600),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

@@ -135,8 +135,8 @@ class _DashCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: accent.withOpacity(0.1),
-                border: Border.all(color: accent.withOpacity(0.2)),
+                color: accent.withValues(alpha: 0.1),
+                border: Border.all(color: accent.withValues(alpha: 0.2)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: accent, size: 22),
