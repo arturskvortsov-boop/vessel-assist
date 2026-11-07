@@ -7,6 +7,7 @@ import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
+import '../features/engine_log/fuel_log/fuel_log_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -32,6 +33,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'tanks',
           builder: (context, state) => const TanksScreen(),
+        ),
+        GoRoute(
+          path: 'fuel_log',
+          builder: (context, state) => const FuelLogScreen(),
         ),
       ],
     ),

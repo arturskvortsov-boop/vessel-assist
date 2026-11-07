@@ -8,6 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('tanks'); // База данных для танков
+  await Hive.openBox('fuel_logs'); // База данных для суточных логов топлива
   
   runApp(
     const ProviderScope(
