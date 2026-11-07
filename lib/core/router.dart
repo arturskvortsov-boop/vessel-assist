@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'nautical_background.dart';
 import 'theme.dart';
+import '../features/splash_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/engine_log/engine_log_screen.dart';
@@ -11,13 +12,18 @@ import '../features/engine_log/fuel_log/fuel_log_screen.dart';
 import '../features/engine_log/orb/orb_screen.dart';
 import '../features/engine_log/bunkering/bunker_checklist_screen.dart';
 import '../features/engine_log/bunkering/lop_screen.dart';
+import '../features/engine_log/tasks/tasks_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouter = GoRouter(
-  navigatorKey: rootNavigatorKey, // <--- Привязываем ключ
-  initialLocation: '/',
+  navigatorKey: rootNavigatorKey,
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
     GoRoute(
       path: '/',
       builder: (context, state) => const MainMenuScreen(),
@@ -56,6 +62,10 @@ final appRouter = GoRouter(
           path: 'lop',
           builder: (context, state) => const LopScreen(),
         ),
+        GoRoute(
+          path: 'tasks',
+          builder: (context, state) => const TasksScreen(),
+        ),
       ],
     ),
   ],
@@ -72,42 +82,48 @@ class MainMenuScreen extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             children: [
-              // Заголовок (Градиентный текст)
               Text(
                 'VESSEL ASSIST',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
-                  fontSize: 26,
+                  fontSize: 24,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 3,
                   foreground: Paint()
                     ..shader = const LinearGradient(
                       colors: [gold, accent],
-                    ).createShader(const Rect.fromLTWH(0.0, 0.0, 250.0, 70.0)),
+                    ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                 ),
               ),
               const SizedBox(height: 4),
               const Text(
-                'DECK & ENGINE PROFESSIONAL TOOLS',
+                'AHOY, SEAFARER! SEVEN FEET UNDER THE KEEL!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: textMuted, fontSize: 12, letterSpacing: 1.5),
+                style: TextStyle(color: gold, fontSize: 11, letterSpacing: 1.5, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Ахой, моряк! Семь футов под килем!',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: textMuted, fontSize: 11, letterSpacing: 1),
               ),
               const SizedBox(height: 40),
 
-              // Карточка Палубы (Deck)
+              // --- ПОДНЯТЬСЯ НА МОСТ ---
               _DashCard(
-                title: 'DECK',
-                subtitle: 'Navigation and cargo operations',
-                icon: Icons.explore,
+                title: 'UP TO THE BRIDGE',
+                subtitle: 'Подняться на мост (Navigation & Cargo)',
+                icon: Icons.explore_outlined,
                 onTap: () => context.push('/deck'),
               ),
-              const SizedBox(height: 16),
               
-              // Карточка Машинного отделения (Engine)
+              const SizedBox(height: 24),
+
+              // --- СПУСТИТЬСЯ В МО ---
               _DashCard(
-                title: 'ENGINE',
-                subtitle: 'EngineLog tools and records',
-                icon: Icons.settings,
+                title: 'DOWN TO THE ENGINE',
+                subtitle: 'Спуститься в МО (MARPOL, Fuel & Tanks)',
+                icon: Icons.settings_outlined,
                 onTap: () => context.push('/engine'),
               ),
             ],
@@ -118,7 +134,6 @@ class MainMenuScreen extends StatelessWidget {
   }
 }
 
-// Виджет карточки для дашборда (как в CSS .dash-card)
 class _DashCard extends StatelessWidget {
   final String title;
   final String subtitle;

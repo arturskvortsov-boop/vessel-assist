@@ -13,6 +13,7 @@ void main() async {
   await Hive.openBox('orb_history');
   await Hive.openBox('settings'); // База для настроек часов
   await Hive.openBox('bunker_checklists'); // База для чек-листов бункеровки
+  await Hive.openBox('tasks'); // База для задач экипажу
   
   runApp(
     const ProviderScope(

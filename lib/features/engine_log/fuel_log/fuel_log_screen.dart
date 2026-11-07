@@ -111,7 +111,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                     title: const Text('Has D/G OUT Meter', style: TextStyle(color: accent, fontSize: 14)),
                     subtitle: const Text('Calculate D/G Cons as (IN - OUT)', style: TextStyle(color: textMuted, fontSize: 12)),
                     value: _hasDgOut,
-                    activeColor: accent,
+                    activeThumbColor: accent,
                     contentPadding: EdgeInsets.zero,
                     onChanged: (val) {
                       setDialogState(() => _hasDgOut = val);
@@ -177,7 +177,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
     final commDens = double.tryParse(_commonDensCtrl.text) ?? 0.9455;
     final commTemp = double.tryParse(_commonTempCtrl.text) ?? 15.0;
 
-    final meMT_raw = _calcLiveMT(_meCurrCtrl, _meDensCtrl, _meTempCtrl, lastLog?.meCurr);
+    final memtRaw = _calcLiveMT(_meCurrCtrl, _meDensCtrl, _meTempCtrl, lastLog?.meCurr);
     final dgInMT = _calcLiveMT(_dgCurrCtrl, _dgDensCtrl, _dgTempCtrl, lastLog?.dgCurr);
     final dgOutMT = _hasDgOut ? _calcLiveMT(_dgOutCurrCtrl, _dgOutDensCtrl, _dgOutTempCtrl, lastLog?.dgOutCurr) : 0.0;
     final dgMT = (dgInMT - dgOutMT) > 0 ? (dgInMT - dgOutMT) : 0.0;
@@ -185,7 +185,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
     final blrMT = _calcLiveMT(_blrCurrCtrl, _blrDensCtrl, _blrTempCtrl, lastLog?.blrCurr);
     final commMT = _calcLiveMT(_commonCurrCtrl, _commonDensCtrl, _commonTempCtrl, lastLog?.commonCurr);
 
-    double finalMeMT = meMT_raw;
+    double finalMeMT = memtRaw;
     if (_scheme == 'common_all') {
       finalMeMT = commMT - dgMT - blrMT;
     } else if (_scheme == 'common_me_dg') {
