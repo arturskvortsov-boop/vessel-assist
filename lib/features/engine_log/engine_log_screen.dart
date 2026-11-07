@@ -62,9 +62,9 @@ class EngineLogScreen extends StatelessWidget {
           _buildMenuCard(
             context: context,
             title: 'Lube Oil',
-            subtitle: 'Feed rate & Top-up (Coming soon)',
+            subtitle: 'Feed rate, Top-up & ROB Tracker',
             icon: Icons.water_drop,
-            route: '/engine/fuel_log', // Временно ведет на Fuel Log
+            route: '/engine/lube',
           ),
 
           const SizedBox(height: 24),
