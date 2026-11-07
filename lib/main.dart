@@ -10,6 +10,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('tanks');
   await Hive.openBox('fuel_logs');
+  await Hive.openBox('orb_history');
   await Hive.openBox('settings'); // База для настроек часов
   
   runApp(

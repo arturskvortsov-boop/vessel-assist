@@ -8,6 +8,7 @@ import '../features/deck/gm_roll_screen.dart';
 import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
 import '../features/engine_log/fuel_log/fuel_log_screen.dart';
+import '../features/engine_log/orb/orb_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -40,6 +41,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'fuel_log',
           builder: (context, state) => const FuelLogScreen(),
+        ),
+        GoRoute(
+          path: 'orb',
+          builder: (context, state) => const OrbScreen(),
         ),
       ],
     ),
