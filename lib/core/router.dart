@@ -16,6 +16,7 @@ import '../features/engine_log/tasks/tasks_screen.dart';
 import '../features/engine_log/lube/lube_screen.dart';
 import '../features/engine_log/night_orders/night_orders_screen.dart';
 import '../features/engine_log/hours/hours_screen.dart';
+import '../features/engine_log/changeover/changeover_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -80,6 +81,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'hours',
           builder: (context, state) => const HoursScreen(),
+        ),
+        GoRoute(
+          path: 'changeover',
+          builder: (context, state) => const ChangeoverScreen(),
         ),
       ],
     ),

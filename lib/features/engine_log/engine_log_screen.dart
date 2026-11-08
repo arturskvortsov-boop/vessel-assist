@@ -20,6 +20,13 @@ class EngineLogScreen extends StatelessWidget {
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
+            title: 'Fuel Changeover',
+            subtitle: 'Fuel switch logbook records',
+            icon: Icons.swap_horiz,
+            route: '/engine/changeover',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'ORB Generator',
             subtitle: 'MARPOL Record Book entries',
             icon: Icons.menu_book,
