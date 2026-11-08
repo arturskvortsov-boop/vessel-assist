@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:animations/animations.dart';
 import 'nautical_background.dart';
 import 'theme.dart';
 import '../features/splash_screen.dart';
@@ -30,111 +31,130 @@ import '../features/engine_log/documents/documents_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
+// Премиум-анимация перехода (Эффект погружения / Shared Axis Z)
+CustomTransitionPage<void> _buildPage(Widget child) {
+  return CustomTransitionPage<void>(
+    key: ValueKey(child.hashCode),
+    child: child,
+    transitionDuration: const Duration(milliseconds: 500),
+    reverseTransitionDuration: const Duration(milliseconds: 400),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SharedAxisTransition(
+        animation: animation,
+        secondaryAnimation: secondaryAnimation,
+        transitionType: SharedAxisTransitionType.scaled, // Эффект наезда/погружения
+        child: child,
+      );
+    },
+  );
+}
+
 final appRouter = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/splash',
   routes: [
     GoRoute(
       path: '/splash',
-      builder: (context, state) => const SplashScreen(),
+      pageBuilder: (context, state) => _buildPage(const SplashScreen()),
     ),
     GoRoute(
       path: '/',
-      builder: (context, state) => const MainMenuScreen(),
+      pageBuilder: (context, state) => _buildPage(const MainMenuScreen()),
     ),
     GoRoute(
       path: '/deck',
-      builder: (context, state) => const DeckMenuScreen(),
+      pageBuilder: (context, state) => _buildPage(const DeckMenuScreen()),
       routes: [
         GoRoute(
           path: 'gm_roll',
-          builder: (context, state) => const GmRollScreen(),
+          pageBuilder: (context, state) => _buildPage(const GmRollScreen()),
         ),
       ],
     ),
     GoRoute(
       path: '/engine',
-      builder: (context, state) => const EngineLogScreen(),
+      pageBuilder: (context, state) => _buildPage(const EngineLogScreen()),
       routes: [
         GoRoute(
           path: 'tanks',
-          builder: (context, state) => const TanksScreen(),
+          pageBuilder: (context, state) => _buildPage(const TanksScreen()),
         ),
         GoRoute(
           path: 'fuel_log',
-          builder: (context, state) => const FuelLogScreen(),
+          pageBuilder: (context, state) => _buildPage(const FuelLogScreen()),
         ),
         GoRoute(
           path: 'orb',
-          builder: (context, state) => const OrbScreen(),
+          pageBuilder: (context, state) => _buildPage(const OrbScreen()),
         ),
         GoRoute(
           path: 'bunker_checklist',
-          builder: (context, state) => const BunkerChecklistScreen(),
+          pageBuilder: (context, state) => _buildPage(const BunkerChecklistScreen()),
         ),
         GoRoute(
           path: 'lop',
-          builder: (context, state) => const LopScreen(),
+          pageBuilder: (context, state) => _buildPage(const LopScreen()),
         ),
         GoRoute(
           path: 'tasks',
-          builder: (context, state) => const TasksScreen(),
+          pageBuilder: (context, state) => _buildPage(const TasksScreen()),
         ),
         GoRoute(
           path: 'lube',
-          builder: (context, state) => const LubeScreen(),
+          pageBuilder: (context, state) => _buildPage(const LubeScreen()),
         ),
         GoRoute(
           path: 'night_orders',
-          builder: (context, state) => const NightOrdersScreen(),
+          pageBuilder: (context, state) => _buildPage(const NightOrdersScreen()),
         ),
         GoRoute(
           path: 'hours',
-          builder: (context, state) => const HoursScreen(),
+          pageBuilder: (context, state) => _buildPage(const HoursScreen()),
         ),
         GoRoute(
           path: 'changeover',
-          builder: (context, state) => const ChangeoverScreen(),
+          pageBuilder: (context, state) => _buildPage(const ChangeoverScreen()),
         ),
         GoRoute(
           path: 'egcs',
-          builder: (context, state) => const EgcsScreen(),
+          pageBuilder: (context, state) => _buildPage(const EgcsScreen()),
         ),
         GoRoute(
           path: 'emergency',
-          builder: (context, state) => const EmergencyScreen(),
+          pageBuilder: (context, state) => _buildPage(const EmergencyScreen()),
         ),
         GoRoute(
           path: 'spares',
-          builder: (context, state) => const SparesScreen(),
+          pageBuilder: (context, state) => _buildPage(const SparesScreen()),
         ),
         GoRoute(
           path: 'warranty',
-          builder: (context, state) => const WarrantyScreen(),
+          pageBuilder: (context, state) => _buildPage(const WarrantyScreen()),
         ),
         GoRoute(
           path: 'delivery',
-          builder: (context, state) => const DeliveryScreen(),
+          pageBuilder: (context, state) => _buildPage(const DeliveryScreen()),
         ),
         GoRoute(
           path: 'notes',
-          builder: (context, state) => const NotesScreen(),
+          pageBuilder: (context, state) => _buildPage(const NotesScreen()),
         ),
         GoRoute(
           path: 'backup',
-          builder: (context, state) => const BackupScreen(),
+          pageBuilder: (context, state) => _buildPage(const BackupScreen()),
         ),
         GoRoute(
           path: 'pump',
-          builder: (context, state) => const PumpScreen(),
+          pageBuilder: (context, state) => _buildPage(const PumpScreen()),
         ),
         GoRoute(
           path: 'voyage',
-          builder: (context, state) => const VoyageScreen(),
+          pageBuilder: (context, state) => _buildPage(const VoyageScreen()),
         ),
+        // Добавляем маршрут для Документов, которого не хватало!
         GoRoute(
           path: 'documents',
-          builder: (context, state) => const DocumentsScreen(),
+          pageBuilder: (context, state) => _buildPage(const DocumentsScreen()),
         ),
       ],
     ),

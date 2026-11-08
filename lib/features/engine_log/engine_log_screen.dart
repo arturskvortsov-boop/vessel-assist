@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import 'package:animations/animations.dart';
 
-class EngineLogScreen extends StatelessWidget {
+class EngineLogScreen extends StatefulWidget {
   const EngineLogScreen({super.key});
+
+  @override
+  State<EngineLogScreen> createState() => _EngineLogScreenState();
+}
+
+class _EngineLogScreenState extends State<EngineLogScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const _MarpolTab(),
+    const _DailyOpsTab(),
+    const _AdminSafetyTab(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -12,197 +26,162 @@ class EngineLogScreen extends StatelessWidget {
         title: const Text('Engine Operations'),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // --- ГРУППА 1: MARPOL & LOGS ---
-          const Text('MARPOL & LOGS', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            context: context,
-            title: 'Tank Status',
-            subtitle: 'Volumes, ROB & Free space to 85%',
-            icon: Icons.storage,
-            route: '/engine/tanks',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Fuel Changeover',
-            subtitle: 'Fuel switch logbook records',
-            icon: Icons.swap_horiz,
-            route: '/engine/changeover',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'ORB Generator',
-            subtitle: 'MARPOL Record Book entries',
-            icon: Icons.menu_book,
-            route: '/engine/orb',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'EGCS Record Book',
-            subtitle: 'Scrubber operations & failures',
-            icon: Icons.air,
-            route: '/engine/egcs',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Bunkering Checklists',
-            subtitle: 'Before, During & After loading',
-            icon: Icons.checklist,
-            route: '/engine/bunker_checklist',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Letters of Protest',
-            subtitle: 'Bunkering disputes & claims',
-            icon: Icons.gavel,
-            route: '/engine/lop',
-          ),
-
-          const SizedBox(height: 24),
-
-          // --- ГРУППА 2: ENGINE OPERATIONS ---
-          const Text('ENGINE OPERATIONS', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            context: context,
-            title: 'Fuel Daily Log',
-            subtitle: 'Consumption & ROB (3 schemes)',
-            icon: Icons.calculate,
-            route: '/engine/fuel_log',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Lube Oil',
-            subtitle: 'Feed rate, Top-up & ROB Tracker',
-            icon: Icons.water_drop,
-            route: '/engine/lube',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Pump Calculator',
-            subtitle: 'Transfer time & overflow check',
-            icon: Icons.water,
-            route: '/engine/pump',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Voyage Plan',
-            subtitle: 'Fuel requirement & arrival ROB',
-            icon: Icons.map,
-            route: '/engine/voyage',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Crew Tasks',
-            subtitle: 'To-do list and assignments',
-            icon: Icons.assignment,
-            route: '/engine/tasks',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Night Orders',
-            subtitle: 'Watch instructions for engineers',
-            icon: Icons.nights_stay,
-            route: '/engine/night_orders',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Engine Hours',
-            subtitle: 'Machinery running hours & history',
-            icon: Icons.timer,
-            route: '/engine/hours',
-          ),
-
-          const SizedBox(height: 24),
-
-          // --- ГРУППА 3: SAFETY & EMERGENCY ---
-          const Text('SAFETY & EMERGENCY', style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            context: context,
-            title: 'Emergency',
-            subtitle: 'Contacts & Procedures',
-            icon: Icons.warning_amber_rounded,
-            route: '/engine/emergency',
-          ),
-
-          const SizedBox(height: 24),
-
-          // --- ГРУППА 4: DOCUMENTS & ADMIN ---
-          const Text('DOCUMENTS & ADMIN', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 8),
-          _buildMenuCard(
-            context: context,
-            title: 'Delivery & Acceptance',
-            subtitle: 'Checklists & Punch List',
-            icon: Icons.assignment_turned_in,
-            route: '/engine/delivery',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Warranty Claims',
-            subtitle: 'Defect tracker & expiry alerts',
-            icon: Icons.shield,
-            route: '/engine/warranty',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Spares & Stores',
-            subtitle: 'Inventory & Requisitions',
-            icon: Icons.inventory_2,
-            route: '/engine/spares',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Notes',
-            subtitle: 'Quick reminders & inspector notes',
-            icon: Icons.sticky_note_2,
-            route: '/engine/notes',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Document Storage',
-            subtitle: 'Scanned manuals & certificates',
-            icon: Icons.folder_copy,
-            route: '/engine/documents',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'Backup & Restore',
-            subtitle: 'Save or load all app data',
-            icon: Icons.cloud_sync,
-            route: '/engine/backup',
-          ),
-        ],
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 400),
+        reverse: false,
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+          return FadeThroughTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: _screens[_currentIndex],
       ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: accent.withValues(alpha: 0.1), // Неоновое свечение снизу
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) => setState(() => _currentIndex = index),
+          backgroundColor: cardSolid,
+          indicatorColor: accent.withValues(alpha: 0.2),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.anchor, color: textMuted),
+              selectedIcon: Icon(Icons.anchor, color: accent),
+              label: 'MARPOL',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.engineering, color: textMuted),
+              selectedIcon: Icon(Icons.engineering, color: accent),
+              label: 'Daily Ops',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.security, color: textMuted),
+              selectedIcon: Icon(Icons.security, color: accent),
+              label: 'Admin',
+            ),
+          ],
+        ), // <--- Закрываем NavigationBar
+      ), // <--- Закрываем Container
+    ); // <--- Закрываем Scaffold
+  }
+}
+
+// --- ВКЛАДКА 1: MARPOL & LOGS ---
+class _MarpolTab extends StatelessWidget {
+  const _MarpolTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _MenuCard(title: 'Tank Status', subtitle: 'Volumes, ROB & Free space', icon: Icons.storage, route: '/engine/tanks'),
+        _MenuCard(title: 'ORB Generator', subtitle: 'MARPOL Record Book entries', icon: Icons.menu_book, route: '/engine/orb'),
+        _MenuCard(title: 'Fuel Changeover', subtitle: 'Fuel switch logbook records', icon: Icons.swap_horiz, route: '/engine/changeover'),
+        _MenuCard(title: 'EGCS Record Book', subtitle: 'Scrubber operations & failures', icon: Icons.air, route: '/engine/egcs'),
+        _MenuCard(title: 'Bunkering Checklists', subtitle: 'Before, During & After loading', icon: Icons.checklist, route: '/engine/bunker_checklist'),
+        _MenuCard(title: 'Letters of Protest', subtitle: 'Bunkering disputes & claims', icon: Icons.gavel, route: '/engine/lop'),
+      ],
     );
   }
+}
 
-  Widget _buildMenuCard({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required String route,
-  }) {
+// --- ВКЛАДКА 2: DAILY OPERATIONS ---
+class _DailyOpsTab extends StatelessWidget {
+  const _DailyOpsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _MenuCard(title: 'Fuel Daily Log', subtitle: 'Consumption & ROB (3 schemes)', icon: Icons.calculate, route: '/engine/fuel_log'),
+        _MenuCard(title: 'Lube Oil', subtitle: 'Feed rate, Top-up & ROB Tracker', icon: Icons.water_drop, route: '/engine/lube'),
+        _MenuCard(title: 'Pump Calculator', subtitle: 'Transfer time & overflow check', icon: Icons.water, route: '/engine/pump'),
+        _MenuCard(title: 'Voyage Plan', subtitle: 'Fuel requirement & arrival ROB', icon: Icons.map, route: '/engine/voyage'),
+        _MenuCard(title: 'Engine Hours', subtitle: 'Machinery running hours', icon: Icons.timer, route: '/engine/hours'),
+        _MenuCard(title: 'Night Orders', subtitle: 'Watch instructions', icon: Icons.nights_stay, route: '/engine/night_orders'),
+        _MenuCard(title: 'Crew Tasks', subtitle: 'To-do list and assignments', icon: Icons.assignment, route: '/engine/tasks'),
+      ],
+    );
+  }
+}
+
+// --- ВКЛАДКА 3: ADMIN & SAFETY ---
+class _AdminSafetyTab extends StatelessWidget {
+  const _AdminSafetyTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _MenuCard(title: 'Emergency', subtitle: 'Contacts & Procedures', icon: Icons.warning_amber_rounded, route: '/engine/emergency'),
+        _MenuCard(title: 'Spares & Stores', subtitle: 'Inventory & Requisitions', icon: Icons.inventory_2, route: '/engine/spares'),
+        _MenuCard(title: 'Warranty Claims', subtitle: 'Defect tracker & expiry alerts', icon: Icons.shield, route: '/engine/warranty'),
+        _MenuCard(title: 'Delivery & Acceptance', subtitle: 'Checklists & Punch List', icon: Icons.assignment_turned_in, route: '/engine/delivery'),
+        _MenuCard(title: 'Notes', subtitle: 'Quick reminders & inspector notes', icon: Icons.sticky_note_2, route: '/engine/notes'),
+        _MenuCard(title: 'Document Storage', subtitle: 'Scanned manuals & certificates', icon: Icons.folder_copy, route: '/engine/documents'),
+        _MenuCard(title: 'Backup & Restore', subtitle: 'Save or load all app data', icon: Icons.cloud_sync, route: '/engine/backup'),
+      ],
+    );
+  }
+}
+
+// --- ВИДЖЕТ КАРТОЧКИ (вынесен отдельно для чистоты) ---
+class _MenuCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final String route;
+
+  const _MenuCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.route,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () => context.push(route),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: cardSolid,
             border: Border.all(color: border),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 4)),
+            ],
           ),
           child: Row(
             children: [
-              Icon(icon, color: accent, size: 28),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: accent.withValues(alpha: 0.2)),
+                ),
+                child: Icon(icon, color: accent, size: 24),
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -214,7 +193,7 @@ class EngineLogScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: accent),
+              const Icon(Icons.chevron_right, color: textMuted),
             ],
           ),
         ),

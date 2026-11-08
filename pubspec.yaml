@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  rive: ^0.13.0
   
   # Стейт-менеджмент и Роутинг
   flutter_riverpod: ^2.5.1
@@ -53,6 +54,7 @@ dependencies:
   
   # Утилиты и шрифты
   intl: ^0.19.0
+  animations: ^2.0.11
   google_fonts: ^6.2.1
 
 dev_dependencies:
