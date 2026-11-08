@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animations/animations.dart';
 import 'nautical_background.dart';
+import 'widgets/glass_card.dart';
 import 'theme.dart';
 import '../features/splash_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
@@ -239,16 +240,10 @@ class _DashCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GlassCard(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: cardSolid,
-          border: Border.all(color: border),
-          borderRadius: BorderRadius.circular(16),
-        ),
         child: Row(
           children: [
             Container(

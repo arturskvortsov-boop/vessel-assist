@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../domain/models/engine_hour.dart';
+import '../../../core/widgets/animated_counter.dart';
 
 class HoursScreen extends StatefulWidget {
   const HoursScreen({super.key});
@@ -205,7 +206,12 @@ class _HoursScreenState extends State<HoursScreen> {
                                       ],
                                     ),
                                     const SizedBox(height: 4),
-                                    Text('${eq.currentHours.toStringAsFixed(1)} h', style: const TextStyle(color: text, fontSize: 22, fontWeight: FontWeight.w800, fontFamily: 'monospace')),
+                                    AnimatedCounter(
+                                      value: eq.currentHours, 
+                                      style: const TextStyle(color: text, fontSize: 22, fontWeight: FontWeight.w800, fontFamily: 'monospace'), 
+                                      decimals: 1, 
+                                      suffix: ' h'
+                                    ),
                                     const SizedBox(height: 8),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
