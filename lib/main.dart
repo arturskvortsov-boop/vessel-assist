@@ -19,6 +19,8 @@ void main() async {
   await Hive.openBox('engine_hours'); // База для наработки механизмов
   await Hive.openBox('changeover_history'); // База для записей смены топлива
   await Hive.openBox('egcs_records'); // База для журнала скруббера
+  await Hive.openBox('emergency_contacts'); // База для аварийных контактов
+  await Hive.openBox('emergency_procedures'); // База для аварийных процедур
   
   runApp(
     const ProviderScope(

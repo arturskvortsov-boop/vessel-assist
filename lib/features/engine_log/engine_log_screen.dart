@@ -97,6 +97,21 @@ class EngineLogScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
+          const SizedBox(height: 24),
+
+          // --- ГРУППА 4: SAFETY & EMERGENCY ---
+          const Text('SAFETY & EMERGENCY', style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          const SizedBox(height: 8),
+          _buildMenuCard(
+            context: context,
+            title: 'Emergency',
+            subtitle: 'Contacts & Procedures',
+            icon: Icons.warning_amber_rounded,
+            route: '/engine/emergency',
+          ),
+
+          const SizedBox(height: 24),
+
           // --- ГРУППА 3: DOCUMENTS & ADMIN ---
           const Text('DOCUMENTS & ADMIN', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 8),

@@ -18,6 +18,7 @@ import '../features/engine_log/night_orders/night_orders_screen.dart';
 import '../features/engine_log/hours/hours_screen.dart';
 import '../features/engine_log/changeover/changeover_screen.dart';
 import '../features/engine_log/egcs/egcs_screen.dart';
+import '../features/engine_log/emergency/emergency_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -90,6 +91,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'egcs',
           builder: (context, state) => const EgcsScreen(),
+        ),
+        GoRoute(
+          path: 'emergency',
+          builder: (context, state) => const EmergencyScreen(),
         ),
       ],
     ),
