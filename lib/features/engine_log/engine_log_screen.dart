@@ -68,6 +68,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Engine Hours',
+            subtitle: 'Machinery running hours & history',
+            icon: Icons.timer,
+            route: '/engine/hours',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'Lube Oil',
             subtitle: 'Feed rate, Top-up & ROB Tracker',
             icon: Icons.water_drop,
