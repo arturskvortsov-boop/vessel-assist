@@ -27,6 +27,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'EGCS Record Book',
+            subtitle: 'Scrubber operations & failures (MEPC.340)',
+            icon: Icons.air,
+            route: '/engine/egcs',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'ORB Generator',
             subtitle: 'MARPOL Record Book entries',
             icon: Icons.menu_book,
