@@ -23,6 +23,8 @@ void main() async {
   await Hive.openBox('emergency_procedures'); // База для аварийных процедур
   await Hive.openBox('spares'); // База для склада запчастей
   await Hive.openBox('warranty'); // База для гарантийных случаев
+  await Hive.openBox('delivery_checklist'); // База для приемки судна
+  await Hive.openBox('punch_list'); // База для списка дефектов
   
   runApp(
     const ProviderScope(
