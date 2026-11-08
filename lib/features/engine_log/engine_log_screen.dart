@@ -89,6 +89,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Voyage Plan',
+            subtitle: 'Fuel requirement & arrival ROB',
+            icon: Icons.map,
+            route: '/engine/voyage',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'Crew Tasks',
             subtitle: 'To-do list and assignments',
             icon: Icons.assignment,
@@ -157,10 +164,10 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
-            title: 'PDF Document Storage',
+            title: 'Document Storage',
             subtitle: 'Scanned manuals & certificates',
             icon: Icons.folder_copy,
-            route: '/engine/lop', // Заглушка (пока ведет в LOP)
+            route: '/engine/documents',
           ),
           _buildMenuCard(
             context: context,

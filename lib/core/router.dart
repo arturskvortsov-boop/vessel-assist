@@ -25,6 +25,8 @@ import '../features/engine_log/delivery/delivery_screen.dart';
 import '../features/engine_log/notes/notes_screen.dart';
 import '../features/engine_log/backup/backup_screen.dart';
 import '../features/engine_log/pump/pump_screen.dart';
+import '../features/engine_log/voyage/voyage_screen.dart';
+import '../features/engine_log/documents/documents_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -125,6 +127,14 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'pump',
           builder: (context, state) => const PumpScreen(),
+        ),
+        GoRoute(
+          path: 'voyage',
+          builder: (context, state) => const VoyageScreen(),
+        ),
+        GoRoute(
+          path: 'documents',
+          builder: (context, state) => const DocumentsScreen(),
         ),
       ],
     ),
