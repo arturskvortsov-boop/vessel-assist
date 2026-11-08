@@ -145,6 +145,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Backup & Restore',
+            subtitle: 'Save or load all app data',
+            icon: Icons.cloud_sync,
+            route: '/engine/backup',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'PDF Document Storage',
             subtitle: 'Scanned manuals & certificates',
             icon: Icons.folder_copy,
