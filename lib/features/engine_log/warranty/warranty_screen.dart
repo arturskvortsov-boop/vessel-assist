@@ -45,7 +45,7 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: system,
+                        initialValue: system,
                         dropdownColor: cardSolid,
                         decoration: const InputDecoration(labelText: 'System'),
                         items: const [
@@ -91,7 +91,7 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: status,
+                  initialValue: status,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Status'),
                   items: const [

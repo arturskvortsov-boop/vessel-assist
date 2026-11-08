@@ -111,7 +111,7 @@ class _EgcsScreenState extends State<EgcsScreen> {
         const SizedBox(height: 12),
 
         DropdownButtonFormField<String>(
-          value: _eventType,
+          initialValue: _eventType,
           dropdownColor: cardSolid,
           decoration: const InputDecoration(labelText: 'Event Type'),
           items: const [

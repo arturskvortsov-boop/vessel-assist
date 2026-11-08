@@ -36,7 +36,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 TextField(controller: bodyCtrl, decoration: const InputDecoration(labelText: 'Note body'), maxLines: 4),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: category,
+                  initialValue: category,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: const [
@@ -51,7 +51,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 SwitchListTile(
                   title: const Text('Pin to top', style: TextStyle(color: accent, fontSize: 14)),
                   value: isPinned,
-                  activeColor: accent,
+                  activeThumbColor: accent,
                   contentPadding: EdgeInsets.zero,
                   onChanged: (val) => setDialogState(() => isPinned = val),
                 ),
@@ -108,7 +108,7 @@ class _NotesScreenState extends State<NotesScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _filter,
+                    initialValue: _filter,
                     dropdownColor: cardSolid,
                     decoration: const InputDecoration(labelText: 'Filter'),
                     items: const [

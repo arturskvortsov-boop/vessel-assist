@@ -34,7 +34,7 @@ class _HoursScreenState extends State<HoursScreen> {
               TextField(controller: hoursCtrl, decoration: const InputDecoration(labelText: 'Initial Hours'), keyboardType: TextInputType.number),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
-                value: group,
+                initialValue: group,
                 dropdownColor: cardSolid,
                 decoration: const InputDecoration(labelText: 'Group'),
                 items: const [

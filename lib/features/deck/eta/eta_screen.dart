@@ -133,7 +133,7 @@ class _EtaScreenState extends State<EtaScreen> {
   Widget _zone(bool departure) => Padding(
         padding: const EdgeInsets.only(bottom: 18),
         child: DropdownButtonFormField<int>(
-          value: departure ? _departureOffset : _arrivalOffset,
+          initialValue: departure ? _departureOffset : _arrivalOffset,
           isExpanded: true,
           decoration: _decoration(departure ? 'Departure UTC Offset' : 'Arrival UTC Offset'),
           items: [
@@ -280,7 +280,7 @@ class _EtaScreenState extends State<EtaScreen> {
                         const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
                           key: ValueKey(_modeRevision),
-                          value: _required ? 'speed' : 'eta',
+                          initialValue: _required ? 'speed' : 'eta',
                           isExpanded: true,
                           decoration: _decoration('Calculation Mode'),
                           items: const [

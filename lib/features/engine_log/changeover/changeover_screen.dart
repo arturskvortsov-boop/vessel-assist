@@ -133,7 +133,7 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
         const SizedBox(height: 12),
 
         DropdownButtonFormField<String>(
-          value: _type,
+          initialValue: _type,
           dropdownColor: cardSolid,
           decoration: const InputDecoration(labelText: 'Type of Changeover'),
           items: const [
@@ -180,7 +180,7 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
           title: const Text('Vessel equipped with Scrubber (EGCS)', style: TextStyle(color: accent, fontSize: 14)),
           subtitle: const Text('Check to add EGCS compliance data to the log', style: TextStyle(color: textMuted, fontSize: 11)),
           value: _hasScrubber,
-          activeColor: accent,
+          activeThumbColor: accent,
           contentPadding: EdgeInsets.zero,
           onChanged: (val) => setState(() => _hasScrubber = val),
         ),

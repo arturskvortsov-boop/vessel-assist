@@ -23,7 +23,7 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
   String _generatedText = '';
 
   // Список стандартных приказов (редактируемый)
-  List<Map<String, dynamic>> _orders = [
+  final List<Map<String, dynamic>> _orders = [
     {'text': 'Monitor M/E parameters (Watch for abnormal noise, vibration, temperatures).', 'checked': true},
     {'text': 'Check A/E and generators (Load, temperatures, fuel/oil pressure).', 'checked': true},
     {'text': 'Monitor boiler water level and steam pressure.', 'checked': true},
@@ -120,7 +120,7 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _status,
+                initialValue: _status,
                 dropdownColor: cardSolid,
                 decoration: const InputDecoration(labelText: 'Status'),
                 items: const [

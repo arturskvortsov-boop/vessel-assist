@@ -49,7 +49,7 @@ class _SparesScreenState extends State<SparesScreen> {
                 TextField(controller: locCtrl, decoration: const InputDecoration(labelText: 'Location (e.g. Store 1, Shelf B)')),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: category,
+                  initialValue: category,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: const [
@@ -74,7 +74,7 @@ class _SparesScreenState extends State<SparesScreen> {
                 SwitchListTile(
                   title: const Text('Critical Spare?', style: TextStyle(color: Colors.orangeAccent, fontSize: 14)),
                   value: isCritical,
-                  activeColor: Colors.orangeAccent,
+                  activeThumbColor: Colors.orangeAccent,
                   contentPadding: EdgeInsets.zero,
                   onChanged: (val) => setDialogState(() => isCritical = val),
                 ),
@@ -158,7 +158,7 @@ class _SparesScreenState extends State<SparesScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _filter,
+                    initialValue: _filter,
                     dropdownColor: cardSolid,
                     decoration: const InputDecoration(labelText: 'Filter'),
                     items: const [

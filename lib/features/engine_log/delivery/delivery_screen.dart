@@ -74,7 +74,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               TextField(controller: textCtrl, decoration: const InputDecoration(labelText: 'Item description')),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: section,
+                initialValue: section,
                 dropdownColor: cardSolid,
                 decoration: const InputDecoration(labelText: 'Section'),
                 items: const [
@@ -132,7 +132,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: severity,
+                        initialValue: severity,
                         dropdownColor: cardSolid,
                         decoration: const InputDecoration(labelText: 'Severity'),
                         items: const [
@@ -146,7 +146,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: status,
+                        initialValue: status,
                         dropdownColor: cardSolid,
                         decoration: const InputDecoration(labelText: 'Status'),
                         items: const [

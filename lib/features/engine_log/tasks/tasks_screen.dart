@@ -44,8 +44,9 @@ class _TasksScreenState extends State<TasksScreen> {
 
   void _toggleStatus(String id, String currentStatus) {
     final task = Task.fromMap(_box.get(id));
-    if (currentStatus == 'Open') task.status = 'In Progress';
-    else if (currentStatus == 'In Progress') task.status = 'Done';
+    if (currentStatus == 'Open') {
+      task.status = 'In Progress';
+    } else if (currentStatus == 'In Progress') task.status = 'Done';
     else task.status = 'Open';
     
     _box.put(id, task.toMap());
@@ -107,7 +108,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: _priority,
+                        initialValue: _priority,
                         dropdownColor: cardSolid,
                         decoration: const InputDecoration(labelText: 'Priority'),
                         items: const [
