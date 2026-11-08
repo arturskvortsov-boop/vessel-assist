@@ -124,6 +124,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Warranty Claims',
+            subtitle: 'Defect tracker & expiry alerts',
+            icon: Icons.shield,
+            route: '/engine/warranty',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'PDF Document Storage',
             subtitle: 'Scanned manuals & certificates',
             icon: Icons.folder_copy,
