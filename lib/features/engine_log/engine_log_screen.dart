@@ -138,6 +138,13 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Notes',
+            subtitle: 'Quick reminders & inspector notes',
+            icon: Icons.sticky_note_2,
+            route: '/engine/notes',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'PDF Document Storage',
             subtitle: 'Scanned manuals & certificates',
             icon: Icons.folder_copy,
