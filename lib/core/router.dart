@@ -24,6 +24,7 @@ import '../features/engine_log/warranty/warranty_screen.dart';
 import '../features/engine_log/delivery/delivery_screen.dart';
 import '../features/engine_log/notes/notes_screen.dart';
 import '../features/engine_log/backup/backup_screen.dart';
+import '../features/engine_log/pump/pump_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -120,6 +121,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'backup',
           builder: (context, state) => const BackupScreen(),
+        ),
+        GoRoute(
+          path: 'pump',
+          builder: (context, state) => const PumpScreen(),
         ),
       ],
     ),

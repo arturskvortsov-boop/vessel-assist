@@ -20,6 +20,13 @@ class EngineLogScreen extends StatelessWidget {
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
+            title: 'Tank Status',
+            subtitle: 'Volumes, ROB & Free space to 85%',
+            icon: Icons.storage,
+            route: '/engine/tanks',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'Fuel Changeover',
             subtitle: 'Fuel switch logbook records',
             icon: Icons.swap_horiz,
@@ -27,17 +34,17 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
-            title: 'EGCS Record Book',
-            subtitle: 'Scrubber operations & failures (MEPC.340)',
-            icon: Icons.air,
-            route: '/engine/egcs',
-          ),
-          _buildMenuCard(
-            context: context,
             title: 'ORB Generator',
             subtitle: 'MARPOL Record Book entries',
             icon: Icons.menu_book,
             route: '/engine/orb',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'EGCS Record Book',
+            subtitle: 'Scrubber operations & failures',
+            icon: Icons.air,
+            route: '/engine/egcs',
           ),
           _buildMenuCard(
             context: context,
@@ -68,6 +75,20 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'Lube Oil',
+            subtitle: 'Feed rate, Top-up & ROB Tracker',
+            icon: Icons.water_drop,
+            route: '/engine/lube',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Pump Calculator',
+            subtitle: 'Transfer time & overflow check',
+            icon: Icons.water,
+            route: '/engine/pump',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'Crew Tasks',
             subtitle: 'To-do list and assignments',
             icon: Icons.assignment,
@@ -87,19 +108,10 @@ class EngineLogScreen extends StatelessWidget {
             icon: Icons.timer,
             route: '/engine/hours',
           ),
-          _buildMenuCard(
-            context: context,
-            title: 'Lube Oil',
-            subtitle: 'Feed rate, Top-up & ROB Tracker',
-            icon: Icons.water_drop,
-            route: '/engine/lube',
-          ),
 
           const SizedBox(height: 24),
 
-          const SizedBox(height: 24),
-
-          // --- ГРУППА 4: SAFETY & EMERGENCY ---
+          // --- ГРУППА 3: SAFETY & EMERGENCY ---
           const Text('SAFETY & EMERGENCY', style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 8),
           _buildMenuCard(
@@ -112,15 +124,15 @@ class EngineLogScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // --- ГРУППА 3: DOCUMENTS & ADMIN ---
+          // --- ГРУППА 4: DOCUMENTS & ADMIN ---
           const Text('DOCUMENTS & ADMIN', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
-            title: 'Spares & Stores',
-            subtitle: 'Inventory & Requisitions',
-            icon: Icons.inventory_2,
-            route: '/engine/spares',
+            title: 'Delivery & Acceptance',
+            subtitle: 'Checklists & Punch List',
+            icon: Icons.assignment_turned_in,
+            route: '/engine/delivery',
           ),
           _buildMenuCard(
             context: context,
@@ -131,10 +143,10 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
-            title: 'Delivery & Acceptance',
-            subtitle: 'Checklists & Punch List',
-            icon: Icons.assignment_turned_in,
-            route: '/engine/delivery',
+            title: 'Spares & Stores',
+            subtitle: 'Inventory & Requisitions',
+            icon: Icons.inventory_2,
+            route: '/engine/spares',
           ),
           _buildMenuCard(
             context: context,
@@ -145,17 +157,17 @@ class EngineLogScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
+            title: 'PDF Document Storage',
+            subtitle: 'Scanned manuals & certificates',
+            icon: Icons.folder_copy,
+            route: '/engine/lop', // Заглушка (пока ведет в LOP)
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'Backup & Restore',
             subtitle: 'Save or load all app data',
             icon: Icons.cloud_sync,
             route: '/engine/backup',
-          ),
-          _buildMenuCard(
-            context: context,
-            title: 'PDF Document Storage',
-            subtitle: 'Scanned manuals & certificates',
-            icon: Icons.folder_copy,
-            route: '/engine/lop', // Временно ведет в LOP (заглушка)
           ),
         ],
       ),
