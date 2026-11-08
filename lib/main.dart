@@ -21,6 +21,7 @@ void main() async {
   await Hive.openBox('egcs_records'); // База для журнала скруббера
   await Hive.openBox('emergency_contacts'); // База для аварийных контактов
   await Hive.openBox('emergency_procedures'); // База для аварийных процедур
+  await Hive.openBox('spares'); // База для склада запчастей
   
   runApp(
     const ProviderScope(

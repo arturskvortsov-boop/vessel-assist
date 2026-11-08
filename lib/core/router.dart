@@ -19,6 +19,7 @@ import '../features/engine_log/hours/hours_screen.dart';
 import '../features/engine_log/changeover/changeover_screen.dart';
 import '../features/engine_log/egcs/egcs_screen.dart';
 import '../features/engine_log/emergency/emergency_screen.dart';
+import '../features/engine_log/spares/spares_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -95,6 +96,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'emergency',
           builder: (context, state) => const EmergencyScreen(),
+        ),
+        GoRoute(
+          path: 'spares',
+          builder: (context, state) => const SparesScreen(),
         ),
       ],
     ),

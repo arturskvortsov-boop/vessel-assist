@@ -117,6 +117,13 @@ class EngineLogScreen extends StatelessWidget {
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
+            title: 'Spares & Stores',
+            subtitle: 'Inventory & Requisitions',
+            icon: Icons.inventory_2,
+            route: '/engine/spares',
+          ),
+          _buildMenuCard(
+            context: context,
             title: 'PDF Document Storage',
             subtitle: 'Scanned manuals & certificates',
             icon: Icons.folder_copy,
