@@ -45,7 +45,7 @@ dependencies:
   # Экспорт отчетов (понадобится позже)
   excel: ^4.0.6
   file_saver: ^0.2.14
-  file_picker: ^8.0.5
+  file_picker: ^10.3.3
   open_filex: ^4.4.0
   image_picker: ^1.0.4
   google_mlkit_text_recognition: ^0.13.0
