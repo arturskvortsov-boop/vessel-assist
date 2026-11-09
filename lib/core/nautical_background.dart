@@ -20,7 +20,7 @@ class _NauticalBackgroundState extends State<NauticalBackground> with SingleTick
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 15))..repeat();
     
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 10; i++) { // Было 30, стало 10 для веба
       _particles.add(Particle(
         x: _random.nextDouble(),
         y: _random.nextDouble(),

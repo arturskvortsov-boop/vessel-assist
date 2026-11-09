@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Для статус-бара
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'core/theme.dart';
@@ -7,6 +8,14 @@ import 'core/widgets/global_clock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Делаем верхнюю полосу (где время и батарея) темной, а иконки белыми
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: bg,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+  ));
+
   await Hive.initFlutter();
   
   // Все базы данных проекта
@@ -28,8 +37,6 @@ void main() async {
   await Hive.openBox('punch_list');
   await Hive.openBox('notes');
   await Hive.openBox('orb_history');
-  
-  // НОВАЯ БАЗА ДЛЯ ТАНКОВ ПАЛУБЫ
   await Hive.openBox('cargo_tanks'); 
   
   runApp(

@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:animations/animations.dart';
 import 'nautical_background.dart';
-import 'widgets/glass_card.dart';
 import 'theme.dart';
 
 // Экраны
 import '../features/splash_screen.dart';
-import '../features/admin/admin_menu_screen.dart'; // Вернули Admin
+import '../features/admin/admin_menu_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/deck/eta/eta_screen.dart';
 import '../features/deck/eta/eco_speed_screen.dart';
 import '../features/deck/ports/ports_screen.dart';
 import '../features/deck/ukc/ukc_screen.dart';
-import '../features/deck/safety_depth/safety_depth_screen.dart';
 import '../features/deck/ballast/ballast_time_screen.dart';
 import '../features/deck/ballast/ballast_sequence_screen.dart';
 import '../features/deck/logbook/logbook_records_screen.dart';
 import '../features/deck/cargo/cargo_tanks_screen.dart';
+import '../features/deck/safety_depth/safety_depth_screen.dart';
 
 import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
@@ -45,18 +43,16 @@ import '../features/engine_log/documents/documents_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
-// Премиум-анимация перехода
+// Легкая анимация для Web (без тормозов)
 CustomTransitionPage<void> _buildPage(Widget child) {
   return CustomTransitionPage<void>(
     key: ValueKey(child.hashCode),
     child: child,
-    transitionDuration: const Duration(milliseconds: 500),
-    reverseTransitionDuration: const Duration(milliseconds: 400),
+    transitionDuration: const Duration(milliseconds: 300),
+    reverseTransitionDuration: const Duration(milliseconds: 300),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return SharedAxisTransition(
-        animation: animation,
-        secondaryAnimation: secondaryAnimation,
-        transitionType: SharedAxisTransitionType.scaled,
+      return FadeTransition(
+        opacity: animation,
         child: child,
       );
     },
@@ -67,35 +63,25 @@ final appRouter = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/splash',
   routes: [
-    GoRoute(
-      path: '/splash',
-      pageBuilder: (context, state) => _buildPage(const SplashScreen()),
-    ),
-    GoRoute(
-      path: '/',
-      pageBuilder: (context, state) => _buildPage(const MainMenuScreen()),
-    ),
+    GoRoute(path: '/splash', pageBuilder: (context, state) => _buildPage(const SplashScreen())),
+    GoRoute(path: '/', pageBuilder: (context, state) => _buildPage(const MainMenuScreen())),
     GoRoute(
       path: '/deck',
       pageBuilder: (context, state) => _buildPage(const DeckMenuScreen()),
       routes: [
         GoRoute(path: 'gm_roll', pageBuilder: (context, state) => _buildPage(const GmRollScreen())),
-        GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
         GoRoute(path: 'eta', pageBuilder: (context, state) => _buildPage(const EtaScreen())),
         GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),
-        GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
         GoRoute(path: 'ports', pageBuilder: (context, state) => _buildPage(const PortsScreen())),
         GoRoute(path: 'ballast_time', pageBuilder: (context, state) => _buildPage(const BallastTimeScreen())),
-        GoRoute(
-          path: 'ballast_sequence',
-          pageBuilder: (context, state) {
+        GoRoute(path: 'ballast_sequence', pageBuilder: (context, state) {
             final start = state.extra as DateTime;
             return _buildPage(BallastSequenceScreen(start: start));
-          },
-        ),
+        }),
         GoRoute(path: 'logbook', pageBuilder: (context, state) => _buildPage(const LogbookRecordsScreen())),
         GoRoute(path: 'cargo_tanks', pageBuilder: (context, state) => _buildPage(const CargoTanksScreen())),
+        GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
       ],
     ),
     GoRoute(
@@ -135,6 +121,7 @@ final appRouter = GoRouter(
   ],
 );
 
+// --- ГЛАВНЫЙ ЭКРАН (Дашборд) ---
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
 
@@ -146,47 +133,57 @@ class MainMenuScreen extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             children: [
+              // Шапка
               Text(
                 'VESSEL ASSIST',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 3,
+                  letterSpacing: 4,
                   foreground: Paint()
                     ..shader = const LinearGradient(
                       colors: [gold, accent],
                     ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               const Text(
-                'AHOY, SEAFARER! SEVEN FEET UNDER THE KEEL!',
+                'AHOY, SEAFARER!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: gold, fontSize: 11, letterSpacing: 1.5, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Ахой, моряк! Семь футов под килем!',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: textMuted, fontSize: 11, letterSpacing: 1),
+                style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 40),
 
+              // Карточка 1: Палуба
               _DashCard(
                 title: 'UP TO THE BRIDGE',
-                subtitle: 'Подняться на мост (Navigation & Cargo)',
+                subtitle: 'Подняться на мост\nNavigation & Cargo Operations',
                 icon: Icons.explore_outlined,
-                onTap: () => context.go('/deck'),
+                gradientColors: [accentDark, accent], // Морской синий
+                onTap: () => context.push('/deck'), // ИСПРАВЛЕНО: push вместо go
               ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
+              // Карточка 2: Машинное отделение
               _DashCard(
                 title: 'DOWN TO THE ENGINE',
-                subtitle: 'Спуститься в МО (MARPOL, Fuel & Tanks)',
+                subtitle: 'Спуститься в МО\nMARPOL, Fuel & Tanks',
                 icon: Icons.settings_outlined,
-                onTap: () => context.go('/engine'),
+                gradientColors: [gold, Colors.orangeAccent], // Золотой
+                onTap: () => context.push('/engine'), // ИСПРАВЛЕНО: push вместо go
+              ),
+
+              const SizedBox(height: 20),
+
+              // Карточка 3: Админка (Документы и Бэкап)
+              _DashCard(
+                title: 'ADMIN & DOCUMENTS',
+                subtitle: 'Документы и резервные копии',
+                icon: Icons.security,
+                gradientColors: [Colors.blueGrey, Colors.grey], 
+                onTap: () => context.push('/admin'), // ИСПРАВЛЕНО: push вместо go
               ),
             ],
           ),
@@ -200,46 +197,66 @@ class _DashCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final List<Color> gradientColors;
   final VoidCallback onTap;
 
   const _DashCard({
     required this.title,
     required this.subtitle,
     required this.icon,
+    required this.gradientColors,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.1),
-                border: Border.all(color: accent.withValues(alpha: 0.2)),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: accent, size: 22),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: gradientColors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(color: text, fontSize: 16, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: const TextStyle(color: textMuted, fontSize: 12)),
-                ],
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: gradientColors.first.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
               ),
-            ),
-            const Icon(Icons.chevron_right, color: accent),
-          ],
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(icon, color: Colors.white, size: 32),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: 1)),
+                    const SizedBox(height: 6),
+                    Text(subtitle, style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 20),
+            ],
+          ),
         ),
       ),
     );
