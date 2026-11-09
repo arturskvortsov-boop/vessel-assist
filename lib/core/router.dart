@@ -9,6 +9,8 @@ import '../features/splash_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/deck/eta/eta_screen.dart';
+import '../features/deck/ports/ports_screen.dart';
+import '../features/deck/ukc/ukc_screen.dart';
 import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
 import '../features/engine_log/fuel_log/fuel_log_screen.dart';
@@ -74,6 +76,14 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'eta',
           pageBuilder: (context, state) => _buildPage(const EtaScreen()),
+        ),
+        GoRoute(
+          path: 'ports',
+          pageBuilder: (context, state) => _buildPage(const PortsScreen()),
+        ),
+        GoRoute(
+          path: 'ukc',
+          pageBuilder: (context, state) => _buildPage(const UkcScreen()),
         ),
       ],
     ),

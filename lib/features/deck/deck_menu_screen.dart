@@ -72,7 +72,7 @@ class _NavigationTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         StaggeredItem(index: 0, child: _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta')),
-        StaggeredItem(index: 1, child: _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/gm_roll')), // Заглушка
+        StaggeredItem(index: 1, child: _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc')),
         StaggeredItem(index: 2, child: _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/gm_roll')), // Заглушка
       ],
     );
@@ -105,7 +105,7 @@ class _DeckOpsTab extends StatelessWidget {
       children: [
         StaggeredItem(index: 0, child: _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/gm_roll')), // Заглушка
         StaggeredItem(index: 1, child: _MenuCard(title: 'Logbook Records', subtitle: 'Inspection wording & schedule', icon: Icons.menu_book, route: '/deck/gm_roll')), // Заглушка
-        StaggeredItem(index: 2, child: _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/gm_roll')), // Заглушка
+        StaggeredItem(index: 2, child: _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/ports')),
       ],
     );
   }
