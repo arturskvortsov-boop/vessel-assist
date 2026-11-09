@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/glass_card.dart';
-import 'ballast_sequence_screen.dart';
 
 class BallastTimeScreen extends StatefulWidget {
   const BallastTimeScreen({super.key});

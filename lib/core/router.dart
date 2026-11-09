@@ -133,57 +133,42 @@ class MainMenuScreen extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             children: [
-              // Шапка
               Text(
                 'VESSEL ASSIST',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 4,
-                  foreground: Paint()
-                    ..shader = const LinearGradient(
-                      colors: [gold, accent],
-                    ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                  fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 4,
+                  foreground: Paint()..shader = const LinearGradient(colors: [gold, accent]).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'AHOY, SEAFARER!',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold),
-              ),
+              const Text('AHOY, SEAFARER!', textAlign: TextAlign.center, style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold)),
               const SizedBox(height: 40),
 
-              // Карточка 1: Палуба
               _DashCard(
                 title: 'UP TO THE BRIDGE',
                 subtitle: 'Подняться на мост\nNavigation & Cargo Operations',
                 icon: Icons.explore_outlined,
-                gradientColors: [accentDark, accent], // Морской синий
-                onTap: () => context.push('/deck'), // ИСПРАВЛЕНО: push вместо go
+                gradientColors: [accentDark, accent],
+                onTap: () => context.push('/deck'), // Теперь push
               ),
-              
               const SizedBox(height: 20),
 
-              // Карточка 2: Машинное отделение
               _DashCard(
                 title: 'DOWN TO THE ENGINE',
                 subtitle: 'Спуститься в МО\nMARPOL, Fuel & Tanks',
                 icon: Icons.settings_outlined,
-                gradientColors: [gold, Colors.orangeAccent], // Золотой
-                onTap: () => context.push('/engine'), // ИСПРАВЛЕНО: push вместо go
+                gradientColors: [gold, Colors.orangeAccent],
+                onTap: () => context.push('/engine'), // Теперь push
               ),
-
               const SizedBox(height: 20),
 
-              // Карточка 3: Админка (Документы и Бэкап)
               _DashCard(
                 title: 'ADMIN & DOCUMENTS',
                 subtitle: 'Документы и резервные копии',
                 icon: Icons.security,
                 gradientColors: [Colors.blueGrey, Colors.grey], 
-                onTap: () => context.push('/admin'), // ИСПРАВЛЕНО: push вместо go
+                onTap: () => context.push('/admin'), // Теперь push
               ),
             ],
           ),
@@ -194,19 +179,12 @@ class MainMenuScreen extends StatelessWidget {
 }
 
 class _DashCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String title, subtitle;
   final IconData icon;
   final List<Color> gradientColors;
   final VoidCallback onTap;
 
-  const _DashCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.gradientColors,
-    required this.onTap,
-  });
+  const _DashCard({required this.title, required this.subtitle, required this.icon, required this.gradientColors, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -218,29 +196,15 @@ class _DashCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: gradientColors,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: LinearGradient(colors: gradientColors, begin: Alignment.topLeft, end: Alignment.bottomRight),
             borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: gradientColors.first.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: gradientColors.first.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
           ),
           child: Row(
             children: [
               Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                width: 60, height: 60,
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(16)),
                 child: Icon(icon, color: Colors.white, size: 32),
               ),
               const SizedBox(width: 20),

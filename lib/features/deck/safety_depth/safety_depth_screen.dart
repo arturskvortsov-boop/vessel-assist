@@ -195,7 +195,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                   ],
                 ),
                 DropdownButtonFormField<String>(
-                  value: _cbMethod,
+                  initialValue: _cbMethod,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Cb Method', border: OutlineInputBorder()),
                   items: const [
@@ -252,7 +252,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                     ],
                   ),
                   DropdownButtonFormField<String>(
-                    value: _catzoc,
+                    initialValue: _catzoc,
                     dropdownColor: cardSolid,
                     decoration: const InputDecoration(labelText: 'CATZOC', border: OutlineInputBorder()),
                     items: ['A1', 'A2', 'B', 'C', 'D', 'U'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),

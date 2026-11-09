@@ -162,7 +162,7 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), 
           child: DropdownButtonFormField<String>(
-            value: _category,
+            initialValue: _category,
             isExpanded: true,
             dropdownColor: cardSolid,
             decoration: InputDecoration(

@@ -98,9 +98,7 @@ class _UkcScreenState extends State<UkcScreen> {
         catzoc: _catzoc,
         confined: _waterType == 'Confined Water',
         
-        maxDraft: double.tryParse(_addMaxDraftCtrl.text.replaceAll(',', '.')) != null 
-            ? double.tryParse(_addMaxDraftCtrl.text.replaceAll(',', '.')) 
-            : null,
+        maxDraft: double.tryParse(_addMaxDraftCtrl.text.replaceAll(',', '.')),
         displacement: double.tryParse(_displacementCtrl.text.replaceAll(',', '.')),
         manualCb: _useManualCb ? double.tryParse(_manualCbCtrl.text.replaceAll(',', '.')) : null,
         manualSquat: _manualSquat ? double.tryParse(_manualSquatCtrl.text.replaceAll(',', '.')) : null,
@@ -161,7 +159,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: _cbMethod,
+                  initialValue: _cbMethod,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Cb Method', isDense: true),
                   items: const [
@@ -218,7 +216,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 _buildField('Port / Location', _portCtrl, isNumber: false),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: _waterType,
+                  initialValue: _waterType,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'Water Type', isDense: true),
                   items: const [
@@ -233,7 +231,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 SwitchListTile(
                   title: const Text('Manual Squat', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w600)),
                   value: _manualSquat,
-                  activeColor: accent,
+                  activeThumbColor: accent,
                   contentPadding: EdgeInsets.zero,
                   onChanged: (val) => setState(() => _manualSquat = val),
                 ),
@@ -251,7 +249,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: _catzoc,
+                  initialValue: _catzoc,
                   dropdownColor: cardSolid,
                   decoration: const InputDecoration(labelText: 'CATZOC', isDense: true),
                   items: const [
@@ -284,7 +282,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     SwitchListTile(
                       title: const Text('Manual Cb', style: TextStyle(color: text, fontSize: 14)),
                       value: _useManualCb,
-                      activeColor: accent,
+                      activeThumbColor: accent,
                       contentPadding: EdgeInsets.zero,
                       onChanged: (val) => setState(() => _useManualCb = val),
                     ),
@@ -293,7 +291,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     SwitchListTile(
                       title: const Text('Manual Depth Allowance (D/U)', style: TextStyle(color: text, fontSize: 14)),
                       value: _useManualDepth,
-                      activeColor: accent,
+                      activeThumbColor: accent,
                       contentPadding: EdgeInsets.zero,
                       onChanged: (val) => setState(() => _useManualDepth = val),
                     ),
