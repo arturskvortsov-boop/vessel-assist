@@ -71,7 +71,7 @@ class _NavigationTab extends StatelessWidget {
       children: [
         _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta'),
         _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc'),
-        _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/gm_roll'), // Временно ведет в GM (сделаем позже)
+        _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/safety_depth'),
       ],
     );
   }
@@ -85,7 +85,7 @@ class _CargoTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _MenuCard(title: 'Cargo Tanks', subtitle: 'Volumes & calculations', icon: Icons.storage, route: '/engine/tanks'), // Пока ведет в Engine Tanks
+        _MenuCard(title: 'Cargo Tanks', subtitle: 'Volumes, density & Excel export', icon: Icons.storage, route: '/deck/cargo_tanks'),
         _MenuCard(title: 'Ballast Time', subtitle: 'Pumping duration', icon: Icons.water, route: '/deck/ballast_time'),
         _MenuCard(title: 'GM Estimate', subtitle: 'Stability from roll period', icon: Icons.straighten, route: '/deck/gm_roll'),
       ],

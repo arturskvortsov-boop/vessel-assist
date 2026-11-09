@@ -8,24 +8,29 @@ import 'core/widgets/global_clock.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  
+  // Все базы данных проекта
   await Hive.openBox('tanks');
   await Hive.openBox('fuel_logs');
+  await Hive.openBox('settings');
+  await Hive.openBox('bunker_checklists');
+  await Hive.openBox('tasks');
+  await Hive.openBox('lube_rob');
+  await Hive.openBox('night_orders');
+  await Hive.openBox('engine_hours');
+  await Hive.openBox('changeover_history');
+  await Hive.openBox('egcs_records');
+  await Hive.openBox('emergency_contacts');
+  await Hive.openBox('emergency_procedures');
+  await Hive.openBox('spares');
+  await Hive.openBox('warranty');
+  await Hive.openBox('delivery_checklist');
+  await Hive.openBox('punch_list');
+  await Hive.openBox('notes');
   await Hive.openBox('orb_history');
-  await Hive.openBox('settings'); // База для настроек часов
-  await Hive.openBox('bunker_checklists'); // База для чек-листов бункеровки
-  await Hive.openBox('tasks'); // База для задач экипажу
-  await Hive.openBox('lube_rob'); // База для остатков масел
-  await Hive.openBox('night_orders'); // База для ночных приказов
-  await Hive.openBox('engine_hours'); // База для наработки механизмов
-  await Hive.openBox('changeover_history'); // База для записей смены топлива
-  await Hive.openBox('egcs_records'); // База для журнала скруббера
-  await Hive.openBox('emergency_contacts'); // База для аварийных контактов
-  await Hive.openBox('emergency_procedures'); // База для аварийных процедур
-  await Hive.openBox('spares'); // База для склада запчастей
-  await Hive.openBox('warranty'); // База для гарантийных случаев
-  await Hive.openBox('delivery_checklist'); // База для приемки судна
-  await Hive.openBox('punch_list'); // База для списка дефектов
-  await Hive.openBox('notes'); // База для быстрых заметок
+  
+  // НОВАЯ БАЗА ДЛЯ ТАНКОВ ПАЛУБЫ
+  await Hive.openBox('cargo_tanks'); 
   
   runApp(
     const ProviderScope(
@@ -44,7 +49,6 @@ class VesselApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
-      // Этот блок выводит часы на всех экранах сверху
       builder: (context, child) => Column(
         children: [
           const GlobalClock(),

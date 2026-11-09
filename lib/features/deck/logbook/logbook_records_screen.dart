@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
-import '../../../core/widgets/glass_card.dart';
 
 class _RecordTemplate {
   final String category;
@@ -79,24 +79,42 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
     ));
   }
 
+  // ВОТ ТО САМОЕ МОДАЛЬНОЕ ОКНО С ДЕТАЛЯМИ
   void _details(_RecordTemplate record) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: cardSolid,
       isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (sheetContext) => SafeArea(child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Text(record.category, style: const TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 18),
-          SelectableText(record.description, style: const TextStyle(fontSize: 18, height: 1.6)),
-          const SizedBox(height: 20),
-          Text('Day / timing: ${record.day.isEmpty ? 'Not specified' : record.day}', style: const TextStyle(color: textMuted, height: 1.6)),
-          const SizedBox(height: 8),
-          Text('Responsibility / remarks: ${record.remarks.isEmpty ? 'Not specified' : record.remarks}', style: const TextStyle(color: textMuted, height: 1.6)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(record.category, style: const TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.w700)),
+              IconButton(icon: const Icon(Icons.close, color: textMuted), onPressed: () => Navigator.pop(sheetContext)),
+            ],
+          ),
+          const Divider(color: border),
+          const SizedBox(height: 16),
+          SelectableText(record.description, style: const TextStyle(color: text, fontSize: 16, height: 1.6)),
           const SizedBox(height: 24),
-          FilledButton.icon(onPressed: () => _copy(record), icon: const Icon(Icons.copy_outlined), label: const Text('Copy Record Wording'), style: FilledButton.styleFrom(backgroundColor: accent, foregroundColor: bg)),
-          TextButton(onPressed: () => Navigator.pop(sheetContext), child: const Text('Close')),
+          if (record.day.isNotEmpty)
+            Text('Day / timing: ${record.day}', style: const TextStyle(color: textMuted, height: 1.6)),
+          if (record.remarks.isNotEmpty)
+            Text('Responsibility / remarks: ${record.remarks}', style: const TextStyle(color: textMuted, height: 1.6)),
+          const SizedBox(height: 30),
+          FilledButton.icon(
+            onPressed: () => _copy(record), 
+            icon: const Icon(Icons.copy_outlined), 
+            label: const Text('Copy Record Wording'), 
+            style: FilledButton.styleFrom(
+              backgroundColor: accent, 
+              foregroundColor: bg,
+              minimumSize: const Size(double.infinity, 50),
+            )
+          ),
         ]),
       )),
     );
@@ -111,31 +129,64 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
       return (_category == 'All' || record.category == _category) && tokens.every(text.contains);
     }).toList();
     final categories = ['All', ..._templates.map((record) => record.category).toSet()];
+    
     return Scaffold(
       backgroundColor: bg,
-      appBar: AppBar(title: const Text('Logbook Records'), actions: [
-        IconButton(onPressed: _info, tooltip: 'Source information', icon: const Icon(Icons.info_outline)),
-      ]),
+      appBar: AppBar(
+        title: const Text('Logbook Records'), 
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+        actions: [
+          IconButton(onPressed: _info, tooltip: 'Source information', icon: const Icon(Icons.info_outline, color: accent)),
+        ]
+      ),
       body: SafeArea(top: false, child: Column(children: [
-        Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 8), child: TextField(
-          controller: _search,
-          onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            hintText: 'Search description, day or officer',
-            prefixIcon: const Icon(Icons.search, color: accent),
-            suffixIcon: _search.text.isEmpty ? null : IconButton(onPressed: () => setState(() => _search.clear()), tooltip: 'Clear search', icon: const Icon(Icons.close)),
-            filled: true, fillColor: cardSolid,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+        
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8), 
+          child: TextField(
+            controller: _search,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              hintText: 'Search description, day or officer',
+              prefixIcon: const Icon(Icons.search, color: accent),
+              suffixIcon: _search.text.isEmpty ? null : IconButton(onPressed: () => setState(() => _search.clear()), tooltip: 'Clear search', icon: const Icon(Icons.close)),
+              filled: true, 
+              fillColor: cardSolid,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: accent)),
+            ),
+          )
+        ),
+        
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), 
+          child: DropdownButtonFormField<String>(
+            value: _category,
+            isExpanded: true,
+            dropdownColor: cardSolid,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: cardSolid,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+            ),
+            items: categories.map((category) => DropdownMenuItem(
+              value: category, 
+              child: Text(category == 'All' ? 'All Frequencies' : category)
+            )).toList(),
+            onChanged: (value) {
+              if (value != null) setState(() => _category = value);
+            },
           ),
-        )),
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: DropdownButton<String>(
-          value: _category,
-          isExpanded: true,
-          dropdownColor: cardSolid,
-          items: categories.map((category) => DropdownMenuItem(value: category, child: Text(category == 'All' ? 'All Frequencies' : category))).toList(),
-          onChanged: (value) { if (value != null) setState(() => _category = value); },
-        )),
-        Padding(padding: const EdgeInsets.fromLTRB(20, 4, 20, 12), child: Align(alignment: Alignment.centerLeft, child: Text('${visible.length} templates', style: const TextStyle(color: textMuted, fontSize: 12)))),
+        ),
+        
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12), 
+          child: Align(alignment: Alignment.centerLeft, child: Text('${visible.length} templates', style: const TextStyle(color: textMuted, fontSize: 12)))
+        ),
+        
         Expanded(child: visible.isEmpty
           ? const Center(child: Text('No matching records.', style: TextStyle(color: textMuted)))
           : ListView.builder(
@@ -144,18 +195,46 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
               itemCount: visible.length,
               itemBuilder: (context, index) {
                 final record = visible[index];
-                return GlassCard(
-                  child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: [
-                      Expanded(child: Text(record.category, style: const TextStyle(color: accent, fontWeight: FontWeight.w700))),
-                      IconButton(onPressed: () => _copy(record), tooltip: 'Copy record wording', icon: const Icon(Icons.copy_outlined, color: accent)),
-                    ]),
-                    const SizedBox(height: 8),
-                    Text(record.description, style: const TextStyle(fontSize: 16, height: 1.5)),
-                    const SizedBox(height: 16),
-                    if (record.day.isNotEmpty) Text('Day / timing: ${record.day}', style: const TextStyle(color: textMuted, height: 1.5)),
-                    if (record.remarks.isNotEmpty) Text('Responsibility / remarks: ${record.remarks}', style: const TextStyle(color: textMuted, height: 1.5)),
-                  ])),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Material(
+                    color: cardSolid,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: const BorderSide(color: border),
+                    ),
+                    child: InkWell(
+                      onTap: () => _details(record), // Открываем детали при клике
+                      child: Padding(
+                        padding: const EdgeInsets.all(16), 
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Row(children: [
+                            Expanded(child: Text(record.category, style: const TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16))),
+                            IconButton(
+                              onPressed: () => _copy(record), 
+                              tooltip: 'Copy record wording', 
+                              icon: const Icon(Icons.copy_outlined, color: accent, size: 20),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                          ]),
+                          const SizedBox(height: 12),
+                          Text(record.description, style: const TextStyle(color: text, fontSize: 14, height: 1.5)),
+                          
+                          if (record.day.isNotEmpty || record.remarks.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            const Divider(color: border, height: 1),
+                            const SizedBox(height: 12),
+                            if (record.day.isNotEmpty) 
+                              Text('Day / timing: ${record.day}', style: const TextStyle(color: textMuted, fontSize: 13, height: 1.4)),
+                            if (record.remarks.isNotEmpty) 
+                              Text('Responsibility: ${record.remarks}', style: const TextStyle(color: textMuted, fontSize: 13, height: 1.4)),
+                          ]
+                        ]),
+                      ),
+                    ),
+                  ),
                 );
               },
             )),

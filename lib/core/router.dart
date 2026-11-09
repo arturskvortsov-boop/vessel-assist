@@ -15,9 +15,11 @@ import '../features/deck/eta/eta_screen.dart';
 import '../features/deck/eta/eco_speed_screen.dart';
 import '../features/deck/ports/ports_screen.dart';
 import '../features/deck/ukc/ukc_screen.dart';
+import '../features/deck/safety_depth/safety_depth_screen.dart';
 import '../features/deck/ballast/ballast_time_screen.dart';
 import '../features/deck/ballast/ballast_sequence_screen.dart';
 import '../features/deck/logbook/logbook_records_screen.dart';
+import '../features/deck/cargo/cargo_tanks_screen.dart';
 
 import '../features/engine_log/engine_log_screen.dart';
 import '../features/engine_log/tanks/tanks_screen.dart';
@@ -78,9 +80,11 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) => _buildPage(const DeckMenuScreen()),
       routes: [
         GoRoute(path: 'gm_roll', pageBuilder: (context, state) => _buildPage(const GmRollScreen())),
+        GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
         GoRoute(path: 'eta', pageBuilder: (context, state) => _buildPage(const EtaScreen())),
         GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),
+        GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
         GoRoute(path: 'ports', pageBuilder: (context, state) => _buildPage(const PortsScreen())),
         GoRoute(path: 'ballast_time', pageBuilder: (context, state) => _buildPage(const BallastTimeScreen())),
         GoRoute(
@@ -91,6 +95,7 @@ final appRouter = GoRouter(
           },
         ),
         GoRoute(path: 'logbook', pageBuilder: (context, state) => _buildPage(const LogbookRecordsScreen())),
+        GoRoute(path: 'cargo_tanks', pageBuilder: (context, state) => _buildPage(const CargoTanksScreen())),
       ],
     ),
     GoRoute(
