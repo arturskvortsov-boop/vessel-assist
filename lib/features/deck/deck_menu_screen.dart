@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animations/animations.dart';
 import '../../core/theme.dart';
-import '../../core/widgets/glass_card.dart';
-import '../../core/widgets/staggered_item.dart';
 
 class DeckMenuScreen extends StatefulWidget {
   const DeckMenuScreen({super.key});
@@ -24,6 +22,7 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bg,
       appBar: AppBar(
         title: const Text('Bridge & Deck'),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
@@ -42,9 +41,8 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(color: accent.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -5)),
-          ],
+          border: const Border(top: BorderSide(color: border)),
+          color: cardSolid,
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
@@ -71,9 +69,9 @@ class _NavigationTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        StaggeredItem(index: 0, child: _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta')),
-        StaggeredItem(index: 1, child: _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc')),
-        StaggeredItem(index: 2, child: _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/gm_roll')), // Заглушка
+        _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta'),
+        _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc'),
+        _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/gm_roll'), // Временно ведет в GM (сделаем позже)
       ],
     );
   }
@@ -87,9 +85,9 @@ class _CargoTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        StaggeredItem(index: 0, child: _MenuCard(title: 'Cargo Tanks', subtitle: 'Volumes & calculations', icon: Icons.storage, route: '/engine/tanks')), // Временно ведет в Engine Tanks
-        StaggeredItem(index: 1, child: _MenuCard(title: 'Ballast Time', subtitle: 'Pumping duration', icon: Icons.water, route: '/deck/gm_roll')), // Заглушка
-        StaggeredItem(index: 2, child: _MenuCard(title: 'GM Estimate', subtitle: 'Stability from roll period', icon: Icons.straighten, route: '/deck/gm_roll')),
+        _MenuCard(title: 'Cargo Tanks', subtitle: 'Volumes & calculations', icon: Icons.storage, route: '/engine/tanks'), // Пока ведет в Engine Tanks
+        _MenuCard(title: 'Ballast Time', subtitle: 'Pumping duration', icon: Icons.water, route: '/deck/ballast_time'),
+        _MenuCard(title: 'GM Estimate', subtitle: 'Stability from roll period', icon: Icons.straighten, route: '/deck/gm_roll'),
       ],
     );
   }
@@ -103,15 +101,15 @@ class _DeckOpsTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        StaggeredItem(index: 0, child: _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/gm_roll')), // Заглушка
-        StaggeredItem(index: 1, child: _MenuCard(title: 'Logbook Records', subtitle: 'Inspection wording & schedule', icon: Icons.menu_book, route: '/deck/gm_roll')), // Заглушка
-        StaggeredItem(index: 2, child: _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/ports')),
+        _MenuCard(title: 'Logbook Records', subtitle: 'Inspection wording & schedule', icon: Icons.menu_book, route: '/deck/logbook'),
+        _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/gm_roll'), // Заглушка
+        _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/ports'),
       ],
     );
   }
 }
 
-// --- ВИДЖЕТ КАРТОЧКИ ---
+// --- ВИДЖЕТ КАРТОЧКИ (Строгий и четкий) ---
 class _MenuCard extends StatelessWidget {
   final String title, subtitle;
   final IconData icon;
@@ -122,30 +120,42 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
-        onTap: () => context.push(route),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 48, height: 48,
-                decoration: BoxDecoration(color: accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: accent.withValues(alpha: 0.2))),
-                child: Icon(icon, color: accent, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(color: text, fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text(subtitle, style: const TextStyle(color: textMuted, fontSize: 12)),
-                  ],
+      child: Material(
+        color: cardSolid,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: border),
+        ),
+        child: InkWell(
+          onTap: () => context.push(route),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 48, height: 48,
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.1), 
+                    borderRadius: BorderRadius.circular(12), 
+                    border: Border.all(color: accent.withValues(alpha: 0.2))
+                  ),
+                  child: Icon(icon, color: accent, size: 24),
                 ),
-              ),
-              const Icon(Icons.chevron_right, color: textMuted),
-            ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: const TextStyle(color: text, fontSize: 16, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 4),
+                      Text(subtitle, style: const TextStyle(color: textMuted, fontSize: 12)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: textMuted),
+              ],
+            ),
           ),
         ),
       ),

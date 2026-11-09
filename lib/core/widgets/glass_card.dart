@@ -28,7 +28,7 @@ class _GlassCardState extends State<GlassCard> with SingleTickerProviderStateMix
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true); // Пульсация туда-сюда
+    )..repeat(reverse: true);
 
     _glowAnimation = Tween<double>(begin: 0.05, end: 0.25).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
@@ -46,32 +46,34 @@ class _GlassCardState extends State<GlassCard> with SingleTickerProviderStateMix
     return AnimatedBuilder(
       animation: _glowAnimation,
       builder: (context, child) {
-        return InkWell(
-          onTap: widget.onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                // Пульсирующее свечение
-                BoxShadow(
-                  color: widget.glowColor.withValues(alpha: _glowAnimation.value),
-                  blurRadius: 15,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8), // Размытие фона (матовое стекло)
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: cardSolid.withValues(alpha: 0.6), // Полупрозрачный фон
-                    border: Border.all(color: border.withValues(alpha: 0.5)),
-                    borderRadius: BorderRadius.circular(16),
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.glowColor.withValues(alpha: _glowAnimation.value),
+                    blurRadius: 15,
+                    spreadRadius: 1,
                   ),
-                  child: child,
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: cardSolid.withValues(alpha: 0.6),
+                      border: Border.all(color: border.withValues(alpha: 0.5)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: child,
+                  ),
                 ),
               ),
             ),

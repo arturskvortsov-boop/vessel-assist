@@ -65,7 +65,7 @@ class UkcResult {
     final chart = missing ? null : depthAccuracyAllowance(p.catzoc,p.depth,
       manual:p.manualDepth,basis:p.depthBasis);
     final ukc = chart == null ? null : staticUkc - chart - squat - heel - p.swell;
-    if ([mean,maximum,cb,squat,heel,staticUkc,if(chart!=null)chart,if(ukc!=null)ukc]
+    if ([mean,maximum,cb,squat,heel,staticUkc,?chart,?ukc]
         .any((x) => !x.isFinite || x.abs()>1e9)) {
       throw const FormatException('Values exceed the calculation range.');
     }
