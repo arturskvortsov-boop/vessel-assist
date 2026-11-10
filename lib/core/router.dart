@@ -8,6 +8,7 @@ import 'theme.dart';
 import '../features/splash_screen.dart';
 import '../features/admin/admin_menu_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
+import '../features/deck/organizer/deck_organizer.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/deck/eta/eta_screen.dart';
 import '../features/deck/eta/eco_speed_screen.dart';
@@ -70,6 +71,8 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) => _buildPage(const DeckMenuScreen()),
       routes: [
         GoRoute(path: 'gm_roll', pageBuilder: (context, state) => _buildPage(const GmRollScreen())),
+        GoRoute(path: 'organizer', pageBuilder: (context, state) => _buildPage(const DeckOrganizerScreen())),
+        GoRoute(path: 'compress_pdf', pageBuilder: (context, state) => _buildPage(const PdfCompressScreen())),
         GoRoute(path: 'eta', pageBuilder: (context, state) => _buildPage(const EtaScreen())),
         GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),

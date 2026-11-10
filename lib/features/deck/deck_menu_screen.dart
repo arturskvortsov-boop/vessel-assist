@@ -52,7 +52,11 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: const [
             NavigationDestination(icon: Icon(Icons.explore, color: textMuted), selectedIcon: Icon(Icons.explore, color: accent), label: 'Nav'),
-            NavigationDestination(icon: Icon(Icons.local_shipping, color: textMuted), selectedIcon: Icon(Icons.local_shipping, color: accent), label: 'Cargo'),
+            NavigationDestination(
+              icon: _CargoCraneIcon(color: textMuted),
+              selectedIcon: _CargoCraneIcon(color: accent),
+              label: 'Cargo',
+            ),
             NavigationDestination(icon: Icon(Icons.book, color: textMuted), selectedIcon: Icon(Icons.book, color: accent), label: 'Deck Ops'),
           ],
         ),
@@ -102,7 +106,8 @@ class _DeckOpsTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _MenuCard(title: 'Logbook Records', subtitle: 'Inspection wording & schedule', icon: Icons.menu_book, route: '/deck/logbook'),
-        _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/gm_roll'), // Заглушка
+        _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/organizer'),
+        _MenuCard(title: 'Compress PDF', subtitle: 'Create a smaller PDF copy', icon: Icons.picture_as_pdf_outlined, route: '/deck/compress_pdf'),
         _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/ports'),
       ],
     );
@@ -161,4 +166,64 @@ class _MenuCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CargoCraneIcon extends StatelessWidget {
+  const _CargoCraneIcon({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+    size: const Size.square(24),
+    painter: _CargoCranePainter(color),
+  );
+}
+
+class _CargoCranePainter extends CustomPainter {
+  const _CargoCranePainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.scale(size.width / 24, size.height / 24);
+
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.7
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final crane = Path()
+      ..moveTo(2, 21)
+      ..lineTo(8, 21)
+      ..moveTo(5, 21)
+      ..lineTo(5, 4)
+      ..lineTo(21, 4)
+      ..moveTo(5, 10)
+      ..lineTo(11, 4)
+      ..moveTo(16, 4)
+      ..lineTo(16, 10)
+      ..lineTo(12, 13)
+      ..moveTo(16, 10)
+      ..lineTo(20, 13);
+    canvas.drawPath(crane, paint);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(10, 13, 12, 7),
+        const Radius.circular(1),
+      ),
+      paint,
+    );
+    canvas.drawLine(const Offset(14, 15), const Offset(14, 18), paint);
+    canvas.drawLine(const Offset(18, 15), const Offset(18, 18), paint);
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_CargoCranePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
