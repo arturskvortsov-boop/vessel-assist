@@ -1,0 +1,37 @@
+{
+    "name": "Vessel Assist",
+    "short_name": "VesselAssist",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0A1628",
+    "theme_color": "#D4A537",
+    "description": "Помощник для моряков: формы, расчёты, логи, документы.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
