@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; frame-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'none'"><title>Compress PDF</title><link rel="stylesheet" href="style.css"></head>
+<body>
+  <main class="card">
+    <p>Choose a PDF to create a smaller copy on this device. Maximum file size: 20 MB.</p>
+    <input id="compressFile" type="file" accept="application/pdf,.pdf" hidden>
+    <button id="compressPdf" class="primary" type="button">Compress PDF</button>
+    <p id="compressStatus" class="error" role="status"></p>
+  </main>
+  <script type="module" src="pdf-compress-page.js"></script>
+</body>
+</html>
