@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/glass_card.dart';
+import '../../core/widgets/important_notice.dart';
 
 class AdminMenuScreen extends StatelessWidget {
   const AdminMenuScreen({super.key});
@@ -25,6 +26,27 @@ class AdminMenuScreen extends StatelessWidget {
             icon: Icons.folder_copy,
             route: '/admin/documents',
           ),
+          _buildMenuCard(
+            context: context,
+            title: 'Deck Organizer',
+            subtitle: 'Notes, documents & expiry',
+            icon: Icons.event_note,
+            route: '/admin/organizer',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Scan to PDF',
+            subtitle: 'Create a PDF from photos',
+            icon: Icons.document_scanner_outlined,
+            route: '/admin/scan_to_pdf',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Compress PDF',
+            subtitle: 'Create a smaller PDF copy',
+            icon: Icons.picture_as_pdf_outlined,
+            route: '/admin/compress_pdf',
+          ),
           
           const SizedBox(height: 24),
           
@@ -36,6 +58,12 @@ class AdminMenuScreen extends StatelessWidget {
             subtitle: 'Save or load all app data',
             icon: Icons.cloud_sync,
             route: '/admin/backup',
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: accent),
+            title: const Text('Important Notice'),
+            trailing: const Icon(Icons.chevron_right, color: textMuted),
+            onTap: () => showImportantNotice(context),
           ),
         ],
       ),

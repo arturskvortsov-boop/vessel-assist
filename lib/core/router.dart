@@ -7,17 +7,22 @@ import 'theme.dart';
 // Экраны
 import '../features/splash_screen.dart';
 import '../features/admin/admin_menu_screen.dart';
+import '../features/admin/scan_to_pdf_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/organizer/deck_organizer.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/deck/eta/eta_screen.dart';
+import '../features/deck/port_distance/port_distance_screen.dart';
+import '../features/deck/compass_error/compass_error_screen.dart';
 import '../features/deck/eta/eco_speed_screen.dart';
 import '../features/deck/ports/ports_screen.dart';
 import '../features/deck/ukc/ukc_screen.dart';
 import '../features/deck/ballast/ballast_time_screen.dart';
 import '../features/deck/ballast/ballast_sequence_screen.dart';
 import '../features/deck/logbook/logbook_records_screen.dart';
+import '../features/deck/tasks/deck_tasks_screen.dart';
 import '../features/deck/cargo/cargo_tanks_screen.dart';
+import '../features/deck/draft_survey/draft_survey_screen.dart';
 import '../features/deck/safety_depth/safety_depth_screen.dart';
 
 import '../features/engine_log/engine_log_screen.dart';
@@ -71,9 +76,14 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) => _buildPage(const DeckMenuScreen()),
       routes: [
         GoRoute(path: 'gm_roll', pageBuilder: (context, state) => _buildPage(const GmRollScreen())),
-        GoRoute(path: 'organizer', pageBuilder: (context, state) => _buildPage(const DeckOrganizerScreen())),
-        GoRoute(path: 'compress_pdf', pageBuilder: (context, state) => _buildPage(const PdfCompressScreen())),
+        GoRoute(path: 'organizer', redirect: (context, state) => '/admin/organizer'),
+        GoRoute(
+          path: 'compress_pdf',
+          redirect: (context, state) => '/admin/compress_pdf',
+        ),
         GoRoute(path: 'eta', pageBuilder: (context, state) => _buildPage(const EtaScreen())),
+        GoRoute(path: 'port_distance', pageBuilder: (context, state) => _buildPage(const PortDistanceScreen())),
+        GoRoute(path: 'compass_error', pageBuilder: (context, state) => _buildPage(const CompassErrorScreen())),
         GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),
         GoRoute(path: 'ports', pageBuilder: (context, state) => _buildPage(const PortsScreen())),
@@ -83,7 +93,9 @@ final appRouter = GoRouter(
             return _buildPage(BallastSequenceScreen(start: start));
         }),
         GoRoute(path: 'logbook', pageBuilder: (context, state) => _buildPage(const LogbookRecordsScreen())),
+        GoRoute(path: 'tasks', pageBuilder: (context, state) => _buildPage(const DeckTasksScreen())),
         GoRoute(path: 'cargo_tanks', pageBuilder: (context, state) => _buildPage(const CargoTanksScreen())),
+        GoRoute(path: 'draft_survey', pageBuilder: (context, state) => _buildPage(const DraftSurveyScreen())),
         GoRoute(path: 'safety_depth', pageBuilder: (context, state) => _buildPage(const SafetyDepthScreen())),
       ],
     ),
@@ -117,6 +129,12 @@ final appRouter = GoRouter(
       path: '/admin',
       pageBuilder: (context, state) => _buildPage(const AdminMenuScreen()),
       routes: [
+        GoRoute(path: 'organizer', pageBuilder: (context, state) => _buildPage(const DeckOrganizerScreen())),
+        GoRoute(path: 'scan_to_pdf', pageBuilder: (context, state) => _buildPage(const ScanToPdfScreen())),
+        GoRoute(
+          path: 'compress_pdf',
+          pageBuilder: (context, state) => _buildPage(const PdfCompressScreen()),
+        ),
         GoRoute(path: 'documents', pageBuilder: (context, state) => _buildPage(const DocumentsScreen())),
         GoRoute(path: 'backup', pageBuilder: (context, state) => _buildPage(const BackupScreen())),
       ],

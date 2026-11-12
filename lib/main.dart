@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'core/theme.dart';
 import 'core/router.dart';
 import 'core/widgets/global_clock.dart';
+import 'core/widgets/important_notice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,11 +57,13 @@ class VesselApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
-      builder: (context, child) => Column(
-        children: [
-          const GlobalClock(),
-          Expanded(child: child ?? const SizedBox.shrink()),
-        ],
+      builder: (context, child) => StartupNotice(
+        child: Column(
+          children: [
+            const GlobalClock(),
+            Expanded(child: child ?? const SizedBox.shrink()),
+          ],
+        ),
       ),
     );
   }
