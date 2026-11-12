@@ -64,7 +64,8 @@ class _SignatureScreenState extends State<SignatureScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please sign first.')));
                         return;
                       }
-                      final Uint8List? data = await _controller.toPngBytes();
+                                            final Uint8List? data = await _controller.toPngBytes();
+                      if (!mounted) return;
                       if (data != null) {
                         Navigator.pop(context, data); // Возвращаем картинку назад
                       }

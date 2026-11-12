@@ -44,10 +44,13 @@ class _TasksScreenState extends State<TasksScreen> {
 
   void _toggleStatus(String id, String currentStatus) {
     final task = Task.fromMap(_box.get(id));
-    if (currentStatus == 'Open') {
+        if (currentStatus == 'Open') {
       task.status = 'In Progress';
-    } else if (currentStatus == 'In Progress') task.status = 'Done';
-    else task.status = 'Open';
+    } else if (currentStatus == 'In Progress') {
+      task.status = 'Done';
+    } else {
+      task.status = 'Open';
+    }
     
     _box.put(id, task.toMap());
     setState(() {});

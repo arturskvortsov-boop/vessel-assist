@@ -44,9 +44,10 @@ dependencies:
   
   # Экспорт отчетов (понадобится позже)
   excel: ^4.0.6
-  file_saver: ^0.2.14
+    file_saver: ^0.2.14
   file_picker: ^10.3.3
   open_filex: ^4.4.0
+  path_provider: ^2.1.4
   image: ^4.3.0
   web: ^1.1.2
   image_picker: ^1.0.4

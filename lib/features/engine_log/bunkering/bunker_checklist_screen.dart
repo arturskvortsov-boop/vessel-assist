@@ -333,7 +333,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
             pw.SizedBox(height: 20),
             
             // Таблица чек-листа
-            pw.Table.fromTextArray(
+            pw.TableHelper.fromTextArray(
               headers: ['#', 'Description', 'Status'],
               data: List<List<String>>.generate(items.length, (index) {
                 final item = items[index];

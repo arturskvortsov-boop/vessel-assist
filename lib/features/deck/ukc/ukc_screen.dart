@@ -44,8 +44,9 @@ class _UkcScreenState extends State<UkcScreen> {
   final _swellCtrl = TextEditingController(text: '0.00');
   String _catzoc = 'A1';
 
-  // --- Advanced Overrides ---
-  bool _showAdvanced = false;
+
+
+    // --- Advanced Overrides ---
   bool _useManualCb = false;
   final _manualCbCtrl = TextEditingController();
   bool _useManualDepth = false;
@@ -275,8 +276,6 @@ class _UkcScreenState extends State<UkcScreen> {
                 child: ExpansionTile(
                   title: const Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
-                  collapsedIconColor: textMuted,
-                  childrenPadding: const EdgeInsets.all(16),
                   onExpansionChanged: (val) => setState(() => _showAdvanced = val),
                   children: [
                     SwitchListTile(

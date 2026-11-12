@@ -25,7 +25,6 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
     
     String dateFail = DateTime.now().toString().split(' ')[0];
     String expiry = '';
-    String dateClaimed = '';
 
     showDialog(
       context: context,
