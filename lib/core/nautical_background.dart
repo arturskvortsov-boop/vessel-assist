@@ -47,67 +47,75 @@ class _NauticalBackgroundState extends State<NauticalBackground> with TickerProv
     return Stack(
       children: [
                 // 1. Радиальный градиент с плавным "дыханием" свечения
-        AnimatedBuilder(
-          animation: _glowController,
-          builder: (context, child) {
-            final t = Curves.easeInOut.transform(_glowController.value);
-            return Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.topCenter,
-                  radius: 1.5 + t * 0.25,
-                  colors: [
-                    Color.lerp(const Color(0xFF0D1B2A), const Color(0xFF122A44), t)!,
-                    bg,
-                  ],
+                RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: _glowController,
+                    builder: (context, child) {
+                      final t = Curves.easeInOut.transform(_glowController.value);
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment.topCenter,
+                            radius: 1.5 + t * 0.25,
+                            colors: [
+                              Color.lerp(const Color(0xFF0D1B2A), const Color(0xFF122A44), t)!,
+                              bg,
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
         
-        // 2. Частицы (Пыль/Пузырьки)
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return CustomPaint(
-              painter: ParticlePainter(_particles, _controller.value),
-              size: Size.infinite,
-            );
-          },
+                // 2. Частицы (Пыль/Пузырьки)
+        RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: ParticlePainter(_particles, _controller.value),
+                size: Size.infinite,
+              );
+            },
+          ),
         ),
 
         // 3. Плывущий 8-битный корабль
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return CustomPaint(
-              painter: PixelShipPainter(_controller.value),
-              size: Size.infinite,
-            );
-          },
+        RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: PixelShipPainter(_controller.value),
+                size: Size.infinite,
+              );
+            },
+          ),
         ),
 
                 // 4. Едва заметный якорь с лёгким параллаксом
-        AnimatedBuilder(
-          animation: _glowController,
-          builder: (context, child) {
-            final t = Curves.easeInOut.transform(_glowController.value);
-            return Positioned(
-              top: 60 + t * 8,
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: 0.03 + t * 0.015,
-                child: Icon(
-                  Icons.anchor,
-                  size: MediaQuery.of(context).size.width * 0.9,
-                  color: text,
+                RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: _glowController,
+                    builder: (context, child) {
+                      final t = Curves.easeInOut.transform(_glowController.value);
+                      return Positioned(
+                        top: 60 + t * 8,
+                        left: 0,
+                        right: 0,
+                        child: Opacity(
+                          opacity: 0.03 + t * 0.015,
+                          child: Icon(
+                            Icons.anchor,
+                            size: MediaQuery.of(context).size.width * 0.9,
+                            color: text,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
         
         // 5. Контент
         widget.child,

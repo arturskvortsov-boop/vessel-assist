@@ -60,12 +60,27 @@ CustomTransitionPage<void> _buildPage(Widget child) {
   return CustomTransitionPage<void>(
     key: ValueKey(child.hashCode),
     child: child,
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 300),
+    transitionDuration: const Duration(milliseconds: 260),
+    reverseTransitionDuration: const Duration(milliseconds: 220),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
+      // Плавный fade + лёгкий подъём снизу. RepaintBoundary изолирует
+      // перерисовку перехода от содержимого экрана (важно для iPhone PWA).
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      );
+      return RepaintBoundary(
+        child: FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.02),
+              end: Offset.zero,
+            ).animate(curved),
+            child: child,
+          ),
+        ),
       );
     },
   );

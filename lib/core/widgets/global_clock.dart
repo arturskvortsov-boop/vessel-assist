@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../theme.dart';
-import '../router.dart'; // <--- Импортируем ключ
+import '../router.dart'; // rootNavigatorKey для диалога смещения времени
 
 class GlobalClock extends StatefulWidget {
   const GlobalClock({super.key});
@@ -91,27 +91,7 @@ class _GlobalClockState extends State<GlobalClock> {
               ],
             ),
             
-            Expanded(
-              child: Center(
-                child: Semantics(
-                  label: 'Home',
-                  child: IconButton(
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.resolveWith((states) {
-                        if (states.contains(WidgetState.hovered) &&
-                            !states.contains(WidgetState.focused) &&
-                            !states.contains(WidgetState.pressed)) {
-                          return Colors.transparent;
-                        }
-                        return null;
-                      }),
-                    ),
-                    icon: const Icon(Icons.home_outlined, color: accent),
-                    onPressed: () => appRouter.go('/'),
-                  ),
-                ),
-              ),
-            ),
+                        const Spacer(),
 
             // LOCAL (с кнопкой настройки)
             InkWell(
