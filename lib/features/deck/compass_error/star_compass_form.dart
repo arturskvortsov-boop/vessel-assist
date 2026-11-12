@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/dms_coordinate.dart';
+
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +18,8 @@ class StarCompassForm extends StatefulWidget {
 }
 
 class _StarCompassFormState extends State<StarCompassForm> {
-  final _latitude = _DmsCoordinate('N', 'S', 90);
-  final _longitude = _DmsCoordinate('E', 'W', 180);
+  final _latitude = DmsCoordinate('N', 'S', 90);
+  final _longitude = DmsCoordinate('E', 'W', 180);
   final _date = TextEditingController();
   final _time = TextEditingController();
   final _gyro = TextEditingController();
@@ -249,7 +252,7 @@ class _StarCompassFormState extends State<StarCompassForm> {
     ),
   );
 
-  Widget _coordinateFields(String label, _DmsCoordinate coordinate) {
+  Widget _coordinateFields(String label, DmsCoordinate coordinate) {
     void positionChanged() => setState(() {
       _fix = null;
       _invalidateSky();
@@ -456,49 +459,5 @@ class _StarCompassFormState extends State<StarCompassForm> {
         ],
       ],
     );
-  }
-}
-
-class _DmsCoordinate {
-  _DmsCoordinate(this.positive, this.negative, this.limit)
-    : hemisphere = positive;
-
-  final String positive, negative;
-  final int limit;
-  String hemisphere;
-  final degrees = TextEditingController();
-  final minutes = TextEditingController();
-  final seconds = TextEditingController();
-
-  List<TextEditingController> get controllers => [degrees, minutes, seconds];
-
-  double? get decimal {
-    final deg = int.tryParse(degrees.text.trim());
-    final min = int.tryParse(minutes.text.trim());
-    final sec = double.tryParse(seconds.text.trim().replaceAll(',', '.'));
-    if (deg == null ||
-        deg < 0 ||
-        deg > limit ||
-        min == null ||
-        min < 0 ||
-        min >= 60 ||
-        sec == null ||
-        !sec.isFinite ||
-        sec < 0 ||
-        sec >= 60 ||
-        (deg == limit && (min != 0 || sec != 0))) {
-      return null;
-    }
-    final value = deg + min / 60 + sec / 3600;
-    return hemisphere == negative ? -value : value;
-  }
-
-  void setDecimal(double value) {
-    // Round before splitting so the seconds field never rounds up to 60.
-    final hundredths = (value.abs() * 360000).round();
-    degrees.text = (hundredths ~/ 360000).toString();
-    minutes.text = (hundredths ~/ 6000 % 60).toString();
-    seconds.text = (hundredths % 6000 / 100).toStringAsFixed(2);
-    hemisphere = value < 0 ? negative : positive;
   }
 }
