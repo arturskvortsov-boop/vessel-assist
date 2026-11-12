@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 
 class BallastSequenceScreen extends StatefulWidget {
@@ -93,9 +93,8 @@ class _BallastSequenceScreenState extends State<BallastSequenceScreen> {
   @override
   Widget build(BuildContext context) {
     final schedule = _schedule;
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(title: const Text('Ballast Sequence')),
+        return AppScaffold(
+      title: 'Ballast Sequence',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 700),

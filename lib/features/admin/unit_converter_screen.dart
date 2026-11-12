@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/widgets/app_scaffold.dart';
 import 'unit_converter_model.dart';
 
 class UnitConverterScreen extends StatefulWidget {
@@ -71,8 +72,8 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
         ? _format(converted)
         : null;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Unit Converter')),
+        return AppScaffold(
+      title: 'Unit Converter',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

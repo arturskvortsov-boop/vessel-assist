@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/orb_entry.dart';
 import '../../../domain/models/tank.dart';
 import '../../../core/utils/time_input_formatter.dart';
@@ -173,11 +173,8 @@ class _OrbScreenState extends State<OrbScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ORB Generator'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'ORB Generator',
       body: DefaultTabController(
         length: 2,
         child: Column(

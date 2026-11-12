@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/tank.dart';
 import '../../../domain/calculators/vcf_calculator.dart';
 
@@ -136,11 +137,8 @@ class _TanksScreenState extends State<TanksScreen> {
       return t.type == _currentGroup;
     }).toList();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tank Status'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Tank Status',
       body: Column(
         children: [
           // --- ПОДСКАЗКА ---

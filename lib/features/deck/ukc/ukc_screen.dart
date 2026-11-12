@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/staggered_item.dart';
 import '../../../domain/models/ukc_model.dart';
@@ -125,11 +125,8 @@ class _UkcScreenState extends State<UkcScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('UKC Calculator'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'UKC Calculator',
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

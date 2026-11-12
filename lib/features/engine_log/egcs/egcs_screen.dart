@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/utils/time_input_formatter.dart';
 import '../../../domain/models/egcs_record.dart';
 
@@ -56,11 +56,8 @@ class _EgcsScreenState extends State<EgcsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('EGCS Record Book'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'EGCS Record Book',
       body: DefaultTabController(
         length: 2,
         child: Column(

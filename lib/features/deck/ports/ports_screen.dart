@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/port.dart';
 
 class PortsScreen extends StatefulWidget {
@@ -59,11 +59,8 @@ class _PortsScreenState extends State<PortsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Port Codes'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Port Codes',
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: accent))
           : Column(

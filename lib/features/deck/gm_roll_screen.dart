@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/app_scaffold.dart';
 import '../../domain/models/gm_roll_model.dart';
 
 class GmRollScreen extends StatefulWidget {
@@ -166,12 +166,8 @@ class _GmRollScreenState extends State<GmRollScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text('GM Estimate — Roll Period'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'GM Estimate — Roll Period',
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Center(

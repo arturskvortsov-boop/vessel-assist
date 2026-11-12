@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/dms_coordinate.dart';
+import '../../core/widgets/app_scaffold.dart';
 import '../deck/port_distance/route_map.dart' show readLand;
 import '../deck/port_distance/sea_routes.dart';
 import 'passage_map.dart';
@@ -503,12 +504,9 @@ class _PassagePlannerScreenState extends State<PassagePlannerScreen> {
     final eta = hours != null && hours.isFinite && hours <= 87600
         ? position!.time.add(Duration(seconds: (hours * 3600).round()))
         : null;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Passage Planner')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: ListView(
+        return AppScaffold(
+      title: 'Passage Planner',
+      body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
               Text(_route.name, style: Theme.of(context).textTheme.titleLarge),
@@ -634,24 +632,22 @@ class _PassagePlannerScreenState extends State<PassagePlannerScreen> {
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 12),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Wrap(
-                    spacing: 24,
-                    runSpacing: 8,
-                    children: [
-                      Text(
-                        'Total Dist: ${points.length < 2 ? '—' : '${_route.totalDistance.toStringAsFixed(1)} NM'}',
-                      ),
-                      Text(
-                        'Remaining Dist: ${remaining == null ? '—' : '${remaining.toStringAsFixed(1)} NM'}',
-                      ),
-                      Text(
-                        'ETA: ${eta == null ? '—' : '${_utc.format(eta)} UTC'}',
-                      ),
-                    ],
-                  ),
+                            AppSectionCard(
+                padding: const EdgeInsets.all(16),
+                child: Wrap(
+                  spacing: 24,
+                  runSpacing: 8,
+                  children: [
+                    Text(
+                      'Total Dist: ${points.length < 2 ? '—' : '${_route.totalDistance.toStringAsFixed(1)} NM'}',
+                    ),
+                    Text(
+                      'Remaining Dist: ${remaining == null ? '—' : '${remaining.toStringAsFixed(1)} NM'}',
+                    ),
+                    Text(
+                      'ETA: ${eta == null ? '—' : '${_utc.format(eta)} UTC'}',
+                    ),
+                  ],
                 ),
               ),
               if (points.isNotEmpty) ...[
@@ -707,11 +703,9 @@ class _PassagePlannerScreenState extends State<PassagePlannerScreen> {
                       },
                     ),
                   ),
-              ],
+                            ],
             ],
           ),
-        ),
-      ),
     );
   }
 }

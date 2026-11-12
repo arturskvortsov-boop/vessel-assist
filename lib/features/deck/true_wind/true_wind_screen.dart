@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/app_scaffold.dart';
 import 'true_wind.dart';
 
 enum _SpeedUnit {
@@ -153,8 +154,8 @@ class _TrueWindScreenState extends State<TrueWindScreen> {
     final theme = Theme.of(context);
     final trueColor = theme.colorScheme.primary;
     const apparentColor = Color(0xFFFFB74D);
-    return Scaffold(
-      appBar: AppBar(title: const Text('True Wind Calculator')),
+        return AppScaffold(
+      title: 'True Wind Calculator',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

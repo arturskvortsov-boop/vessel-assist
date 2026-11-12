@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 
 class BallastTimeScreen extends StatefulWidget {
@@ -133,9 +134,8 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
     final duration = minutes == null ? '—'
         : '${minutes ~/ 1440} d  ${_two((minutes % 1440) ~/ 60)} h  '
           '${_two(minutes % 60)} min';
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(title: const Text('Ballast Time')),
+        return AppScaffold(
+      title: 'Ballast Time',
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(child: ConstrainedBox(

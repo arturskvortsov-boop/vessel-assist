@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 
 class BackupScreen extends StatefulWidget {
   const BackupScreen({super.key});
@@ -99,12 +99,9 @@ class _BackupScreenState extends State<BackupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Backup & Restore'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
-      body: _isLoading 
+        return AppScaffold(
+      title: 'Backup & Restore',
+      body: _isLoading  
         ? const Center(child: CircularProgressIndicator(color: accent))
         : ListView(
             padding: const EdgeInsets.all(24),

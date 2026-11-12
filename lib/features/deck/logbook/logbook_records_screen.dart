@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 
 class _RecordTemplate {
   final String category;
@@ -130,15 +130,11 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
     }).toList();
     final categories = ['All', ..._templates.map((record) => record.category).toSet()];
     
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text('Logbook Records'), 
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        actions: [
-          IconButton(onPressed: _info, tooltip: 'Source information', icon: const Icon(Icons.info_outline, color: accent)),
-        ]
-      ),
+        return AppScaffold(
+      title: 'Logbook Records',
+      actions: [
+        IconButton(onPressed: _info, tooltip: 'Source information', icon: const Icon(Icons.info_outline, color: accent)),
+      ],
       body: SafeArea(top: false, child: Column(children: [
         
         Padding(

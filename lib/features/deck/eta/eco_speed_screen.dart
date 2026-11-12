@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../domain/models/eta_model.dart';
 import '../../../domain/models/eco_speed_model.dart';
@@ -33,7 +34,7 @@ class _EcoSpeedScreenState extends State<EcoSpeedScreen> {
   void calculate(){if(!_form.currentState!.validate())return;try{final r=EcoSpeedPlan.calculate(distance:number(_distance.text)!,ecoSpeed:number(_eco.text)!,fullSpeed:number(_full.text)!,departure:_departure,arrival:_arrival);setState((){_result=r;_error=null;});}on FormatException catch(e){setState((){_result=null;_error=e.message;});}}
   Widget modeResult(String title,double hours,double distance)=>GlassCard(child: Padding(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(title,style:const TextStyle(color:accent,fontSize:22,fontWeight:FontWeight.bold)),const SizedBox(height:10),Text('${hours.toStringAsFixed(4)} hours'),Text('${(hours/24).toStringAsFixed(4)} days'),Text(etaDuration(Duration(microseconds:(hours*3600000000).round()))),const SizedBox(height:8),Text('${distance.toStringAsFixed(2)} NM')])));
   @override
-  Widget build(BuildContext context)=>Scaffold(backgroundColor:bg,appBar:AppBar(title:const Text('Eco / Full Speed')),body:SingleChildScrollView(padding:const EdgeInsets.all(20),child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:720),child:Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:[
+  Widget build(BuildContext context)=>AppScaffold(title:'Eco / Full Speed',body:SingleChildScrollView(padding:const EdgeInsets.all(20),child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:720),child:Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:[
     const Text('Plan how long to sail at Eco Speed and Full Speed to cover the remaining distance and arrive at the target time.',style:TextStyle(fontSize:18,height:1.5)),
     const SizedBox(height:10),const Text('Enter average speeds over ground (SOG). All dates and times below are UTC. Stops and waiting time are not included.',style:TextStyle(color:textMuted,height:1.5)),const SizedBox(height:24),
     Form(key:_form,child:Column(children:[field(_distance,'Distance / Remaining Distance (NM)'),field(_eco,'Eco Speed (kts)'),field(_full,'Full Speed (kts)')])),

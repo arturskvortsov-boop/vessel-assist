@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../core/widgets/app_scaffold.dart';
 import 'scan_camera_stub.dart'
     if (dart.library.js_interop) 'scan_camera_web.dart';
 
@@ -116,8 +117,8 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Scan to PDF')),
+        return AppScaffold(
+      title: 'Scan to PDF',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

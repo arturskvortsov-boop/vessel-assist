@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
 import 'package:animations/animations.dart';
+import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/staggered_item.dart';
 
@@ -23,11 +24,8 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Engine Operations'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Engine Operations',
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,

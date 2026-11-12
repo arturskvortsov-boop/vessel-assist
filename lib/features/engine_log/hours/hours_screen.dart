@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../domain/models/engine_hour.dart';
 import '../../../core/widgets/animated_counter.dart';
+import '../../../core/widgets/app_scaffold.dart';
 
 class HoursScreen extends StatefulWidget {
   const HoursScreen({super.key});
@@ -124,11 +124,8 @@ class _HoursScreenState extends State<HoursScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Engine Hours'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Engine Hours',
       body: Column(
         children: [
           Padding(

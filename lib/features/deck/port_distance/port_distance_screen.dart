@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/port.dart';
 import 'route_map.dart';
 import 'sea_routes.dart';
@@ -141,8 +142,8 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Port Distance')),
+        return AppScaffold(
+      title: 'Port Distance',
       body: FutureBuilder(
         future: _data,
         builder: (context, snapshot) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/fuel_log.dart';
 import '../../../domain/calculators/vcf_calculator.dart';
 import '../../../core/utils/time_input_formatter.dart';
@@ -239,14 +239,11 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
 
     FuelLog? lastLog = logs.isNotEmpty ? logs.first : null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fuel Daily Log'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        actions: [
-          IconButton(icon: const Icon(Icons.settings, color: accent), onPressed: _showSettings),
-        ],
-      ),
+        return AppScaffold(
+      title: 'Fuel Daily Log',
+      actions: [
+        IconButton(icon: const Icon(Icons.settings, color: accent), onPressed: _showSettings),
+      ],
       body: DefaultTabController(
         length: 2,
         child: Column(

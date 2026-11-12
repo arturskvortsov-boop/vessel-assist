@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/eta_model.dart';
 
 class EtaScreen extends StatefulWidget {
@@ -260,9 +261,8 @@ class _EtaScreenState extends State<EtaScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: bg,
-        appBar: AppBar(title: const Text('ETA Calculator')),
+    Widget build(BuildContext context) => AppScaffold(
+        title: 'ETA Calculator',
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Center(

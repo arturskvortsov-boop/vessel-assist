@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 
 class VoyageScreen extends StatefulWidget {
   const VoyageScreen({super.key});
@@ -53,11 +53,8 @@ class _VoyageScreenState extends State<VoyageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Voyage Plan'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Voyage Plan',
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

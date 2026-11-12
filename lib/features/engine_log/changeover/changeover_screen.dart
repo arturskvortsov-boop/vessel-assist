@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/utils/time_input_formatter.dart';
 
 class ChangeoverScreen extends StatefulWidget {
@@ -78,11 +78,8 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fuel Changeover'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Fuel Changeover',
       body: DefaultTabController(
         length: 2,
         child: Column(

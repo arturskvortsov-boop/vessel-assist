@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import '../../../core/widgets/app_scaffold.dart';
 import 'draft_marks_diagram.dart';
 import 'draft_survey.dart';
 
@@ -526,17 +527,15 @@ class _DraftSurveyScreenState extends State<DraftSurveyScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Draft Survey'),
-      actions: [
-        IconButton(
-          onPressed: _ready && !_saving && _box != null ? _save : null,
-          icon: const Icon(Icons.save_outlined),
-          tooltip: 'Save survey',
-        ),
-      ],
-    ),
+    Widget build(BuildContext context) => AppScaffold(
+    title: 'Draft Survey',
+    actions: [
+      IconButton(
+        onPressed: _ready && !_saving && _box != null ? _save : null,
+        icon: const Icon(Icons.save_outlined),
+        tooltip: 'Save survey',
+      ),
+    ],
     body: !_ready
         ? const Center(child: CircularProgressIndicator())
         : Center(

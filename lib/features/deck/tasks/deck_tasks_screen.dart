@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/task.dart';
 
 class DeckTasksScreen extends StatefulWidget {
@@ -73,8 +73,8 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
     builder: (context, snapshot) {
       final box = snapshot.data;
       if (box != null) return _buildTasks(box);
-      return Scaffold(
-        appBar: AppBar(title: const Text('Crew Tasks')),
+            return AppScaffold(
+        title: 'Crew Tasks',
         body: Center(
           child: snapshot.hasError
               ? const Text('Could not open Deck tasks.')
@@ -93,14 +93,8 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
       return b.timestamp.compareTo(a.timestamp);
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crew Tasks'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
+        return AppScaffold(
+      title: 'Crew Tasks',
       body: Column(
         children: [
           // Форма добавления

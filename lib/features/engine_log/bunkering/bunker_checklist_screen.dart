@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -21,11 +21,9 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bunkering Checklists'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        actions: [
+        return AppScaffold(
+      title: 'Bunkering Checklists',
+      actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.orangeAccent),
             tooltip: 'Reset for New Bunkering',
@@ -56,10 +54,9 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
                   ],
                 ),
               );
-            },
+                        },
           ),
         ],
-      ),
       body: DefaultTabController(
         length: 3,
         child: Column(

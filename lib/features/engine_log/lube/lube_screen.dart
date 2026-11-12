@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 
 class LubeScreen extends StatefulWidget {
   const LubeScreen({super.key});
@@ -119,11 +119,8 @@ class _LubeScreenState extends State<LubeScreen> {
   Widget build(BuildContext context) {
     final robKeys = _robBox.keys.toList();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Lube Oil'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Lube Oil',
       body: DefaultTabController(
         length: 2,
         child: Column(

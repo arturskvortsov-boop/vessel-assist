@@ -48,15 +48,50 @@ void main() async {
   );
 }
 
+
+
+
+
+
+
+
+
+
+
 /// Плавающая кнопка "Домой" справа снизу (под правый палец).
 /// Скрыта на splash и на главном экране.
-class _HomeFab extends StatelessWidget {
+class _HomeFab extends StatefulWidget {
   const _HomeFab();
 
   @override
+  State<_HomeFab> createState() => _HomeFabState();
+}
+
+class _HomeFabState extends State<_HomeFab> {
+  String _location = appRouter.routerDelegate.currentConfiguration.uri.path;
+
+  @override
+  void initState() {
+    super.initState();
+    appRouter.routerDelegate.addListener(_onRouteChanged);
+  }
+
+  @override
+  void dispose() {
+    appRouter.routerDelegate.removeListener(_onRouteChanged);
+    super.dispose();
+  }
+
+  void _onRouteChanged() {
+    final location = appRouter.routerDelegate.currentConfiguration.uri.path;
+    if (location != _location && mounted) {
+      setState(() => _location = location);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    final hidden = location == '/' || location == '/splash';
+    final hidden = _location == '/' || _location == '/splash';
 
     return Positioned(
       right: 16,

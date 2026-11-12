@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/widgets/app_scaffold.dart';
 import 'landmark_bearing.dart';
 import 'star_compass_form.dart';
 
@@ -151,8 +152,8 @@ class _CompassErrorScreenState extends State<CompassErrorScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Compass Error Calculator')),
+    Widget build(BuildContext context) => AppScaffold(
+    title: 'Compass Error Calculator',
     body: Column(
       children: [
         Padding(

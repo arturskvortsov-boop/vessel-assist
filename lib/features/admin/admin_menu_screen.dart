@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/important_notice.dart';
 
@@ -9,11 +10,8 @@ class AdminMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin & Documents'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Admin & Documents',
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

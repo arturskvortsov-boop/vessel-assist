@@ -1,3 +1,4 @@
+
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
@@ -7,6 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+
+import '../../core/widgets/app_scaffold.dart';
 
 class PhotoCompressScreen extends StatefulWidget {
   const PhotoCompressScreen({super.key});
@@ -96,8 +99,8 @@ class _PhotoCompressScreenState extends State<PhotoCompressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Compress Photos')),
+        return AppScaffold(
+      title: 'Compress Photos',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

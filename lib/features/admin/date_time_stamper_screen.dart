@@ -11,6 +11,8 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/widgets/app_scaffold.dart';
+
 const _stampColorKey = 'date_time_stamper_text_color';
 
 enum _StampMode { date, time, both }
@@ -489,8 +491,8 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
   Widget build(BuildContext context) {
     final stamp = _stamp;
     final canExport = !_busy && _photos.isNotEmpty && stamp != null;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Date & Time Stamper')),
+        return AppScaffold(
+      title: 'Date & Time Stamper',
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'dart:typed_data';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -319,18 +319,15 @@ class _LopScreenState extends State<LopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+        return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Letter of Protest'),
-          leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-          bottom: const TabBar(
-            indicatorColor: accent,
-            labelColor: accent,
-            unselectedLabelColor: textMuted,
-            tabs: [Tab(text: 'TEMPLATES'), Tab(text: 'MY FORMS')],
-          ),
+      child: AppScaffold(
+        title: 'Letter of Protest',
+        bottom: const TabBar(
+          indicatorColor: accent,
+          labelColor: accent,
+          unselectedLabelColor: textMuted,
+          tabs: [Tab(text: 'TEMPLATES'), Tab(text: 'MY FORMS')],
         ),
         body: TabBarView(
           children: [

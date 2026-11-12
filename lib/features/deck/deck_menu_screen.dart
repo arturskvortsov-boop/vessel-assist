@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animations/animations.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/app_scaffold.dart';
 
 class DeckMenuScreen extends StatefulWidget {
   const DeckMenuScreen({super.key});
@@ -21,12 +22,8 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text('Bridge & Deck'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Bridge & Deck',
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,

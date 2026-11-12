@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/safety_depth_model.dart';
 
 class SafetyDepthScreen extends StatefulWidget {
@@ -137,12 +137,9 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text('Safety Depth'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        actions: [
+        return AppScaffold(
+      title: 'Safety Depth',
+      actions: [
           IconButton(
             icon: const Icon(Icons.info_outline, color: accent),
             onPressed: () {
@@ -171,10 +168,9 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                   actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],
                 ),
               );
-            },
+                        },
           )
         ],
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

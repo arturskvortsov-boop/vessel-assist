@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:excel/excel.dart' as xl;
 import 'package:file_saver/file_saver.dart' as fs;
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/cargo_tank.dart';
 
 class CargoTanksScreen extends StatefulWidget {
@@ -141,12 +141,8 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text('Cargo Tanks'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Cargo Tanks',
       body: ValueListenableBuilder(
         valueListenable: _box.listenable(),
         builder: (context, Box box, _) {

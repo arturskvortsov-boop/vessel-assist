@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -31,8 +33,31 @@ class _StartupNoticeState extends State<StartupNotice> {
   static const _acknowledgmentKey = 'importantNoticeAcknowledged';
   final _settings = Hive.box('settings');
   late bool _acknowledged = _settings.get(_acknowledgmentKey) == true;
-  bool _saving = false;
-  bool _saveFailed = false;
+    bool _saving = false;
+    bool _saveFailed = false;
+
+    // Уведомление показываем только после splash-загрузки.
+    // Splash длится ~4 секунды, поэтому ждём столько же.
+    bool _splashDone = false;
+    Timer? _splashTimer;
+
+    @override
+    void initState() {
+      super.initState();
+      if (_acknowledged) {
+        _splashDone = true;
+      } else {
+        _splashTimer = Timer(const Duration(seconds: 4), () {
+          if (mounted) setState(() => _splashDone = true);
+        });
+      }
+    }
+
+    @override
+    void dispose() {
+      _splashTimer?.cancel();
+      super.dispose();
+    }
 
   Future<void> _acknowledge() async {
     if (_saving) return;
@@ -53,32 +78,38 @@ class _StartupNoticeState extends State<StartupNotice> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Offstage(
-        offstage: !_acknowledged,
-        child: ExcludeFocus(excluding: !_acknowledged, child: widget.child),
-      ),
-      if (!_acknowledged) ...[
-        ModalBarrier(color: Theme.of(context).scaffoldBackgroundColor),
-        SafeArea(
-          child: _NoticeDialog(
-            error: _saveFailed
-                ? 'Could not save your acknowledgment. Try again.'
-                : null,
-            action: FilledButton(
-              onPressed: _saving ? null : _acknowledge,
-              child: Text(
-                _saving ? 'Saving…' : 'I understand and wish to continue',
+    @override
+  Widget build(BuildContext context) {
+        // Пока идёт splash или уведомление уже принято — показываем приложение
+    // без блокировки. Уведомление появляется только после загрузки.
+    final showNotice = !_acknowledged && _splashDone;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Offstage(
+          offstage: showNotice,
+          child: ExcludeFocus(excluding: showNotice, child: widget.child),
+        ),
+        if (showNotice) ...[
+          ModalBarrier(color: Theme.of(context).scaffoldBackgroundColor),
+          SafeArea(
+            child: _NoticeDialog(
+              error: _saveFailed
+                  ? 'Could not save your acknowledgment. Try again.'
+                  : null,
+              action: FilledButton(
+                onPressed: _saving ? null : _acknowledge,
+                child: Text(
+                  _saving ? 'Saving…' : 'I understand and wish to continue',
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ],
-    ],
-  );
+    );
+  }
 }
 
 class _NoticeDialog extends StatelessWidget {

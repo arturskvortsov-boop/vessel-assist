@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/task.dart';
 
 class TasksScreen extends StatefulWidget {
@@ -66,11 +66,8 @@ class _TasksScreenState extends State<TasksScreen> {
       return b.timestamp.compareTo(a.timestamp);
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crew Tasks'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-      ),
+        return AppScaffold(
+      title: 'Crew Tasks',
       body: Column(
         children: [
           // Форма добавления
