@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'nautical_background.dart';
 import 'theme.dart';
+import 'widgets/staggered_item.dart';
 
 // Экраны
 import '../features/passage_planner/passage_planner_screen.dart';
@@ -180,40 +181,52 @@ class MainMenuScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text('AHOY, SEAFARER!', textAlign: TextAlign.center, style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 40),
+                            const SizedBox(height: 40),
 
-              _DashCard(
-                title: 'UP TO THE BRIDGE',
-                subtitle: 'Подняться на мост\nNavigation & Cargo Operations',
-                icon: Icons.explore_outlined,
-                gradientColors: [accentDark, accent],
-                onTap: () => context.push('/deck'), // Теперь push
+              StaggeredItem(
+                index: 0,
+                child: _DashCard(
+                  title: 'UP TO THE BRIDGE',
+                  subtitle: 'Подняться на мост\nNavigation & Cargo Operations',
+                  icon: Icons.explore_outlined,
+                  gradientColors: [accentDark, accent],
+                  onTap: () => context.push('/deck'), // Теперь push
+                ),
               ),
               const SizedBox(height: 20),
 
-              _DashCard(
-                title: 'DOWN TO THE ENGINE',
-                subtitle: 'Спуститься в МО\nMARPOL, Fuel & Tanks',
-                icon: Icons.settings_outlined,
-                gradientColors: [gold, Colors.orangeAccent],
-                onTap: () => context.push('/engine'), // Теперь push
+              StaggeredItem(
+                index: 1,
+                child: _DashCard(
+                  title: 'DOWN TO THE ENGINE',
+                  subtitle: 'Спуститься в МО\nMARPOL, Fuel & Tanks',
+                  icon: Icons.settings_outlined,
+                  gradientColors: [gold, Colors.orangeAccent],
+                  onTap: () => context.push('/engine'), // Теперь push
+                ),
               ),
               const SizedBox(height: 20),
 
-              _DashCard(
-                title: 'PASSAGE PLANNER',
-                subtitle: 'Route map, waypoints & ETA',
-                icon: Icons.route_outlined,
-                gradientColors: const [Color(0xFF12645E), Color(0xFF219C8E)],
-                onTap: () => context.push('/passage_planner'),
+              StaggeredItem(
+                index: 2,
+                child: _DashCard(
+                  title: 'PASSAGE PLANNER',
+                  subtitle: 'Route map, waypoints & ETA',
+                  icon: Icons.route_outlined,
+                  gradientColors: const [Color(0xFF12645E), Color(0xFF219C8E)],
+                  onTap: () => context.push('/passage_planner'),
+                ),
               ),
               const SizedBox(height: 20),
-              _DashCard(
-                title: 'ADMIN & DOCUMENTS',
-                subtitle: 'Документы и резервные копии',
-                icon: Icons.security,
-                gradientColors: [Colors.blueGrey, Colors.grey], 
-                onTap: () => context.push('/admin'), // Теперь push
+              StaggeredItem(
+                index: 3,
+                child: _DashCard(
+                  title: 'ADMIN & DOCUMENTS',
+                  subtitle: 'Документы и резервные копии',
+                  icon: Icons.security,
+                  gradientColors: [Colors.blueGrey, Colors.grey],
+                  onTap: () => context.push('/admin'), // Теперь push
+                ),
               ),
             ],
           ),
@@ -223,7 +236,7 @@ class MainMenuScreen extends StatelessWidget {
   }
 }
 
-class _DashCard extends StatelessWidget {
+class _DashCard extends StatefulWidget {
   final String title, subtitle;
   final IconData icon;
   final List<Color> gradientColors;
@@ -232,11 +245,31 @@ class _DashCard extends StatelessWidget {
   const _DashCard({required this.title, required this.subtitle, required this.icon, required this.gradientColors, required this.onTap});
 
   @override
+  State<_DashCard> createState() => _DashCardState();
+}
+
+class _DashCardState extends State<_DashCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
+    final title = widget.title;
+    final subtitle = widget.subtitle;
+    final icon = widget.icon;
+    final gradientColors = widget.gradientColors;
+    final onTap = widget.onTap;
+
+    return AnimatedScale(
+      scale: _pressed ? 0.97 : 1.0,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+      child: Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
         borderRadius: BorderRadius.circular(24),
         child: Container(
           padding: const EdgeInsets.all(24),
@@ -263,10 +296,11 @@ class _DashCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 20),
+                            const Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 20),
             ],
           ),
         ),
+      ),
       ),
     );
   }

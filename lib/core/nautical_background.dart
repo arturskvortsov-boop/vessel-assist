@@ -10,8 +10,9 @@ class NauticalBackground extends StatefulWidget {
   State<NauticalBackground> createState() => _NauticalBackgroundState();
 }
 
-class _NauticalBackgroundState extends State<NauticalBackground> with SingleTickerProviderStateMixin {
+class _NauticalBackgroundState extends State<NauticalBackground> with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _glowController;
   final List<Particle> _particles = [];
   final Random _random = Random();
 
@@ -19,6 +20,9 @@ class _NauticalBackgroundState extends State<NauticalBackground> with SingleTick
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 15))..repeat();
+    // Медленное "дыхание" свечения фона
+    _glowController = AnimationController(vsync: this, duration: const Duration(seconds: 8))..repeat(reverse: true);
+    
     
     for (int i = 0; i < 10; i++) { // Было 30, стало 10 для веба
       _particles.add(Particle(
@@ -31,9 +35,10 @@ class _NauticalBackgroundState extends State<NauticalBackground> with SingleTick
     }
   }
 
-  @override
+    @override
   void dispose() {
     _controller.dispose();
+    _glowController.dispose();
     super.dispose();
   }
 
@@ -41,15 +46,24 @@ class _NauticalBackgroundState extends State<NauticalBackground> with SingleTick
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 1. Радиальный градиент
-        Container(
-          decoration: const BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment.topCenter,
-              radius: 1.5,
-              colors: [Color(0xFF0D1B2A), bg],
-            ),
-          ),
+                // 1. Радиальный градиент с плавным "дыханием" свечения
+        AnimatedBuilder(
+          animation: _glowController,
+          builder: (context, child) {
+            final t = Curves.easeInOut.transform(_glowController.value);
+            return Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topCenter,
+                  radius: 1.5 + t * 0.25,
+                  colors: [
+                    Color.lerp(const Color(0xFF0D1B2A), const Color(0xFF122A44), t)!,
+                    bg,
+                  ],
+                ),
+              ),
+            );
+          },
         ),
         
         // 2. Частицы (Пыль/Пузырьки)
@@ -74,19 +88,25 @@ class _NauticalBackgroundState extends State<NauticalBackground> with SingleTick
           },
         ),
 
-        // 4. Едва заметный якорь
-        Positioned(
-          top: 60,
-          left: 0,
-          right: 0,
-          child: Opacity(
-            opacity: 0.03,
-            child: Icon(
-              Icons.anchor,
-              size: MediaQuery.of(context).size.width * 0.9,
-              color: text,
-            ),
-          ),
+                // 4. Едва заметный якорь с лёгким параллаксом
+        AnimatedBuilder(
+          animation: _glowController,
+          builder: (context, child) {
+            final t = Curves.easeInOut.transform(_glowController.value);
+            return Positioned(
+              top: 60 + t * 8,
+              left: 0,
+              right: 0,
+              child: Opacity(
+                opacity: 0.03 + t * 0.015,
+                child: Icon(
+                  Icons.anchor,
+                  size: MediaQuery.of(context).size.width * 0.9,
+                  color: text,
+                ),
+              ),
+            );
+          },
         ),
         
         // 5. Контент

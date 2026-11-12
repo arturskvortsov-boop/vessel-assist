@@ -3,8 +3,8 @@
     "short_name": "VesselAssist",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0A1628",
-    "theme_color": "#D4A537",
+    "background_color": "#050B14",
+    "theme_color": "#38BDF8",
     "description": "Помощник для моряков: формы, расчёты, логи, документы.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
@@ -12,14 +12,12 @@
         {
             "src": "icons/Icon-192.png",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
+            "type": "image/png"
         },
         {
             "src": "icons/Icon-512.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
+            "type": "image/png"
         },
         {
             "src": "icons/Icon-maskable-192.png",

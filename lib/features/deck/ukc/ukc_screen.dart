@@ -274,9 +274,8 @@ class _UkcScreenState extends State<UkcScreen> {
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                  title: const Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                                    title: const Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
-                  onExpansionChanged: (val) => setState(() => _showAdvanced = val),
                   children: [
                     SwitchListTile(
                       title: const Text('Manual Cb', style: TextStyle(color: text, fontSize: 14)),

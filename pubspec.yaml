@@ -44,7 +44,7 @@ dependencies:
   
   # Экспорт отчетов (понадобится позже)
   excel: ^4.0.6
-    file_saver: ^0.2.14
+  file_saver: ^0.2.14
   file_picker: ^10.3.3
   open_filex: ^4.4.0
   path_provider: ^2.1.4
@@ -73,8 +73,24 @@ dev_dependencies:
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
+    # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.1
+
+# Конфигурация иконок приложения (flutter_launcher_icons)
+# Генерация: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icon/app_icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    background_color: "#050B14"
+    theme_color: "#38BDF8"
+  adaptive_icon_background: "#050B14"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
