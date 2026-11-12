@@ -1,0 +1,7 @@
+network.geojson is the unmodified marnet_searoute.geojson from
+https://github.com/genthalili/searoute-py/blob/dde4613/searoute/data/marnet_searoute.geojson
+Copyright 2024 - Gent Halili. Apache License 2.0, see LICENSE.
+
+land.geojson is the unmodified Natural Earth 1:110m land dataset (v5.1.2).
+https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_110m_land.geojson
+Public domain: https://www.naturalearthdata.com/about/terms-of-use/

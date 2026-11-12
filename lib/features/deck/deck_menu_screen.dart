@@ -74,6 +74,8 @@ class _NavigationTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta'),
+        _MenuCard(title: 'Port Distance', subtitle: 'Sea distance & time at sea', icon: Icons.route, route: '/deck/port_distance'),
+        _MenuCard(title: 'Compass Error Calculator', subtitle: 'Gyro and magnetic compass checks', icon: Icons.explore_outlined, route: '/deck/compass_error'),
         _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc'),
         _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/safety_depth'),
       ],
@@ -90,6 +92,7 @@ class _CargoTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _MenuCard(title: 'Cargo Tanks', subtitle: 'Volumes, density & Excel export', icon: Icons.storage, route: '/deck/cargo_tanks'),
+        _MenuCard(title: 'Draft Survey', subtitle: 'Cargo weight from draft readings', icon: Icons.calculate_outlined, route: '/deck/draft_survey'),
         _MenuCard(title: 'Ballast Time', subtitle: 'Pumping duration', icon: Icons.water, route: '/deck/ballast_time'),
         _MenuCard(title: 'GM Estimate', subtitle: 'Stability from roll period', icon: Icons.straighten, route: '/deck/gm_roll'),
       ],
@@ -106,8 +109,7 @@ class _DeckOpsTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _MenuCard(title: 'Logbook Records', subtitle: 'Inspection wording & schedule', icon: Icons.menu_book, route: '/deck/logbook'),
-        _MenuCard(title: 'Deck Organizer', subtitle: 'Notes, documents & expiry', icon: Icons.event_note, route: '/deck/organizer'),
-        _MenuCard(title: 'Compress PDF', subtitle: 'Create a smaller PDF copy', icon: Icons.picture_as_pdf_outlined, route: '/deck/compress_pdf'),
+        _MenuCard(title: 'Crew Tasks', subtitle: 'Assignments, deadlines & status', icon: Icons.task_alt, route: '/deck/tasks'),
         _MenuCard(title: 'Port Codes', subtitle: 'Search ports by UN/LOCODE', icon: Icons.travel_explore, route: '/deck/ports'),
       ],
     );

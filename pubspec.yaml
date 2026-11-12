@@ -47,6 +47,8 @@ dependencies:
   file_saver: ^0.2.14
   file_picker: ^10.3.3
   open_filex: ^4.4.0
+  image: ^4.3.0
+  web: ^1.1.2
   image_picker: ^1.0.4
   google_mlkit_text_recognition: ^0.13.0
   pdf: ^3.11.3
@@ -57,6 +59,7 @@ dependencies:
   intl: ^0.19.0
   animations: ^2.0.11
   google_fonts: ^6.2.1
+  geolocator: 14.0.2
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +84,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/ports.json
+    - assets/data/sea_routes/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
