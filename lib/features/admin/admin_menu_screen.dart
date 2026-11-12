@@ -28,7 +28,7 @@ class AdminMenuScreen extends StatelessWidget {
           ),
           _buildMenuCard(
             context: context,
-            title: 'Deck Organizer',
+            title: 'Organizer',
             subtitle: 'Notes, documents & expiry',
             icon: Icons.event_note,
             route: '/admin/organizer',
@@ -39,6 +39,27 @@ class AdminMenuScreen extends StatelessWidget {
             subtitle: 'Create a PDF from photos',
             icon: Icons.document_scanner_outlined,
             route: '/admin/scan_to_pdf',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Date & Time Stamper',
+            subtitle: 'Add a date or time to photos',
+            icon: Icons.date_range_outlined,
+            route: '/admin/date_time_stamper',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Unit Converter',
+            subtitle: 'Convert maritime and everyday units',
+            icon: Icons.swap_horiz,
+            route: '/admin/unit_converter',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Compress Photos',
+            subtitle: 'Resize photos and adjust JPEG quality',
+            icon: Icons.photo_size_select_large_outlined,
+            route: '/admin/compress_photos',
           ),
           _buildMenuCard(
             context: context,

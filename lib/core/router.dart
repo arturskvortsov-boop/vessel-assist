@@ -8,11 +8,15 @@ import 'theme.dart';
 import '../features/splash_screen.dart';
 import '../features/admin/admin_menu_screen.dart';
 import '../features/admin/scan_to_pdf_screen.dart';
+import '../features/admin/unit_converter_screen.dart';
+import '../features/admin/photo_compress_screen.dart';
+import '../features/admin/date_time_stamper_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
 import '../features/deck/organizer/deck_organizer.dart';
 import '../features/deck/gm_roll_screen.dart';
 import '../features/deck/eta/eta_screen.dart';
 import '../features/deck/port_distance/port_distance_screen.dart';
+import '../features/deck/true_wind/true_wind_screen.dart';
 import '../features/deck/compass_error/compass_error_screen.dart';
 import '../features/deck/eta/eco_speed_screen.dart';
 import '../features/deck/ports/ports_screen.dart';
@@ -83,6 +87,7 @@ final appRouter = GoRouter(
         ),
         GoRoute(path: 'eta', pageBuilder: (context, state) => _buildPage(const EtaScreen())),
         GoRoute(path: 'port_distance', pageBuilder: (context, state) => _buildPage(const PortDistanceScreen())),
+        GoRoute(path: 'true_wind', pageBuilder: (context, state) => _buildPage(const TrueWindScreen())),
         GoRoute(path: 'compass_error', pageBuilder: (context, state) => _buildPage(const CompassErrorScreen())),
         GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),
@@ -131,6 +136,15 @@ final appRouter = GoRouter(
       routes: [
         GoRoute(path: 'organizer', pageBuilder: (context, state) => _buildPage(const DeckOrganizerScreen())),
         GoRoute(path: 'scan_to_pdf', pageBuilder: (context, state) => _buildPage(const ScanToPdfScreen())),
+        GoRoute(path: 'date_time_stamper', pageBuilder: (context, state) => _buildPage(const DateTimeStamperScreen())),
+        GoRoute(
+          path: 'unit_converter',
+          pageBuilder: (context, state) => _buildPage(const UnitConverterScreen()),
+        ),
+        GoRoute(
+          path: 'compress_photos',
+          pageBuilder: (context, state) => _buildPage(const PhotoCompressScreen()),
+        ),
         GoRoute(
           path: 'compress_pdf',
           pageBuilder: (context, state) => _buildPage(const PdfCompressScreen()),

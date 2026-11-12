@@ -70,6 +70,8 @@
 	</array>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Select document photos to create a PDF.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Save copies of stamped photos to your photo library.</string>
     <key>NSCameraUsageDescription</key>
     <string>This app needs camera access to scan documents and recognize text.</string>
 </dict>

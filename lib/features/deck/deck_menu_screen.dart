@@ -75,6 +75,7 @@ class _NavigationTab extends StatelessWidget {
       children: [
         _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta'),
         _MenuCard(title: 'Port Distance', subtitle: 'Sea distance & time at sea', icon: Icons.route, route: '/deck/port_distance'),
+        _MenuCard(title: 'True Wind Calculator', subtitle: 'True and apparent wind vectors', icon: Icons.air, route: '/deck/true_wind'),
         _MenuCard(title: 'Compass Error Calculator', subtitle: 'Gyro and magnetic compass checks', icon: Icons.explore_outlined, route: '/deck/compass_error'),
         _MenuCard(title: 'UKC Calculator', subtitle: 'Under-keel clearance', icon: Icons.waves, route: '/deck/ukc'),
         _MenuCard(title: 'Safety Depth', subtitle: 'Vessel settings & calculation', icon: Icons.straighten, route: '/deck/safety_depth'),
