@@ -194,6 +194,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Delivery & Acceptance',
+      background: AppBackground.engineRoom,
       body: DefaultTabController(
         length: 2,
         child: Column(

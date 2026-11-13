@@ -56,6 +56,7 @@ class _PumpScreenState extends State<PumpScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Pump Calculator',
+      background: AppBackground.engineRoom,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -93,7 +94,7 @@ class _PumpScreenState extends State<PumpScreen> {
             const SizedBox(height: 24),
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.3), border: Border.all(color: _resultColor), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: cardSolid, border: Border.all(color: _resultColor), borderRadius: BorderRadius.circular(12)),
               child: Text(_result, style: TextStyle(color: _resultColor, fontFamily: 'monospace', fontSize: 14, height: 1.5)),
             ),
           ]

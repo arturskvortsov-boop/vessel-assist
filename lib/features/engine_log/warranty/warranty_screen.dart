@@ -149,6 +149,7 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Warranty Claims',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           Padding(

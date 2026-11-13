@@ -80,6 +80,7 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Fuel Changeover',
+      background: AppBackground.engineRoom,
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -205,7 +206,7 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.3), border: Border.all(color: accent), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: cardSolid, border: Border.all(color: accent), borderRadius: BorderRadius.circular(12)),
             child: Text(_generatedText, style: const TextStyle(color: Color(0xFF4ADE80), fontFamily: 'monospace', fontSize: 13)),
           ),
           const SizedBox(height: 16),

@@ -53,7 +53,7 @@ class _EtaScreenState extends State<EtaScreen> {
   InputDecoration _decoration(String label) => InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: bg,
+        fillColor: cardSolid,
         errorMaxLines: 3,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       );

@@ -111,7 +111,7 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
           labelText: label,
           suffixText: unit,
           filled: true,
-          fillColor: bg,
+          fillColor: cardSolid,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
         onChanged: (_) => _clear(),

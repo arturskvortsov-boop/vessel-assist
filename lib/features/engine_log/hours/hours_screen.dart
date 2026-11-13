@@ -126,6 +126,7 @@ class _HoursScreenState extends State<HoursScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Engine Hours',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           Padding(

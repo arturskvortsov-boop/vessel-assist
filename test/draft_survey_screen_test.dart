@@ -16,14 +16,14 @@ void main() {
     );
     try {
       await tester.pumpWidget(const MaterialApp(home: DraftSurveyScreen()));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.tap(find.text('Initial'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tester.tap(find.text('Starboard'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.tap(find.widgetWithText(TextButton, 'AFT'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       final field = find.byWidgetPredicate(
         (widget) =>
             widget is TextField && widget.decoration?.labelText == 'AFT STBD',
@@ -42,9 +42,9 @@ void main() {
 
       await tester.pumpWidget(const SizedBox());
       await tester.pumpWidget(const MaterialApp(home: DraftSurveyScreen()));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.tap(find.text('Initial'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(tester.widget<TextField>(field).controller!.text, '7,00');
       expect(tester.takeException(), isNull);
     } finally {

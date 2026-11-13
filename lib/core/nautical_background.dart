@@ -19,9 +19,9 @@ class _NauticalBackgroundState extends State<NauticalBackground> with TickerProv
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 15))..repeat();
+        _controller = AnimationController(vsync: this, duration: const Duration(seconds: 24))..repeat();
     // Медленное "дыхание" свечения фона
-    _glowController = AnimationController(vsync: this, duration: const Duration(seconds: 8))..repeat(reverse: true);
+    _glowController = AnimationController(vsync: this, duration: const Duration(seconds: 14))..repeat(reverse: true);
     
     
     for (int i = 0; i < 10; i++) { // Было 30, стало 10 для веба
@@ -94,26 +94,33 @@ class _NauticalBackgroundState extends State<NauticalBackground> with TickerProv
           ),
         ),
 
-                // 4. Едва заметный якорь с лёгким параллаксом
-                RepaintBoundary(
-                  child: AnimatedBuilder(
-                    animation: _glowController,
-                    builder: (context, child) {
-                      final t = Curves.easeInOut.transform(_glowController.value);
-                      return Positioned(
-                        top: 60 + t * 8,
-                        left: 0,
-                        right: 0,
-                        child: Opacity(
-                          opacity: 0.03 + t * 0.015,
-                          child: Icon(
-                            Icons.anchor,
-                            size: MediaQuery.of(context).size.width * 0.9,
-                            color: text,
+                                // 4. Едва заметный якорь с лёгким параллаксом
+                // ВАЖНО: Positioned должен быть ПРЯМЫМ потомком Stack.
+                // Раньше Positioned возвращался из AnimatedBuilder/RepaintBoundary,
+                // из-за чего Flutter бросал "Incorrect use of ParentDataWidget"
+                // и ломал раскладку на всех экранах. Теперь анимация — внутри Positioned.
+                Positioned(
+                  top: 60,
+                  left: 0,
+                  right: 0,
+                  child: RepaintBoundary(
+                    child: AnimatedBuilder(
+                      animation: _glowController,
+                      builder: (context, child) {
+                        final t = Curves.easeInOut.transform(_glowController.value);
+                        return Transform.translate(
+                          offset: Offset(0, t * 8),
+                          child: Opacity(
+                            opacity: 0.03 + t * 0.015,
+                            child: Icon(
+                              Icons.anchor,
+                              size: MediaQuery.of(context).size.width * 0.9,
+                              color: text,
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
         

@@ -139,6 +139,7 @@ class _TanksScreenState extends State<TanksScreen> {
 
         return AppScaffold(
       title: 'Tank Status',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           // --- ПОДСКАЗКА ---

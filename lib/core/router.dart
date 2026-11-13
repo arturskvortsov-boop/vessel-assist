@@ -6,7 +6,6 @@ import 'theme.dart';
 import 'widgets/staggered_item.dart';
 
 // Экраны
-import '../features/passage_planner/passage_planner_screen.dart';
 import '../features/splash_screen.dart';
 import '../features/admin/admin_menu_screen.dart';
 import '../features/admin/scan_to_pdf_screen.dart';
@@ -89,8 +88,7 @@ CustomTransitionPage<void> _buildPage(Widget child) {
 final appRouter = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/splash',
-  routes: [
-    GoRoute(path: '/passage_planner', pageBuilder: (context, state) => _buildPage(const PassagePlannerScreen())),
+    routes: [
     GoRoute(path: '/splash', pageBuilder: (context, state) => _buildPage(const SplashScreen())),
     GoRoute(path: '/', pageBuilder: (context, state) => _buildPage(const MainMenuScreen())),
     GoRoute(
@@ -220,21 +218,10 @@ class MainMenuScreen extends StatelessWidget {
                   onTap: () => context.push('/engine'), // Теперь push
                 ),
               ),
-              const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
               StaggeredItem(
                 index: 2,
-                child: _DashCard(
-                  title: 'PASSAGE PLANNER',
-                  subtitle: 'Route map, waypoints & ETA',
-                  icon: Icons.route_outlined,
-                  gradientColors: const [Color(0xFF12645E), Color(0xFF219C8E)],
-                  onTap: () => context.push('/passage_planner'),
-                ),
-              ),
-              const SizedBox(height: 20),
-              StaggeredItem(
-                index: 3,
                 child: _DashCard(
                   title: 'ADMIN & DOCUMENTS',
                   subtitle: 'Документы и резервные копии',

@@ -58,6 +58,7 @@ class _EgcsScreenState extends State<EgcsScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'EGCS Record Book',
+      background: AppBackground.engineRoom,
       body: DefaultTabController(
         length: 2,
         child: Column(

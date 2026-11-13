@@ -20,33 +20,33 @@ void main() {
     final fields = find.byType(TextField);
     expect(fields, findsNWidgets(2));
     await tester.enterText(fields.at(0), 'NLRTM');
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(find.textContaining('(NLRTM)').last);
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.enterText(fields.at(1), 'GRPIR');
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(find.textContaining('(GRPIR)').last);
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
 
     await tester.tap(find.text('Calculate'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     final distance = find.textContaining('Sea distance · ≈ 2835.6 NM');
     expect(distance, findsOneWidget);
     expect(find.byType(RouteMap), findsOneWidget);
     expect(find.textContaining('Time at sea'), findsNothing);
 
     await tester.tap(find.text('Distance & time'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.enterText(fields.at(2), '12');
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(distance, findsOneWidget);
     expect(find.text('Time at sea · ≈ 9 d 20 h 18 min'), findsOneWidget);
 
     await tester.enterText(fields.at(2), '10');
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Time at sea · ≈ 11 d 19 h 33 min'), findsOneWidget);
     await tester.enterText(fields.at(2), '0');
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.textContaining('Time at sea'), findsNothing);
     expect(find.text('Enter a valid speed greater than 0 kn.'), findsOneWidget);
     expect(tester.takeException(), isNull);

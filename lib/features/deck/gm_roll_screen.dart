@@ -78,7 +78,7 @@ class _GmRollScreenState extends State<GmRollScreen> with WidgetsBindingObserver
       decoration: InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: bg,
+        fillColor: cardSolid,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
       keyboardType: TextInputType.numberWithOptions(decimal: !integer),

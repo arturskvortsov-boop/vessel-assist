@@ -116,7 +116,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   @override
   Widget build(BuildContext context) {
         return AppScaffold(
-      title: 'Document Storage',
+            title: 'Document Storage',
       body: Column(
         children: [
           Padding(

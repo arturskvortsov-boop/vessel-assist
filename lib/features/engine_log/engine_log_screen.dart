@@ -24,8 +24,9 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-        return AppScaffold(
+                return AppScaffold(
       title: 'Engine Operations',
+      background: AppBackground.engineRoom,
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,

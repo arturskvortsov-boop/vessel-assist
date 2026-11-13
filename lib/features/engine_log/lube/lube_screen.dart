@@ -121,6 +121,7 @@ class _LubeScreenState extends State<LubeScreen> {
 
         return AppScaffold(
       title: 'Lube Oil',
+      background: AppBackground.engineRoom,
       body: DefaultTabController(
         length: 2,
         child: Column(

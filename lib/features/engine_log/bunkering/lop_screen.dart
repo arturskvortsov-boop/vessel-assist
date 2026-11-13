@@ -323,6 +323,7 @@ class _LopScreenState extends State<LopScreen> {
       length: 2,
       child: AppScaffold(
         title: 'Letter of Protest',
+        background: AppBackground.engineRoom,
         bottom: const TabBar(
           indicatorColor: accent,
           labelColor: accent,

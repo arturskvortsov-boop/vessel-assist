@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../nautical_background.dart';
+import '../engine_room_background.dart';
 import '../theme.dart';
+
+/// Тип фона экрана.
+enum AppBackground {
+  /// Морской фон (по умолчанию) — корабль, волны, частицы.
+  nautical,
+
+  /// Машинное отделение — 8-битный двигатель в разрезе.
+  engineRoom,
+}
 
 /// Единый каркас экрана в стиле приложения.
 ///
@@ -25,6 +35,7 @@ class AppScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final bool showBackground;
+  final AppBackground background;
   final double maxWidth;
   final bool centerContent;
 
@@ -41,10 +52,20 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.showBackground = true,
+    this.background = AppBackground.nautical,
     this.maxWidth = 900,
     this.centerContent = true,
     this.showHomeFab = true,
   });
+
+  Widget _wrapBackground(Widget content) {
+    switch (background) {
+      case AppBackground.engineRoom:
+        return EngineRoomBackground(child: content);
+      case AppBackground.nautical:
+        return NauticalBackground(child: content);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +98,7 @@ class AppScaffold extends StatelessWidget {
       floatingActionButton: fab,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: bottomNavigationBar,
-      body: showBackground ? NauticalBackground(child: content) : content,
+      body: showBackground ? _wrapBackground(content) : content,
     );
   }
 }

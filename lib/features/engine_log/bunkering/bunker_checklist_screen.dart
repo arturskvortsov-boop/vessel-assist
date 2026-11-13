@@ -23,6 +23,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Bunkering Checklists',
+      background: AppBackground.engineRoom,
       actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.orangeAccent),

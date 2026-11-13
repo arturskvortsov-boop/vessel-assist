@@ -175,6 +175,7 @@ class _OrbScreenState extends State<OrbScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'ORB Generator',
+      background: AppBackground.engineRoom,
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -229,7 +230,7 @@ class _OrbScreenState extends State<OrbScreen> {
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.3), border: Border.all(color: accent), borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: cardSolid, border: Border.all(color: accent), borderRadius: BorderRadius.circular(12)),
             child: Text(_generatedText, style: const TextStyle(color: Color(0xFF4ADE80), fontFamily: 'monospace', fontSize: 13)),
           ),
           const SizedBox(height: 16),
@@ -476,7 +477,7 @@ class _OrbScreenState extends State<OrbScreen> {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: cardSolid,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: border),
           ),

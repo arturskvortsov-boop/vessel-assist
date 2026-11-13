@@ -241,6 +241,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
 
         return AppScaffold(
       title: 'Fuel Daily Log',
+      background: AppBackground.engineRoom,
       actions: [
         IconButton(icon: const Icon(Icons.settings, color: accent), onPressed: _showSettings),
       ],

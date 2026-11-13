@@ -147,6 +147,7 @@ class _SparesScreenState extends State<SparesScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Spares & Stores',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           Padding(

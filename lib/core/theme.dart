@@ -36,9 +36,10 @@ class AppTheme {
         centerTitle: true,
         titleTextStyle: GoogleFonts.inter(color: accent, fontSize: 18, fontWeight: FontWeight.w700),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+            inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.black.withValues(alpha: 0.2),
+        // Непрозрачная подложка: фон не должен просвечивать сквозь поля ввода.
+        fillColor: cardSolid,
         labelStyle: const TextStyle(color: textMuted, fontSize: 12, fontWeight: FontWeight.w600),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

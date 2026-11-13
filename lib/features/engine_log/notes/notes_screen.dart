@@ -97,6 +97,7 @@ class _NotesScreenState extends State<NotesScreen> {
   Widget build(BuildContext context) {
         return AppScaffold(
       title: 'Notes',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           Padding(

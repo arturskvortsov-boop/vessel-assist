@@ -68,6 +68,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
         return AppScaffold(
       title: 'Crew Tasks',
+      background: AppBackground.engineRoom,
       body: Column(
         children: [
           // Форма добавления
