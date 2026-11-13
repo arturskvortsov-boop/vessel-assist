@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class NightOrdersScreen extends StatefulWidget {
@@ -72,11 +73,12 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
         return AppScaffold(
       title: 'Night Orders',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent, labelColor: accent, unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'GENERATOR'), Tab(text: 'HISTORY')],
             ),
@@ -142,7 +144,7 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
         ),
         const SizedBox(height: 24),
         
-        const Text('Standard Orders:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+        Text('Standard Orders:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         
         ..._orders.asMap().entries.map((entry) {
@@ -268,7 +270,7 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Order from: ${DateTime.fromMillisecondsSinceEpoch(int.parse(key.toString())).toString().split(' ')[0]}', style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                        Text('Order from: ${DateTime.fromMillisecondsSinceEpoch(int.parse(key.toString())).toString().split(' ')[0]}', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20),
                           onPressed: () {
@@ -277,7 +279,7 @@ class _NightOrdersScreenState extends State<NightOrdersScreen> {
                         )
                       ],
                     ),
-                    const Divider(color: border),
+                    Divider(color: border),
                     Text(orderText, style: const TextStyle(color: text, fontFamily: 'monospace', fontSize: 12)),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(

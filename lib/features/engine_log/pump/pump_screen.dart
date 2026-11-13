@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class PumpScreen extends StatefulWidget {
@@ -57,6 +58,7 @@ class _PumpScreenState extends State<PumpScreen> {
         return AppScaffold(
       title: 'Pump Calculator',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -73,9 +75,9 @@ class _PumpScreenState extends State<PumpScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(color: border),
+          Divider(color: border),
           const SizedBox(height: 8),
-          const Text('Receiving Tank:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+          Text('Receiving Tank:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [

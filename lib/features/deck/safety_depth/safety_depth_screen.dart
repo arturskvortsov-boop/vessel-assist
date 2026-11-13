@@ -141,7 +141,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
       title: 'Safety Depth',
       actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline, color: accent),
+            icon: Icon(Icons.info_outline, color: accent),
             onPressed: () {
               showDialog(
                 context: context,
@@ -275,8 +275,8 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text('SAFETY DEPTH', style: TextStyle(color: textMuted, letterSpacing: 1.5)),
-                  Text('${_result!.displayedDepth.toStringAsFixed(2)} m', style: const TextStyle(fontSize: 36, color: accent, fontWeight: FontWeight.bold)),
-                  const Divider(color: border, height: 24),
+                  Text('${_result!.displayedDepth.toStringAsFixed(2)} m', style: TextStyle(fontSize: 36, color: accent, fontWeight: FontWeight.bold)),
+                  Divider(color: border, height: 24),
                   ..._result!.calculationLines.map((l) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(

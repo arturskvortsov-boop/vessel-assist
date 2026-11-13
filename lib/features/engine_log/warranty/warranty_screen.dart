@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/warranty_claim.dart';
 
@@ -150,6 +151,7 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
         return AppScaffold(
       title: 'Warranty Claims',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: Column(
         children: [
           Padding(
@@ -215,7 +217,7 @@ class _WarrantyScreenState extends State<WarrantyScreen> {
                           Text('${item.system} • ${item.maker}', style: const TextStyle(color: textMuted, fontSize: 12)),
                           const SizedBox(height: 8),
                           if (item.description.isNotEmpty) Text(item.description, style: const TextStyle(color: text, fontSize: 13)),
-                          const Divider(color: border, height: 20),
+                          Divider(color: border, height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/utils/time_input_formatter.dart';
 
@@ -81,11 +82,12 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
         return AppScaffold(
       title: 'Fuel Changeover',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent, labelColor: accent, unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'GENERATOR'), Tab(text: 'HISTORY')],
             ),
@@ -175,7 +177,7 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
 
         const SizedBox(height: 16),
         SwitchListTile(
-          title: const Text('Vessel equipped with Scrubber (EGCS)', style: TextStyle(color: accent, fontSize: 14)),
+          title: Text('Vessel equipped with Scrubber (EGCS)', style: TextStyle(color: accent, fontSize: 14)),
           subtitle: const Text('Check to add EGCS compliance data to the log', style: TextStyle(color: textMuted, fontSize: 11)),
           value: _hasScrubber,
           activeThumbColor: accent,
@@ -263,14 +265,14 @@ class _ChangeoverScreenState extends State<ChangeoverScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Record: ${DateTime.fromMillisecondsSinceEpoch(int.parse(key.toString())).toString().split(' ')[0]}', style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                        Text('Record: ${DateTime.fromMillisecondsSinceEpoch(int.parse(key.toString())).toString().split(' ')[0]}', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20),
                           onPressed: () => box.delete(key),
                         )
                       ],
                     ),
-                    const Divider(color: border),
+                    Divider(color: border),
                     Text(orderText, style: const TextStyle(color: text, fontFamily: 'monospace', fontSize: 12)),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(

@@ -188,7 +188,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 const SizedBox(height: 8),
                 _buildReadOnlyRow('Mean Draft:', '$_meanDraftStr m'),
                 _buildReadOnlyRow('Maximum Draft:', '$_maxDraftStr m'),
-                const Divider(color: border, height: 24),
+                Divider(color: border, height: 24),
                 _buildField('Displacement (t)', _displacementCtrl),
                 const SizedBox(height: 12),
                 Row(
@@ -227,7 +227,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 _buildField('Speed Through Water (kn)', _speedCtrl),
                 const SizedBox(height: 12),
                 SwitchListTile(
-                  title: const Text('Manual Squat', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w600)),
+                  title: Text('Manual Squat', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w600)),
                   value: _manualSquat,
                   activeThumbColor: accent,
                   contentPadding: EdgeInsets.zero,
@@ -271,7 +271,7 @@ class _UkcScreenState extends State<UkcScreen> {
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                                    title: const Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                                    title: Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
                   children: [
                     SwitchListTile(
@@ -307,19 +307,19 @@ class _UkcScreenState extends State<UkcScreen> {
             index: 5,
             child: Container(
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [accentDark, accent]),
+                gradient: LinearGradient(colors: [accentDark, accent]),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
               ),
               child: ElevatedButton.icon(
                 onPressed: _calculate,
-                icon: const Icon(Icons.calculate, color: bg),
+                icon: Icon(Icons.calculate, color: bg),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   minimumSize: const Size(double.infinity, 55),
                 ),
-                label: const Text('CALCULATE UKC', style: TextStyle(color: bg, fontWeight: FontWeight.bold, fontSize: 16)),
+                label: Text('CALCULATE UKC', style: TextStyle(color: bg, fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
           ),
@@ -351,7 +351,7 @@ class _UkcScreenState extends State<UkcScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Divider(color: border, height: 32),
+                      Divider(color: border, height: 32),
                       ..._result!.details.map((d) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Text(d, style: const TextStyle(color: text, fontSize: 12, height: 1.4)),
@@ -374,7 +374,7 @@ class _UkcScreenState extends State<UkcScreen> {
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                  title: const Text('About This Calculation', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                  title: Text('About This Calculation', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
                   collapsedIconColor: textMuted,
                   childrenPadding: const EdgeInsets.all(16),
@@ -408,7 +408,7 @@ class _UkcScreenState extends State<UkcScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8),
-            child: Text(title, style: const TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+            child: Text(title, style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
           ),
           GlassCard(
             child: Padding(

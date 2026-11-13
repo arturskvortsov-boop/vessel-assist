@@ -62,7 +62,7 @@ class _PortsScreenState extends State<PortsScreen> {
         return AppScaffold(
       title: 'Port Codes',
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: accent))
+          ? Center(child: CircularProgressIndicator(color: accent))
           : Column(
               children: [
                 Padding(
@@ -72,7 +72,7 @@ class _PortsScreenState extends State<PortsScreen> {
                     onChanged: _search,
                     decoration: InputDecoration(
                       hintText: 'Search port name, UN/LOCODE or country...',
-                      prefixIcon: const Icon(Icons.search, color: accent),
+                      prefixIcon: Icon(Icons.search, color: accent),
                       suffixIcon: _searchCtrl.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear),
@@ -122,7 +122,7 @@ class _PortsScreenState extends State<PortsScreen> {
                                     color: accent.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: Text(port.code, style: const TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 12)),
+                                  child: Text(port.code, style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 12)),
                                 ),
                                 onTap: () {
                                   // Копируем код порта в буфер обмена при нажатии

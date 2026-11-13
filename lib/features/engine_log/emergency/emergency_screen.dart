@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/emergency_contact.dart';
 import '../../../domain/models/emergency_procedure.dart';
@@ -180,6 +181,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
         return AppScaffold(
       title: 'Emergency',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -266,7 +268,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                     ...drills.map((p) => _buildProcCard(p, box)),
                   ],
                   if (radioScripts.isNotEmpty) ...[
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                       child: Text('RADIO SCRIPTS (E/R)', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                     ),
@@ -296,14 +298,14 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(color: border),
+                Divider(color: border),
                 Text(p.steps, style: const TextStyle(color: textMuted, height: 1.5)),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit, color: accent),
+                      icon: Icon(Icons.edit, color: accent),
                       onPressed: () => _editProcedure(p),
                     ),
                     IconButton(
@@ -349,7 +351,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     child: ListTile(
                       leading: const Icon(Icons.phone, color: Colors.greenAccent),
-                      title: Text(c.role, style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                      title: Text(c.role, style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                       subtitle: Text('${c.name}\n${c.phone}', style: const TextStyle(color: text)),
                       isThreeLine: true,
                       trailing: IconButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/note.dart';
 
@@ -49,7 +50,7 @@ class _NotesScreenState extends State<NotesScreen> {
                   onChanged: (val) => setDialogState(() => category = val!),
                 ),
                 SwitchListTile(
-                  title: const Text('Pin to top', style: TextStyle(color: accent, fontSize: 14)),
+                  title: Text('Pin to top', style: TextStyle(color: accent, fontSize: 14)),
                   value: isPinned,
                   activeThumbColor: accent,
                   contentPadding: EdgeInsets.zero,
@@ -98,6 +99,7 @@ class _NotesScreenState extends State<NotesScreen> {
         return AppScaffold(
       title: 'Notes',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: Column(
         children: [
           Padding(
@@ -177,7 +179,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                   style: const TextStyle(color: text, fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                               ),
-                              if (n.isPinned) const Icon(Icons.push_pin, color: accent, size: 16),
+                              if (n.isPinned) Icon(Icons.push_pin, color: accent, size: 16),
                             ],
                           ),
                           if (n.body.isNotEmpty) ...[

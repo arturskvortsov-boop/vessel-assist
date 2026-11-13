@@ -144,7 +144,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             ),
           ),
           _isLoading 
-            ? const Center(child: CircularProgressIndicator(color: accent))
+            ? Center(child: CircularProgressIndicator(color: accent))
             : Expanded(
                 child: _files.isEmpty
                     ? const Center(child: Text('No documents stored yet.', style: TextStyle(color: textMuted)))
@@ -175,7 +175,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                       _loadFiles();
                                     },
                                   ),
-                                  const Icon(Icons.chevron_right, color: accent),
+                                  Icon(Icons.chevron_right, color: accent),
                                 ],
                               ),
                               onTap: () => OpenFilex.open(file.path),

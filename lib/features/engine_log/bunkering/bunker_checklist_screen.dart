@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
@@ -24,6 +25,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
         return AppScaffold(
       title: 'Bunkering Checklists',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.orangeAccent),
@@ -62,7 +64,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
         length: 3,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent,
               labelColor: accent,
               unselectedLabelColor: textMuted,
@@ -134,7 +136,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.edit, color: accent, size: 20),
+                        icon: Icon(Icons.edit, color: accent, size: 20),
                         onPressed: () => _editItem(tabKey, items, index),
                       ),
                       IconButton(

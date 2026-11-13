@@ -102,11 +102,11 @@ class _BackupScreenState extends State<BackupScreen> {
         return AppScaffold(
       title: 'Backup & Restore',
       body: _isLoading      
-        ? const Center(child: CircularProgressIndicator(color: accent))
+        ? Center(child: CircularProgressIndicator(color: accent))
         : ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              const Icon(Icons.cloud_sync, size: 80, color: accent),
+              Icon(Icons.cloud_sync, size: 80, color: accent),
               const SizedBox(height: 24),
               const Text(
                 'Data Management',

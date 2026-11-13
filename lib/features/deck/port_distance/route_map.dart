@@ -60,9 +60,9 @@ class RouteMap extends StatelessWidget {
         children: [
           Text(
             '● Departure · $departureCode',
-            style: const TextStyle(color: accent),
+            style: TextStyle(color: accent),
           ),
-          Text('● Arrival · $arrivalCode', style: const TextStyle(color: gold)),
+          Text('● Arrival · $arrivalCode', style: TextStyle(color: gold)),
         ],
       ),
     ],

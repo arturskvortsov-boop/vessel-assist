@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/tank.dart';
 import '../../../domain/calculators/vcf_calculator.dart';
@@ -127,8 +128,9 @@ class _TanksScreenState extends State<TanksScreen> {
     setState(() {});
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final palette = SectionTheme.of(context);
     final allData = _box.values.toList();
     
     // Фильтруем танки по текущей вкладке
@@ -137,9 +139,10 @@ class _TanksScreenState extends State<TanksScreen> {
       return t.type == _currentGroup;
     }).toList();
 
-        return AppScaffold(
+                return AppScaffold(
       title: 'Tank Status',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: Column(
         children: [
           // --- ПОДСКАЗКА ---
@@ -205,7 +208,7 @@ class _TanksScreenState extends State<TanksScreen> {
                                 Text(t.name, style: const TextStyle(color: text, fontSize: 16, fontWeight: FontWeight.bold)),
                                 Row(
                                   children: [
-                                    IconButton(icon: const Icon(Icons.edit, color: accent, size: 20), onPressed: () => _editTank(t)),
+                                    IconButton(icon: Icon(Icons.edit, color: palette.accent, size: 20), onPressed: () => _editTank(t)),
                                     IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20), onPressed: () => _deleteTank(t)),
                                   ],
                                 )
@@ -225,7 +228,7 @@ class _TanksScreenState extends State<TanksScreen> {
                             LinearProgressIndicator(
                               value: fillPercent / 100,
                               backgroundColor: border,
-                              color: isHigh ? Colors.redAccent : accent,
+                                                            color: isHigh ? Colors.redAccent : palette.accent,
                               minHeight: 6,
                             ),
                             const SizedBox(height: 12),
@@ -233,14 +236,14 @@ class _TanksScreenState extends State<TanksScreen> {
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                                decoration: BoxDecoration(
-                                  color: accent.withValues(alpha: 0.1),
+                                                                decoration: BoxDecoration(
+                                  color: palette.accent.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: accent.withValues(alpha: 0.3)),
+                                  border: Border.all(color: palette.accent.withValues(alpha: 0.3)),
                                 ),
                                 child: Text(
                                   'Free to 85%: ${freeTo85.toStringAsFixed(1)} m³ (~${(freeTo85 * t.density).toStringAsFixed(1)} MT)',
-                                  style: const TextStyle(color: accent, fontSize: 12),
+                                  style: TextStyle(color: palette.accent, fontSize: 12),
                                 ),
                               )
                             else
@@ -276,22 +279,23 @@ class _TankTabButton extends StatelessWidget {
 
   const _TankTabButton({required this.label, required this.isActive, required this.onTap});
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final palette = SectionTheme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
-          color: isActive ? accent.withValues(alpha: 0.15) : Colors.transparent,
-          border: Border.all(color: isActive ? accent : border),
+          color: isActive ? palette.accent.withValues(alpha: 0.15) : Colors.transparent,
+          border: Border.all(color: isActive ? palette.accent : border),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isActive ? accent : textMuted,
+            color: isActive ? palette.accent : textMuted,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
             fontSize: 13,
           ),

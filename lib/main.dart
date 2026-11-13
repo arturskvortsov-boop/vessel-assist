@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Делаем верхнюю полосу (где время и батарея) темной, а иконки белыми
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: bg,
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.dark,

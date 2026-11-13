@@ -87,7 +87,7 @@ class _GlobalClockState extends State<GlobalClock> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('UTC', style: TextStyle(color: textMuted, fontSize: 10, letterSpacing: 1)),
-                Text(_formatTime(_now, 0), style: const TextStyle(color: accent, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+                Text(_formatTime(_now, 0), style: TextStyle(color: accent, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
               ],
             ),
             
@@ -102,7 +102,7 @@ class _GlobalClockState extends State<GlobalClock> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text('LOCAL (UTC${offset >= 0 ? '+' : ''}$offset)', style: const TextStyle(color: textMuted, fontSize: 10, letterSpacing: 1)),
-                      Text(_formatTime(_now, offset), style: const TextStyle(color: gold, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+                      Text(_formatTime(_now, offset), style: TextStyle(color: gold, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
                     ],
                   ),
                   const SizedBox(width: 8),

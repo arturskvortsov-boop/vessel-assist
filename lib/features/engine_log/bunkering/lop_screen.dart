@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
@@ -324,7 +325,8 @@ class _LopScreenState extends State<LopScreen> {
       child: AppScaffold(
         title: 'Letter of Protest',
         background: AppBackground.engineRoom,
-        bottom: const TabBar(
+      section: AppSection.engine,
+        bottom: TabBar(
           indicatorColor: accent,
           labelColor: accent,
           unselectedLabelColor: textMuted,
@@ -390,7 +392,7 @@ class _LopScreenState extends State<LopScreen> {
               child: Text(_generatedText, style: const TextStyle(color: Color(0xFF4ADE80), fontFamily: 'monospace', fontSize: 13)),
             ),
             const SizedBox(height: 16),
-            const Text('Signatures:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+            Text('Signatures:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             
             Row(
@@ -463,7 +465,7 @@ class _LopScreenState extends State<LopScreen> {
                               setState(() {});
                             },
                           ),
-                          const Icon(Icons.chevron_right, color: accent),
+                          Icon(Icons.chevron_right, color: accent),
                         ],
                       ),
                       onTap: () => OpenFilex.open(file.path),

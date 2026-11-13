@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/section_theme.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/important_notice.dart';
@@ -10,12 +11,13 @@ class AdminMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return AppScaffold(
+                return AppScaffold(
       title: 'Admin & Documents',
+      section: AppSection.admin,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('DOCUMENTS', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          Text('DOCUMENTS', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
@@ -69,7 +71,7 @@ class AdminMenuScreen extends StatelessWidget {
           
           const SizedBox(height: 24),
           
-          const Text('DATA MANAGEMENT', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          Text('DATA MANAGEMENT', style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 8),
           _buildMenuCard(
             context: context,
@@ -79,7 +81,7 @@ class AdminMenuScreen extends StatelessWidget {
             route: '/admin/backup',
           ),
           ListTile(
-            leading: const Icon(Icons.info_outline, color: accent),
+            leading: Icon(Icons.info_outline, color: accent),
             title: const Text('Important Notice'),
             trailing: const Icon(Icons.chevron_right, color: textMuted),
             onTap: () => showImportantNotice(context),
@@ -89,7 +91,8 @@ class AdminMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuCard({required BuildContext context, required String title, required String subtitle, required IconData icon, required String route}) {
+    Widget _buildMenuCard({required BuildContext context, required String title, required String subtitle, required IconData icon, required String route}) {
+    final palette = SectionTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassCard(
@@ -102,11 +105,11 @@ class AdminMenuScreen extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.1),
+                  color: palette.accent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: accent.withValues(alpha: 0.2)),
+                  border: Border.all(color: palette.accent.withValues(alpha: 0.2)),
                 ),
-                child: Icon(icon, color: accent, size: 24),
+                child: Icon(icon, color: palette.accent, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(

@@ -2,10 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:vessel_assist/features/deck/draft_survey/draft_survey_screen.dart';
 
 void main() {
+  setUpAll(() {
+    // В тестах нет сети — не пытаемся скачивать шрифты Google Fonts.
+    GoogleFonts.config.allowRuntimeFetching = false;
+  });
+
   testWidgets('Draft Survey focuses a mark and restores the saved input', (
     tester,
   ) async {

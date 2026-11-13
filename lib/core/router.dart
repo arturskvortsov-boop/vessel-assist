@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'nautical_background.dart';
+import 'palette_state.dart';
 import 'theme.dart';
 import 'widgets/staggered_item.dart';
 
@@ -176,8 +177,10 @@ final appRouter = GoRouter(
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    // Дашборд всегда в морской палитре (мостик).
+    PaletteState.set(AppSection.bridge);
     return Scaffold(
       body: NauticalBackground(
         child: SafeArea(
@@ -189,11 +192,11 @@ class MainMenuScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 4,
-                  foreground: Paint()..shader = const LinearGradient(colors: [gold, accent]).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                  foreground: Paint()..shader = LinearGradient(colors: [gold, accent]).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text('AHOY, SEAFARER!', textAlign: TextAlign.center, style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold)),
+              Text('AHOY, SEAFARER!', textAlign: TextAlign.center, style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 40),
 
               StaggeredItem(

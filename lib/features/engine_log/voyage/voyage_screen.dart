@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class VoyageScreen extends StatefulWidget {
@@ -56,6 +57,7 @@ class _VoyageScreenState extends State<VoyageScreen> {
         return AppScaffold(
       title: 'Voyage Plan',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

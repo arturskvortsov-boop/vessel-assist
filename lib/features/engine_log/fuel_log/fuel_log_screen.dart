@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/fuel_log.dart';
 import '../../../domain/calculators/vcf_calculator.dart';
@@ -77,7 +78,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                     style: TextStyle(color: textMuted, fontSize: 12, fontStyle: FontStyle.italic),
                   ),
                   const SizedBox(height: 16),
-                  const Text('Meter Type:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                  Text('Meter Type:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   DropdownButton<String>(
                     value: _meterType,
                     isExpanded: true,
@@ -94,7 +95,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  const Text('Meter Scheme:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                  Text('Meter Scheme:', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   DropdownButton<String>(
                     value: _scheme,
                     isExpanded: true,
@@ -113,7 +114,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                   ),
                   const SizedBox(height: 16),
                   SwitchListTile(
-                    title: const Text('Has D/G OUT Meter', style: TextStyle(color: accent, fontSize: 14)),
+                    title: Text('Has D/G OUT Meter', style: TextStyle(color: accent, fontSize: 14)),
                     subtitle: const Text('Calculate D/G Cons as (IN - OUT)', style: TextStyle(color: textMuted, fontSize: 12)),
                     value: _hasDgOut,
                     activeThumbColor: accent,
@@ -239,20 +240,18 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
 
     FuelLog? lastLog = logs.isNotEmpty ? logs.first : null;
 
-        return AppScaffold(
+                return AppScaffold(
       title: 'Fuel Daily Log',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       actions: [
-        IconButton(icon: const Icon(Icons.settings, color: accent), onPressed: _showSettings),
+        IconButton(icon: Icon(Icons.settings, color: SectionTheme.of(context).accent), onPressed: _showSettings),
       ],
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
             const TabBar(
-              indicatorColor: accent,
-              labelColor: accent,
-              unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'NEW ENTRY'), Tab(text: 'HISTORY')],
             ),
             Expanded(
@@ -289,7 +288,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                   borderRadius: BorderRadius.circular(8), 
                   border: Border.all(color: accent.withValues(alpha: 0.3))
                 ),
-                child: Text('Previous (${lastLog.date} ${lastLog.time}):\nME: ${lastLog.meCurr} | DG IN: ${lastLog.dgCurr} | BLR: ${lastLog.blrCurr}', style: const TextStyle(color: accent, fontSize: 12)),
+                child: Text('Previous (${lastLog.date} ${lastLog.time}):\nME: ${lastLog.meCurr} | DG IN: ${lastLog.dgCurr} | BLR: ${lastLog.blrCurr}', style: TextStyle(color: accent, fontSize: 12)),
               ),
 
             Row(
@@ -417,11 +416,11 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(color: accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-                    child: Text(log.event, style: const TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text(log.event, style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
-              const Divider(color: border, height: 24),
+              Divider(color: border, height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

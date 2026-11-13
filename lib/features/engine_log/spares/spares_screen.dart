@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/spare_part.dart';
 
@@ -148,6 +149,7 @@ class _SparesScreenState extends State<SparesScreen> {
         return AppScaffold(
       title: 'Spares & Stores',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: Column(
         children: [
           Padding(

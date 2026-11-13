@@ -125,7 +125,7 @@ class _EtaScreenState extends State<EtaScreen> {
           child: Row(
             children: [
               Expanded(child: Text(etaDateTime(time))),
-              const Icon(Icons.calendar_month_outlined, color: accent),
+              Icon(Icons.calendar_month_outlined, color: accent),
             ],
           ),
         ),
@@ -227,7 +227,7 @@ class _EtaScreenState extends State<EtaScreen> {
             r.requiredSpeedMode
                 ? '${r.requiredSpeedRounded.toStringAsFixed(2)} kts'
                 : etaDateTime(localArrival),
-            style: const TextStyle(color: accent, fontSize: 30, fontWeight: FontWeight.w700),
+            style: TextStyle(color: accent, fontSize: 30, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           Text(

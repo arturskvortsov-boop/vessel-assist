@@ -88,7 +88,7 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    const ColoredBox(color: bg),
+                    ColoredBox(color: bg),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
@@ -125,7 +125,7 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
             Text('Capacity: ${tank.capacityM3.toStringAsFixed(2)} m³', style: const TextStyle(color: textMuted, fontSize: 13)),
             Text('Density: ${tank.densityMtPerM3.toStringAsFixed(4)} MT/m³', style: const TextStyle(color: textMuted, fontSize: 13)),
             const SizedBox(height: 8),
-            Text('${tank.massMT.toStringAsFixed(3)} MT', style: const TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.bold)),
+            Text('${tank.massMT.toStringAsFixed(3)} MT', style: TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () => _edit(tank),
@@ -369,7 +369,7 @@ class _TankEditorDialogState extends State<TankEditorDialog> {
                 }, numeric: true),
                 _field(_density, 'Density (MT/m³)', _positive, numeric: true),
                 const SizedBox(height: 10),
-                Text('Calculated Mass: ${mass.toStringAsFixed(3)} MT', style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                Text('Calculated Mass: ${mass.toStringAsFixed(3)} MT', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                 Text('Filling: ${fill.toStringAsFixed(1)}%', style: const TextStyle(color: textMuted)),
               ],
             ),

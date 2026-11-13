@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'palette_state.dart';
 
-// Цвета из твоего CSS
-const Color bg = Color(0xFF050B14);
-const Color cardSolid = Color(0xFF0D1627); // Для дашборда
-const Color border = Color(0xFF1E2D48);
+// Цвета — ДИНАМИЧЕСКИЕ: читают палитру текущего раздела (PaletteState).
+// Меняешь цвета разделов в palette_state.dart — перекрашивается всё.
+Color get bg => PaletteState.palette.background;
+Color get cardSolid => PaletteState.palette.field;
+Color get border => PaletteState.palette.border;
+Color get accent => PaletteState.palette.accent;
+Color get accentDark => PaletteState.palette.accentDark;
+Color get gold => PaletteState.palette.secondary;
+
+// Нейтральные цвета — одинаковы во всех разделах.
 const Color text = Color(0xFFF0F4F8);
 const Color textMuted = Color(0xFF8B9BB4);
-const Color accent = Color(0xFF38BDF8);
-const Color accentDark = Color(0xFF0284C7);
-const Color gold = Color(0xFFD4AF37);
 
 class AppTheme {
   static ThemeData get darkTheme {
@@ -19,7 +23,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: bg,
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme.dark(
         primary: accent,
         secondary: gold,
         surface: cardSolid,
@@ -36,18 +40,18 @@ class AppTheme {
         centerTitle: true,
         titleTextStyle: GoogleFonts.inter(color: accent, fontSize: 18, fontWeight: FontWeight.w700),
       ),
-            inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         filled: true,
         // Непрозрачная подложка: фон не должен просвечивать сквозь поля ввода.
         fillColor: cardSolid,
         labelStyle: const TextStyle(color: textMuted, fontSize: 12, fontWeight: FontWeight.w600),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: border),
+          borderSide: BorderSide(color: border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: accent, width: 1),
+          borderSide: BorderSide(color: accent, width: 1),
         ),
       ),
     );

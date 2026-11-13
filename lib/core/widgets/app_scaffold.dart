@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../nautical_background.dart';
 import '../engine_room_background.dart';
+import '../palette_state.dart';
+import '../section_theme.dart';
 import '../theme.dart';
 
 /// Тип фона экрана.
@@ -34,8 +36,11 @@ class AppScaffold extends StatelessWidget {
   final PreferredSizeWidget? bottom;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
-  final bool showBackground;
+    final bool showBackground;
   final AppBackground background;
+
+  /// Раздел приложения — определяет цветовую палитру (акцент, шапка, поля).
+  final AppSection section;
   final double maxWidth;
   final bool centerContent;
 
@@ -51,8 +56,9 @@ class AppScaffold extends StatelessWidget {
     this.bottom,
     this.floatingActionButton,
     this.bottomNavigationBar,
-    this.showBackground = true,
+        this.showBackground = true,
     this.background = AppBackground.nautical,
+    this.section = AppSection.bridge,
     this.maxWidth = 900,
     this.centerContent = true,
     this.showHomeFab = true,
@@ -67,8 +73,12 @@ class AppScaffold extends StatelessWidget {
     }
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    // Выставляем текущий раздел, чтобы динамические цвета (accent, cardSolid,
+    // border и т.д.) вернули палитру этого раздела.
+    PaletteState.set(section);
+
     final content = centerContent
         ? Center(
             child: ConstrainedBox(
@@ -80,25 +90,35 @@ class AppScaffold extends StatelessWidget {
 
     // Если экран передал свой FAB — показываем его, иначе (при showHomeFab)
     // показываем кнопку "Домой" в виде якоря.
-    final fab = floatingActionButton ??
+        final fab = floatingActionButton ??
         (showHomeFab ? const _HomeAnchorFab() : null);
 
-    return Scaffold(
-      backgroundColor: bg,
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        title: Text(title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.canPop() ? context.pop() : context.go('/'),
+    final palette = SectionPalette.of(section);
+
+    return SectionTheme(
+      section: section,
+      palette: palette,
+      child: Theme(
+        data: SectionThemeData.build(section),
+        child: Scaffold(
+          backgroundColor: bg,
+          extendBodyBehindAppBar: false,
+          appBar: AppBar(
+            title: Text(title),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () =>
+                  context.canPop() ? context.pop() : context.go('/'),
+            ),
+            actions: actions,
+            bottom: bottom,
+          ),
+          floatingActionButton: fab,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          bottomNavigationBar: bottomNavigationBar,
+          body: showBackground ? _wrapBackground(content) : content,
         ),
-        actions: actions,
-        bottom: bottom,
       ),
-      floatingActionButton: fab,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: bottomNavigationBar,
-      body: showBackground ? _wrapBackground(content) : content,
     );
   }
 }
@@ -109,15 +129,16 @@ class AppScaffold extends StatelessWidget {
 class _HomeAnchorFab extends StatelessWidget {
   const _HomeAnchorFab();
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final palette = SectionTheme.of(context);
     return FloatingActionButton(
       heroTag: 'home_anchor_fab',
       backgroundColor: cardSolid,
-      foregroundColor: accent,
+      foregroundColor: palette.accent,
       elevation: 6,
       tooltip: 'Home',
-      shape: const CircleBorder(side: BorderSide(color: border)),
+      shape: CircleBorder(side: BorderSide(color: border)),
       onPressed: () => context.go('/'),
       child: const Icon(Icons.anchor),
     );
@@ -130,14 +151,14 @@ class AppSectionCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final Color? color;
-  final Color borderColor;
+  final Color? borderColor;
 
   const AppSectionCard({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(20),
     this.color,
-    this.borderColor = border,
+    this.borderColor,
   });
 
   @override
@@ -148,7 +169,7 @@ class AppSectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? cardSolid,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: borderColor ?? border),
       ),
       child: child,
     );

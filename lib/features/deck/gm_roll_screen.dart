@@ -210,7 +210,7 @@ class _GmRollScreenState extends State<GmRollScreen> with WidgetsBindingObserver
                   children: [
                     const Text('Stopwatch', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text('${(_watch.elapsedMicroseconds / 1000000).toStringAsFixed(2)} s', style: const TextStyle(fontSize: 36, color: accent, fontFamily: 'monospace')),
+                    Text('${(_watch.elapsedMicroseconds / 1000000).toStringAsFixed(2)} s', style: TextStyle(fontSize: 36, color: accent, fontFamily: 'monospace')),
                     if (_interrupted)
                       const Padding(padding: EdgeInsets.only(top: 8), child: Text('Measurement interrupted. Start a new measurement.', style: TextStyle(color: Colors.amber))),
                     const SizedBox(height: 16),
@@ -259,7 +259,7 @@ class _GmRollScreenState extends State<GmRollScreen> with WidgetsBindingObserver
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Text('ESTIMATED GM', style: TextStyle(color: textMuted, letterSpacing: 1.5)),
-                      Text('${_result!.gm.toStringAsFixed(2)} m', style: const TextStyle(fontSize: 36, color: accent, fontWeight: FontWeight.bold)),
+                      Text('${_result!.gm.toStringAsFixed(2)} m', style: TextStyle(fontSize: 36, color: accent, fontWeight: FontWeight.bold)),
                       Text('Roll period: ${_result!.periodSeconds.toStringAsFixed(2)} s'),
                       const SizedBox(height: 12),
                       Text('T = ${_result!.periodSeconds.toStringAsFixed(2)} s\nGM ≈ (k × B / T)²', style: const TextStyle(color: textMuted, height: 1.5)),

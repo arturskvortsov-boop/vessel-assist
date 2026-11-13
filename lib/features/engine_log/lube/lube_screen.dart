@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class LubeScreen extends StatefulWidget {
@@ -122,11 +123,12 @@ class _LubeScreenState extends State<LubeScreen> {
         return AppScaffold(
       title: 'Lube Oil',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent,
               labelColor: accent,
               unselectedLabelColor: textMuted,
@@ -157,7 +159,7 @@ class _LubeScreenState extends State<LubeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Cylinder Oil Feed Rate', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('Cylinder Oil Feed Rate', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 4),
               const Text('Calculates daily consumption based on engine power (kW) and recommended feed rate (g/kWh).', style: TextStyle(color: textMuted, fontSize: 11, fontStyle: FontStyle.italic)),
               const SizedBox(height: 12),
@@ -195,7 +197,7 @@ class _LubeScreenState extends State<LubeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('System Oil Top-Up', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('System Oil Top-Up', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 4),
               const Text('Calculates how much oil to add to reach the target level in the sump tank.', style: TextStyle(color: textMuted, fontSize: 11, fontStyle: FontStyle.italic)),
               const SizedBox(height: 12),
@@ -246,7 +248,7 @@ class _LubeScreenState extends State<LubeScreen> {
             ],
           ),
         ),
-        const Divider(color: border),
+        Divider(color: border),
         Expanded(
           child: keys.isEmpty 
             ? const Center(child: Text('No data yet.', style: TextStyle(color: textMuted)))
@@ -284,7 +286,7 @@ class _LubeScreenState extends State<LubeScreen> {
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.edit, color: accent, size: 20),
+                              Icon(Icons.edit, color: accent, size: 20),
                               const SizedBox(width: 8),
                               IconButton(
                                 icon: const Icon(Icons.delete, color: Colors.grey),

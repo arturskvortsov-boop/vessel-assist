@@ -141,7 +141,7 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
         child: Center(child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 700),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            const Icon(Icons.water_outlined, color: accent, size: 46),
+            Icon(Icons.water_outlined, color: accent, size: 46),
             const SizedBox(height: 20),
             const Text('Ballast Time Calculator', style: TextStyle(
               fontSize: 30, fontWeight: FontWeight.w700)),
@@ -189,7 +189,7 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
                 const Text('ESTIMATED DURATION',
                   style: TextStyle(color: textMuted, letterSpacing: 1.4)),
                 const SizedBox(height: 12),
-                Text(duration, style: const TextStyle(color: accent,
+                Text(duration, style: TextStyle(color: accent,
                   fontSize: 28, fontWeight: FontWeight.w700)),
                 if (_exactMinutes != null) ...[
                   const SizedBox(height: 8),

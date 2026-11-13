@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 
 class GlassCard extends StatefulWidget {
-  final Widget child;
+    final Widget child;
   final VoidCallback? onTap;
-  final Color glowColor;
+  final Color? glowColor;
 
   const GlassCard({
     super.key,
     required this.child,
     this.onTap,
-    this.glowColor = accent,
+    this.glowColor,
   });
 
   @override
@@ -51,8 +51,8 @@ class _GlassCardState extends State<GlassCard> {
             decoration: BoxDecoration(
               borderRadius: radius,
               boxShadow: [
-                BoxShadow(
-                  color: widget.glowColor.withValues(alpha: 0.12),
+                                BoxShadow(
+                  color: (widget.glowColor ?? accent).withValues(alpha: 0.12),
                   blurRadius: 15,
                   spreadRadius: 1,
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animations/animations.dart';
 import '../../core/theme.dart';
+import '../../core/section_theme.dart';
 import '../../core/widgets/app_scaffold.dart';
 
 class DeckMenuScreen extends StatefulWidget {
@@ -20,10 +21,12 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
     const _DeckOpsTab(),
   ];
 
-  @override
+    @override
   Widget build(BuildContext context) {
-        return AppScaffold(
+    final palette = SectionPalette.of(AppSection.bridge);
+    return AppScaffold(
       title: 'Bridge & Deck',
+      section: AppSection.bridge,
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,
@@ -38,23 +41,23 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          border: const Border(top: BorderSide(color: border)),
+          border: Border(top: BorderSide(color: border)),
           color: cardSolid,
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) => setState(() => _currentIndex = index),
-          backgroundColor: cardSolid,
-          indicatorColor: accent.withValues(alpha: 0.2),
+                    backgroundColor: cardSolid,
+          indicatorColor: palette.accent.withValues(alpha: 0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.explore, color: textMuted), selectedIcon: Icon(Icons.explore, color: accent), label: 'Nav'),
+          destinations: [
+            NavigationDestination(icon: const Icon(Icons.explore, color: textMuted), selectedIcon: Icon(Icons.explore, color: palette.accent), label: 'Nav'),
             NavigationDestination(
-              icon: _CargoCraneIcon(color: textMuted),
-              selectedIcon: _CargoCraneIcon(color: accent),
+              icon: const _CargoCraneIcon(color: textMuted),
+              selectedIcon: _CargoCraneIcon(color: palette.accent),
               label: 'Cargo',
             ),
-            NavigationDestination(icon: Icon(Icons.book, color: textMuted), selectedIcon: Icon(Icons.book, color: accent), label: 'Deck Ops'),
+            NavigationDestination(icon: const Icon(Icons.book, color: textMuted), selectedIcon: Icon(Icons.book, color: palette.accent), label: 'Deck Ops'),
           ],
         ),
       ),
@@ -122,8 +125,9 @@ class _MenuCard extends StatelessWidget {
   final String route;
   const _MenuCard({required this.title, required this.subtitle, required this.icon, required this.route});
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final palette = SectionTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
@@ -131,7 +135,7 @@ class _MenuCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: border),
+          side: BorderSide(color: border),
         ),
         child: InkWell(
           onTap: () => context.push(route),
@@ -142,11 +146,11 @@ class _MenuCard extends StatelessWidget {
                 Container(
                   width: 48, height: 48,
                   decoration: BoxDecoration(
-                    color: accent.withValues(alpha: 0.1), 
+                    color: palette.accent.withValues(alpha: 0.1), 
                     borderRadius: BorderRadius.circular(12), 
-                    border: Border.all(color: accent.withValues(alpha: 0.2))
+                    border: Border.all(color: palette.accent.withValues(alpha: 0.2))
                   ),
-                  child: Icon(icon, color: accent, size: 24),
+                  child: Icon(icon, color: palette.accent, size: 24),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

@@ -92,11 +92,11 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(record.category, style: const TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.w700)),
+              Text(record.category, style: TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.w700)),
               IconButton(icon: const Icon(Icons.close, color: textMuted), onPressed: () => Navigator.pop(sheetContext)),
             ],
           ),
-          const Divider(color: border),
+          Divider(color: border),
           const SizedBox(height: 16),
           SelectableText(record.description, style: const TextStyle(color: text, fontSize: 16, height: 1.6)),
           const SizedBox(height: 24),
@@ -133,7 +133,7 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
         return AppScaffold(
       title: 'Logbook Records',
       actions: [
-        IconButton(onPressed: _info, tooltip: 'Source information', icon: const Icon(Icons.info_outline, color: accent)),
+        IconButton(onPressed: _info, tooltip: 'Source information', icon: Icon(Icons.info_outline, color: accent)),
       ],
       body: SafeArea(top: false, child: Column(children: [
         
@@ -144,13 +144,13 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: 'Search description, day or officer',
-              prefixIcon: const Icon(Icons.search, color: accent),
+              prefixIcon: Icon(Icons.search, color: accent),
               suffixIcon: _search.text.isEmpty ? null : IconButton(onPressed: () => setState(() => _search.clear()), tooltip: 'Clear search', icon: const Icon(Icons.close)),
               filled: true, 
               fillColor: cardSolid,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: accent)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: accent)),
             ),
           )
         ),
@@ -165,8 +165,8 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
               filled: true,
               fillColor: cardSolid,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: border)),
             ),
             items: categories.map((category) => DropdownMenuItem(
               value: category, 
@@ -198,7 +198,7 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
                     clipBehavior: Clip.antiAlias,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: const BorderSide(color: border),
+                      side: BorderSide(color: border),
                     ),
                     child: InkWell(
                       onTap: () => _details(record), // Открываем детали при клике
@@ -206,11 +206,11 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
                         padding: const EdgeInsets.all(16), 
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Row(children: [
-                            Expanded(child: Text(record.category, style: const TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16))),
+                            Expanded(child: Text(record.category, style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 16))),
                             IconButton(
                               onPressed: () => _copy(record), 
                               tooltip: 'Copy record wording', 
-                              icon: const Icon(Icons.copy_outlined, color: accent, size: 20),
+                              icon: Icon(Icons.copy_outlined, color: accent, size: 20),
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(),
                             ),
@@ -220,7 +220,7 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
                           
                           if (record.day.isNotEmpty || record.remarks.isNotEmpty) ...[
                             const SizedBox(height: 16),
-                            const Divider(color: border, height: 1),
+                            Divider(color: border, height: 1),
                             const SizedBox(height: 12),
                             if (record.day.isNotEmpty) 
                               Text('Day / timing: ${record.day}', style: const TextStyle(color: textMuted, fontSize: 13, height: 1.4)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../domain/models/engine_hour.dart';
 import '../../../core/widgets/animated_counter.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -127,6 +128,7 @@ class _HoursScreenState extends State<HoursScreen> {
         return AppScaffold(
       title: 'Engine Hours',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: Column(
         children: [
           Padding(
@@ -169,7 +171,7 @@ class _HoursScreenState extends State<HoursScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(entry.key, style: const TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.bold)),
+                          child: Text(entry.key, style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.bold)),
                         ),
                         Wrap(
                           spacing: 12,

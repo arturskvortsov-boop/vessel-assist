@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/orb_entry.dart';
 import '../../../domain/models/tank.dart';
@@ -176,11 +177,12 @@ class _OrbScreenState extends State<OrbScreen> {
         return AppScaffold(
       title: 'ORB Generator',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent, labelColor: accent, unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'GENERATOR'), Tab(text: 'HISTORY')],
             ),
@@ -352,7 +354,7 @@ class _OrbScreenState extends State<OrbScreen> {
           _buildField('ISO Designation', 'source'), 
           _buildField('Fuel Type (HFO/MGO)', 'substance'), 
           _buildField('Sulphur (%)', 'retained'),
-          const Text('Tanks Distribution:', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 14)),
+          Text('Tanks Distribution:', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 8),
           ..._buildDynamicTankList(),
           _buildField('Officer Name & Rank', 'officer')
@@ -389,7 +391,7 @@ class _OrbScreenState extends State<OrbScreen> {
           ),
           _buildField('Total Qty (MT)', 'qty', isNumber: true), 
           _buildField('Oil Type', 'substance'),
-          const Text('Tanks Distribution:', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 14)),
+          Text('Tanks Distribution:', style: TextStyle(color: accent, fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 8),
           ..._buildDynamicTankList(),
           _buildField('Officer Name & Rank', 'officer')
@@ -437,7 +439,7 @@ class _OrbScreenState extends State<OrbScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${item.code} - ${item.date}', style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                    Text('${item.code} - ${item.date}', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20),
                       onPressed: () {
@@ -447,7 +449,7 @@ class _OrbScreenState extends State<OrbScreen> {
                     )
                   ],
                 ),
-                const Divider(color: border),
+                Divider(color: border),
                 Text(item.text, style: const TextStyle(color: text, fontFamily: 'monospace', fontSize: 12)),
                 const SizedBox(height: 8),
                 ElevatedButton.icon(

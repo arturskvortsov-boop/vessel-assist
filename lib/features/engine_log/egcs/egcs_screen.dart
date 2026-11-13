@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/utils/time_input_formatter.dart';
 import '../../../domain/models/egcs_record.dart';
@@ -59,11 +60,12 @@ class _EgcsScreenState extends State<EgcsScreen> {
         return AppScaffold(
       title: 'EGCS Record Book',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent, labelColor: accent, unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'NEW RECORD'), Tab(text: 'HISTORY')],
             ),
@@ -188,7 +190,7 @@ class _EgcsScreenState extends State<EgcsScreen> {
                       ),
                     ],
                   ),
-                  const Divider(color: border, height: 20),
+                  Divider(color: border, height: 20),
                   Text(rec.description, style: const TextStyle(color: text, fontSize: 13)),
                   const SizedBox(height: 8),
                   if (rec.position.isNotEmpty || rec.officer.isNotEmpty)

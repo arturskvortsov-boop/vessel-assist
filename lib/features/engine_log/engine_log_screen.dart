@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/section_theme.dart';
 import 'package:animations/animations.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/glass_card.dart';
@@ -22,11 +23,13 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
     const _AdminSafetyTab(),
   ];
 
-  @override
+    @override
   Widget build(BuildContext context) {
-                return AppScaffold(
+    final palette = SectionPalette.of(AppSection.engine);
+    return AppScaffold(
       title: 'Engine Operations',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,
@@ -43,7 +46,7 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: accent.withValues(alpha: 0.1),
+              color: palette.accent.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -53,22 +56,22 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) => setState(() => _currentIndex = index),
           backgroundColor: cardSolid,
-          indicatorColor: accent.withValues(alpha: 0.2),
+          indicatorColor: palette.accent.withValues(alpha: 0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.anchor, color: textMuted),
-              selectedIcon: Icon(Icons.anchor, color: accent),
+              icon: const Icon(Icons.anchor, color: textMuted),
+              selectedIcon: Icon(Icons.anchor, color: palette.accent),
               label: 'MARPOL',
             ),
             NavigationDestination(
-              icon: Icon(Icons.engineering, color: textMuted),
-              selectedIcon: Icon(Icons.engineering, color: accent),
+              icon: const Icon(Icons.engineering, color: textMuted),
+              selectedIcon: Icon(Icons.engineering, color: palette.accent),
               label: 'Daily Ops',
             ),
             NavigationDestination(
-              icon: Icon(Icons.security, color: textMuted),
-              selectedIcon: Icon(Icons.security, color: accent),
+              icon: const Icon(Icons.security, color: textMuted),
+              selectedIcon: Icon(Icons.security, color: palette.accent),
               label: 'Admin',
             ),
           ],
@@ -154,8 +157,9 @@ class _MenuCard extends StatelessWidget {
     required this.route,
   });
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final palette = SectionTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassCard(
@@ -168,11 +172,11 @@ class _MenuCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.1),
+                  color: palette.accent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: accent.withValues(alpha: 0.2)),
+                  border: Border.all(color: palette.accent.withValues(alpha: 0.2)),
                 ),
-                child: Icon(icon, color: accent, size: 24),
+                child: Icon(icon, color: palette.accent, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(

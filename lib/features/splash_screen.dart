@@ -102,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                               BoxShadow(color: accent.withValues(alpha: 0.3), blurRadius: 40, spreadRadius: 10),
                             ],
                           ),
-                          child: const Icon(Icons.anchor, size: 100, color: accent),
+                          child: Icon(Icons.anchor, size: 100, color: accent),
                         ),
                       ),
                     ),
@@ -116,7 +116,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                             style: const TextStyle(color: text, fontSize: 28, fontWeight: FontWeight.bold, letterSpacing: 4),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'DECK & ENGINE',
                             style: TextStyle(color: gold, fontSize: 12, letterSpacing: 2),
                           ),

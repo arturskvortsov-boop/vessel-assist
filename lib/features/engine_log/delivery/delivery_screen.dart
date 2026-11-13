@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/punch_item.dart';
 
@@ -195,11 +196,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         return AppScaffold(
       title: 'Delivery & Acceptance',
       background: AppBackground.engineRoom,
+      section: AppSection.engine,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               indicatorColor: accent, labelColor: accent, unselectedLabelColor: textMuted,
               tabs: [Tab(text: 'CHECKLIST'), Tab(text: 'PUNCH LIST')],
             ),
@@ -255,7 +257,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     key: ValueKey(section), // Стабильный ключ
                     maintainState: true, // Не сбрасывать состояние
                     initiallyExpanded: false, // Закрыты по умолчанию
-                    title: Text('$section ($done/${sectionItems.length})', style: const TextStyle(color: accent, fontWeight: FontWeight.bold)),
+                    title: Text('$section ($done/${sectionItems.length})', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                     children: sectionItems.map((item) {
                       final itemKey = box.keys.firstWhere((k) => box.get(k)['text'] == item['text'] && box.get(k)['section'] == section);
                       return _ChecklistRow(
