@@ -28,6 +28,10 @@ class AppScaffold extends StatelessWidget {
   final double maxWidth;
   final bool centerContent;
 
+  /// Показывать плавающую кнопку "Домой" (якорь) в правом нижнем углу.
+  /// По умолчанию включена на всех внутренних экранах.
+  final bool showHomeFab;
+
   const AppScaffold({
     super.key,
     required this.title,
@@ -39,6 +43,7 @@ class AppScaffold extends StatelessWidget {
     this.showBackground = true,
     this.maxWidth = 900,
     this.centerContent = true,
+    this.showHomeFab = true,
   });
 
   @override
@@ -52,6 +57,11 @@ class AppScaffold extends StatelessWidget {
           )
         : body;
 
+    // Если экран передал свой FAB — показываем его, иначе (при showHomeFab)
+    // показываем кнопку "Домой" в виде якоря.
+    final fab = floatingActionButton ??
+        (showHomeFab ? const _HomeAnchorFab() : null);
+
     return Scaffold(
       backgroundColor: bg,
       extendBodyBehindAppBar: false,
@@ -64,9 +74,31 @@ class AppScaffold extends StatelessWidget {
         actions: actions,
         bottom: bottom,
       ),
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: fab,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: bottomNavigationBar,
       body: showBackground ? NauticalBackground(child: content) : content,
+    );
+  }
+}
+
+/// Плавающая кнопка "Домой" в стиле якоря.
+/// Ведёт на главный экран. Располагается справа снизу (под правый палец),
+/// автоматически поднимается над нижней навигацией и учитывает SafeArea.
+class _HomeAnchorFab extends StatelessWidget {
+  const _HomeAnchorFab();
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      heroTag: 'home_anchor_fab',
+      backgroundColor: cardSolid,
+      foregroundColor: accent,
+      elevation: 6,
+      tooltip: 'Home',
+      shape: const CircleBorder(side: BorderSide(color: border)),
+      onPressed: () => context.go('/'),
+      child: const Icon(Icons.anchor),
     );
   }
 }
