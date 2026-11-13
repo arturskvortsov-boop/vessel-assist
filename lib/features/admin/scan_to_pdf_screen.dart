@@ -121,6 +121,7 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
     PaletteState.set(AppSection.admin);
         return AppScaffold(
       title: 'Scan to PDF',
+      section: AppSection.admin,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

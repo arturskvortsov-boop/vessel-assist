@@ -116,9 +116,10 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    PaletteState.set(AppSection.engine);
+        PaletteState.set(AppSection.admin);
         return AppScaffold(
             title: 'Document Storage',
+      section: AppSection.admin,
       body: Column(
         children: [
           Padding(

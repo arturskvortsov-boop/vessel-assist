@@ -495,6 +495,7 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
     final canExport = !_busy && _photos.isNotEmpty && stamp != null;
         return AppScaffold(
       title: 'Date & Time Stamper',
+      section: AppSection.admin,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

@@ -100,9 +100,10 @@ class _BackupScreenState extends State<BackupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    PaletteState.set(AppSection.engine);
+        PaletteState.set(AppSection.admin);
         return AppScaffold(
       title: 'Backup & Restore',
+      section: AppSection.admin,
       body: _isLoading      
         ? Center(child: CircularProgressIndicator(color: accent))
         : ListView(

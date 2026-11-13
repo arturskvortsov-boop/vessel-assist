@@ -103,6 +103,7 @@ class _PhotoCompressScreenState extends State<PhotoCompressScreen> {
     PaletteState.set(AppSection.admin);
         return AppScaffold(
       title: 'Compress Photos',
+      section: AppSection.admin,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
