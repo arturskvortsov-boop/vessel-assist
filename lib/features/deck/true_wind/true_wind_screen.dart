@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import 'true_wind.dart';
 
@@ -150,6 +151,7 @@ class _TrueWindScreenState extends State<TrueWindScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
     final result = _result;
     final theme = Theme.of(context);
     final trueColor = theme.colorScheme.primary;

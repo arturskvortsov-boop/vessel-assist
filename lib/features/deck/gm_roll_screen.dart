@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/theme.dart';
+import '../../core/palette_state.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../domain/models/gm_roll_model.dart';
 
@@ -166,6 +167,7 @@ class _GmRollScreenState extends State<GmRollScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
         return AppScaffold(
       title: 'GM Estimate — Roll Period',
       body: SingleChildScrollView(

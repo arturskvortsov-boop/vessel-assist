@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
@@ -320,6 +320,7 @@ class _LopScreenState extends State<LopScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return DefaultTabController(
       length: 2,
       child: AppScaffold(

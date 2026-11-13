@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class LubeScreen extends StatefulWidget {
@@ -118,6 +118,7 @@ class _LubeScreenState extends State<LubeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
     final robKeys = _robBox.keys.toList();
 
         return AppScaffold(

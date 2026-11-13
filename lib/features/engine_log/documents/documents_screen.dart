@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class DocumentsScreen extends StatefulWidget {
@@ -115,6 +116,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
             title: 'Document Storage',
       body: Column(

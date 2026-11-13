@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class PumpScreen extends StatefulWidget {
@@ -55,6 +55,7 @@ class _PumpScreenState extends State<PumpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'Pump Calculator',
       background: AppBackground.engineRoom,

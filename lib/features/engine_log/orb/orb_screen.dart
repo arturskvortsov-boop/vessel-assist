@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/orb_entry.dart';
 import '../../../domain/models/tank.dart';
@@ -174,6 +174,7 @@ class _OrbScreenState extends State<OrbScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'ORB Generator',
       background: AppBackground.engineRoom,

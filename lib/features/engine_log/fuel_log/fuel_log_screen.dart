@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/section_theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/fuel_log.dart';
@@ -234,6 +235,7 @@ class _FuelLogScreenState extends State<FuelLogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
     final logsData = _box.values.toList();
     final logs = logsData.map((e) => FuelLog.fromMap(e)).toList();
     logs.sort((a, b) => b.id.compareTo(a.id)); 

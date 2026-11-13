@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'palette_state.dart';
 import 'theme.dart';
 
-export 'palette_state.dart' show AppSection, SectionPalette;
-
 /// Даёт доступ к палитре текущего раздела из любого виджета-потомка.
 class SectionTheme extends InheritedWidget {
   final AppSection section;

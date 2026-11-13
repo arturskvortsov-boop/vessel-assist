@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:excel/excel.dart' as xl;
 import 'package:file_saver/file_saver.dart' as fs;
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/cargo_tank.dart';
 
@@ -141,6 +142,7 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
         return AppScaffold(
       title: 'Cargo Tanks',
       body: ValueListenableBuilder(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/signature_pad.dart';
 import 'package:pdf/pdf.dart';
@@ -22,6 +22,7 @@ class _BunkerChecklistScreenState extends State<BunkerChecklistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'Bunkering Checklists',
       background: AppBackground.engineRoom,

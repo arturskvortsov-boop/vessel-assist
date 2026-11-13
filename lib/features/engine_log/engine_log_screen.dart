@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/palette_state.dart';
 import '../../core/section_theme.dart';
 import 'package:animations/animations.dart';
 import '../../core/widgets/app_scaffold.dart';
@@ -25,6 +26,7 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
 
     @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
     final palette = SectionPalette.of(AppSection.engine);
     return AppScaffold(
       title: 'Engine Operations',
@@ -54,8 +56,8 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
-          onDestinationSelected: (index) => setState(() => _currentIndex = index),
-          backgroundColor: cardSolid,
+                    onDestinationSelected: (index) => setState(() => _currentIndex = index),
+          backgroundColor: palette.field,
           indicatorColor: palette.accent.withValues(alpha: 0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: [

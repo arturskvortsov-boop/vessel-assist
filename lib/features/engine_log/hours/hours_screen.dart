@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../domain/models/engine_hour.dart';
 import '../../../core/widgets/animated_counter.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -125,6 +125,7 @@ class _HoursScreenState extends State<HoursScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'Engine Hours',
       background: AppBackground.engineRoom,

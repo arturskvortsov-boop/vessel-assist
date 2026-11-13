@@ -11,6 +11,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/palette_state.dart';
 import '../../core/widgets/app_scaffold.dart';
 
 const _stampColorKey = 'date_time_stamper_text_color';
@@ -489,6 +490,7 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.admin);
     final stamp = _stamp;
     final canExport = !_busy && _photos.isNotEmpty && stamp != null;
         return AppScaffold(

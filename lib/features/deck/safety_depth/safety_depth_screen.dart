@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/safety_depth_model.dart';
 
@@ -137,6 +138,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
         return AppScaffold(
       title: 'Safety Depth',
       actions: [

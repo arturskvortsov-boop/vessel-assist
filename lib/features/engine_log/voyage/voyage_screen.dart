@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class VoyageScreen extends StatefulWidget {
@@ -54,6 +54,7 @@ class _VoyageScreenState extends State<VoyageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'Voyage Plan',
       background: AppBackground.engineRoom,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/palette_state.dart';
 import '../../core/section_theme.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/glass_card.dart';
@@ -11,6 +12,7 @@ class AdminMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.admin);
                 return AppScaffold(
       title: 'Admin & Documents',
       section: AppSection.admin,

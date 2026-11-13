@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
+import '../../core/palette_state.dart';
 import '../../core/widgets/app_scaffold.dart';
 
 class PhotoCompressScreen extends StatefulWidget {
@@ -99,6 +100,7 @@ class _PhotoCompressScreenState extends State<PhotoCompressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.admin);
         return AppScaffold(
       title: 'Compress Photos',
       body: Center(

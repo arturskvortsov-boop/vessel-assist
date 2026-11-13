@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/theme.dart';
-import '../../../core/section_theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/utils/time_input_formatter.dart';
 import '../../../domain/models/egcs_record.dart';
@@ -57,6 +57,7 @@ class _EgcsScreenState extends State<EgcsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.engine);
         return AppScaffold(
       title: 'EGCS Record Book',
       background: AppBackground.engineRoom,

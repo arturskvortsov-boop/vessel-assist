@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 
@@ -92,6 +93,7 @@ class _BallastSequenceScreenState extends State<BallastSequenceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
     final schedule = _schedule;
         return AppScaffold(
       title: 'Ballast Sequence',

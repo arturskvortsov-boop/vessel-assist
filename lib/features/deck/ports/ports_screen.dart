@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/port.dart';
 
@@ -59,6 +60,7 @@ class _PortsScreenState extends State<PortsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
         return AppScaffold(
       title: 'Port Codes',
       body: _isLoading

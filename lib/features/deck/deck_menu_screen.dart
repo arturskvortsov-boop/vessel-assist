@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animations/animations.dart';
 import '../../core/theme.dart';
+import '../../core/palette_state.dart';
 import '../../core/section_theme.dart';
 import '../../core/widgets/app_scaffold.dart';
 
@@ -23,6 +24,7 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
 
     @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
     final palette = SectionPalette.of(AppSection.bridge);
     return AppScaffold(
       title: 'Bridge & Deck',

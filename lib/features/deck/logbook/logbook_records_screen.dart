@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 class _RecordTemplate {
@@ -122,6 +123,7 @@ class _LogbookRecordsScreenState extends State<LogbookRecordsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
     final query = _search.text.trim().toLowerCase();
     final tokens = query.split(RegExp(r'\s+')).where((text) => text.isNotEmpty).toList();
     final visible = _templates.where((record) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/glass_card.dart';
 
@@ -130,6 +131,7 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.bridge);
     final minutes = _roundedMinutes;
     final duration = minutes == null ? '—'
         : '${minutes ~/ 1440} d  ${_two((minutes % 1440) ~/ 60)} h  '

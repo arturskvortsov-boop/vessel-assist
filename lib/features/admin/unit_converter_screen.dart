@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/palette_state.dart';
 import '../../core/widgets/app_scaffold.dart';
 import 'unit_converter_model.dart';
 
@@ -62,6 +63,7 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PaletteState.set(AppSection.admin);
     final units = unitCategories[_category]!;
     final input = _input.text.trim();
     final value = double.tryParse(input.replaceAll(',', '.'));
