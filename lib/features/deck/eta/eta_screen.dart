@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/eta_model.dart';
@@ -289,11 +290,11 @@ class _EtaScreenState extends State<EtaScreen> {
                             DropdownMenuItem(value: 'speed', child: Text('Required Average Speed')),
                             DropdownMenuItem(value: 'eco', child: Text('Eco / Full Speed')),
                           ],
-                          onChanged: (v) async {
+                                                    onChanged: (v) async {
                             if (v == 'eco') {
-                              // TODO: Навигация на Eco Speed, когда создадим экран
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eco Speed screen coming soon!')));
+                              // Переходим на отдельный экран Eco / Full Speed.
                               if (mounted) setState(() => _modeRevision++);
+                              context.push('/deck/eco_speed');
                               return;
                             }
                             if (v != null) {
