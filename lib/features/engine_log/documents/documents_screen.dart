@@ -120,6 +120,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         return AppScaffold(
             title: 'Document Storage',
       section: AppSection.admin,
+      background: AppBackground.neutral,
       body: Column(
         children: [
           Padding(

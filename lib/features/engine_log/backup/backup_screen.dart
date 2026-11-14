@@ -104,6 +104,7 @@ class _BackupScreenState extends State<BackupScreen> {
         return AppScaffold(
       title: 'Backup & Restore',
       section: AppSection.admin,
+      background: AppBackground.neutral,
       body: _isLoading      
         ? Center(child: CircularProgressIndicator(color: accent))
         : ListView(

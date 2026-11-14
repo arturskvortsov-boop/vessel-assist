@@ -496,6 +496,7 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
         return AppScaffold(
       title: 'Date & Time Stamper',
       section: AppSection.admin,
+      background: AppBackground.neutral,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

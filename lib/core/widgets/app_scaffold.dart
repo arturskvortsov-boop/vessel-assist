@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../nautical_background.dart';
 import '../engine_room_background.dart';
+import '../neutral_background.dart';
 import '../palette_state.dart';
 import '../section_theme.dart';
 import '../theme.dart';
@@ -13,6 +14,9 @@ enum AppBackground {
 
   /// Машинное отделение — 8-битный двигатель в разрезе.
   engineRoom,
+
+  /// Нейтральный фон — спокойный градиент с сеткой (администрирование).
+  neutral,
 }
 
 /// Единый каркас экрана в стиле приложения.
@@ -64,10 +68,12 @@ class AppScaffold extends StatelessWidget {
     this.showHomeFab = true,
   });
 
-  Widget _wrapBackground(Widget content) {
+    Widget _wrapBackground(Widget content) {
     switch (background) {
       case AppBackground.engineRoom:
         return EngineRoomBackground(child: content);
+      case AppBackground.neutral:
+        return NeutralBackground(child: content);
       case AppBackground.nautical:
         return NauticalBackground(child: content);
     }

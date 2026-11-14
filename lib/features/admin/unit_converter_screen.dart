@@ -77,6 +77,7 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
         return AppScaffold(
       title: 'Unit Converter',
       section: AppSection.admin,
+      background: AppBackground.neutral,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),

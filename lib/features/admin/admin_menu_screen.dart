@@ -16,6 +16,7 @@ class AdminMenuScreen extends StatelessWidget {
                 return AppScaffold(
       title: 'Admin & Documents',
       section: AppSection.admin,
+      background: AppBackground.neutral,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
