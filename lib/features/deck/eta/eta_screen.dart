@@ -18,8 +18,7 @@ class _EtaScreenState extends State<EtaScreen> {
   final _form = GlobalKey<FormState>();
   final _distance = TextEditingController();
   final _speed = TextEditingController();
-  bool _required = false;
-  int _modeRevision = 0;
+    bool _required = false;
   int _departureOffset = 0, _arrivalOffset = 0;
   late DateTime _departure, _target;
   EtaResult? _result;
@@ -133,29 +132,51 @@ class _EtaScreenState extends State<EtaScreen> {
     );
   }
 
-  Widget _zone(bool departure) => Padding(
-        padding: const EdgeInsets.only(bottom: 18),
-        child: DropdownButtonFormField<int>(
-          initialValue: departure ? _departureOffset : _arrivalOffset,
-          isExpanded: true,
+    Widget _zone(bool departure) {
+    final current = departure ? _departureOffset : _arrivalOffset;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () async {
+          final picked = await showModalBottomSheet<int>(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (_) => _OffsetSheet(
+              title: departure ? 'Departure UTC Offset' : 'Arrival UTC Offset',
+              selected: current,
+            ),
+          );
+          if (picked == null) return;
+          setState(() {
+            if (departure) {
+              _departureOffset = picked;
+            } else {
+              _arrivalOffset = picked;
+            }
+            _invalidate();
+          });
+        },
+        child: InputDecorator(
           decoration: _decoration(departure ? 'Departure UTC Offset' : 'Arrival UTC Offset'),
-          items: [
-            for (var m = -720; m <= 840; m += 15)
-              DropdownMenuItem(value: m, child: Text(etaOffsetLabel(m)))
-          ],
-          onChanged: (v) {
-            if (v == null) return;
-            setState(() {
-              if (departure) {
-                _departureOffset = v;
-              } else {
-                _arrivalOffset = v;
-              }
-              _invalidate();
-            });
-          },
+          child: Row(
+            children: [
+              Icon(Icons.public, color: accent, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  etaOffsetLabel(current),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              const Icon(Icons.expand_more, color: textMuted),
+            ],
+          ),
         ),
-      );
+      ),
+    );
+  }
 
   void _calculate() {
     if (!_form.currentState!.validate()) return;
@@ -278,31 +299,21 @@ class _EtaScreenState extends State<EtaScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text('Passage Planning', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 16),
-                        DropdownButtonFormField<String>(
-                          key: ValueKey(_modeRevision),
-                          initialValue: _required ? 'speed' : 'eta',
-                          isExpanded: true,
-                          decoration: _decoration('Calculation Mode'),
-                          items: const [
-                            DropdownMenuItem(value: 'eta', child: Text('Calculate ETA')),
-                            DropdownMenuItem(value: 'speed', child: Text('Required Average Speed')),
-                            DropdownMenuItem(value: 'eco', child: Text('Eco / Full Speed')),
-                          ],
-                                                    onChanged: (v) async {
+                                                const Text('Passage Planning', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 6),
+                        const Text('Calculation Mode', style: TextStyle(color: textMuted, fontSize: 12, letterSpacing: 1)),
+                        const SizedBox(height: 12),
+                        _ModeSelector(
+                          selected: _required ? 'speed' : 'eta',
+                          onSelect: (v) {
                             if (v == 'eco') {
-                              // Переходим на отдельный экран Eco / Full Speed.
-                              if (mounted) setState(() => _modeRevision++);
                               context.push('/deck/eco_speed');
                               return;
                             }
-                            if (v != null) {
-                              setState(() {
-                                _required = v == 'speed';
-                                _invalidate();
-                              });
-                            }
+                            setState(() {
+                              _required = v == 'speed';
+                              _invalidate();
+                            });
                           },
                         ),
                       ],
@@ -390,4 +401,198 @@ class _EtaScreenState extends State<EtaScreen> {
           ),
         ),
       );
+}
+
+/// Сегментированный выбор режима расчёта — три карточки с иконками.
+class _ModeSelector extends StatelessWidget {
+  final String selected;
+  final ValueChanged<String> onSelect;
+  const _ModeSelector({required this.selected, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <_ModeItem>[
+      _ModeItem('eta', 'Calculate ETA', Icons.schedule),
+      _ModeItem('speed', 'Required Speed', Icons.speed),
+      _ModeItem('eco', 'Eco / Full', Icons.eco_outlined),
+    ];
+    return Row(
+      children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(width: 10),
+          Expanded(
+            child: _ModeTile(
+              item: items[i],
+              active: selected == items[i].value,
+              onTap: () => onSelect(items[i].value),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ModeItem {
+  final String value;
+  final String label;
+  final IconData icon;
+  const _ModeItem(this.value, this.label, this.icon);
+}
+
+class _ModeTile extends StatelessWidget {
+  final _ModeItem item;
+  final bool active;
+  final VoidCallback onTap;
+  const _ModeTile({required this.item, required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          decoration: BoxDecoration(
+            color: active ? accent.withValues(alpha: 0.14) : cardSolid,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: active ? accent : border,
+              width: active ? 1.5 : 1,
+            ),
+            boxShadow: active
+                ? [BoxShadow(color: accent.withValues(alpha: 0.18), blurRadius: 14, spreadRadius: 1)]
+                : null,
+          ),
+          child: Column(
+            children: [
+              Icon(item.icon, color: active ? accent : textMuted, size: 26),
+              const SizedBox(height: 8),
+              Text(
+                item.label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: active ? accent : textMuted,
+                  fontSize: 12,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  height: 1.2,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Нижняя панель выбора UTC-смещения — аккуратный список с выделением.
+class _OffsetSheet extends StatefulWidget {
+  final String title;
+  final int selected;
+  const _OffsetSheet({required this.title, required this.selected});
+
+  @override
+  State<_OffsetSheet> createState() => _OffsetSheetState();
+}
+
+class _OffsetSheetState extends State<_OffsetSheet> {
+  late final ScrollController _controller;
+  static const _step = 15;
+  static const _min = -720;
+  static const _max = 840;
+
+  @override
+  void initState() {
+    super.initState();
+    // Прокручиваем к текущему значению.
+    final index = (widget.selected - _min) ~/ _step;
+    _controller = ScrollController(initialScrollOffset: (index * 52.0) - 120);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final values = [for (var m = _min; m <= _max; m += _step) m];
+    return Container(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
+      decoration: BoxDecoration(
+        color: cardSolid,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 12),
+          Container(
+            width: 44,
+            height: 4,
+            decoration: BoxDecoration(color: border, borderRadius: BorderRadius.circular(2)),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+            child: Row(
+              children: [
+                Icon(Icons.public, color: accent, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                ),
+              ],
+            ),
+          ),
+          Divider(color: border, height: 1),
+          Flexible(
+            child: ListView.builder(
+              controller: _controller,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: values.length,
+              itemBuilder: (context, i) {
+                final v = values[i];
+                final active = v == widget.selected;
+                return InkWell(
+                  onTap: () => Navigator.of(context).pop(v),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: active ? accent.withValues(alpha: 0.14) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: active ? accent : Colors.transparent),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            etaOffsetLabel(v),
+                            style: TextStyle(
+                              color: active ? accent : text,
+                              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        if (active) Icon(Icons.check_circle, color: accent, size: 20),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
 }
