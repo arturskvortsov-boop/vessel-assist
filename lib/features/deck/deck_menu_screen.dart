@@ -75,8 +75,7 @@ class _NavigationTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time & required speed', icon: Icons.schedule, route: '/deck/eta'),
-        _MenuCard(title: 'Eco / Full Speed', subtitle: 'Split passage between eco and full speed', icon: Icons.speed, route: '/deck/eco_speed'),
+        _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time, required speed & eco/full split', icon: Icons.schedule, route: '/deck/eta'),
         _MenuCard(title: 'Port Distance', subtitle: 'Sea distance & time at sea', icon: Icons.route, route: '/deck/port_distance'),
         _MenuCard(title: 'True Wind Calculator', subtitle: 'True and apparent wind vectors', icon: Icons.air, route: '/deck/true_wind'),
         _MenuCard(title: 'Compass Error Calculator', subtitle: 'Gyro and magnetic compass checks', icon: Icons.explore_outlined, route: '/deck/compass_error'),

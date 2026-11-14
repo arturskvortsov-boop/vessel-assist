@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/dms_coordinate.dart';
+import '../../../core/theme.dart';
 
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -330,134 +331,361 @@ class _StarCompassFormState extends State<StarCompassForm> {
     super.dispose();
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     final sky = _sky;
     final star = _star;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
-        _coordinateFields('Latitude', _latitude),
-        _coordinateFields('Longitude', _longitude),
-        OutlinedButton.icon(
-          onPressed: _locating ? null : _useGps,
-          icon: const Icon(Icons.my_location),
-          label: Text(_locating ? 'Getting position…' : 'Use GPS'),
-        ),
-        if (_fix != null) Text(_fix!),
-        const SizedBox(height: 12),
-        Row(
+        _Section(
+          title: 'Position',
+          icon: Icons.place_outlined,
           children: [
-            Expanded(
-              child: _field(
-                _date,
-                'Date (UTC)',
-                hint: 'DD.MM.YYYY',
-                changed: (_) => setState(_invalidateSky),
-              ),
+            _coordinateFields('Latitude', _latitude),
+            const SizedBox(height: 12),
+            _coordinateFields('Longitude', _longitude),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: _locating ? null : _useGps,
+              icon: _locating
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.my_location),
+              label: Text(_locating ? 'Getting position…' : 'Use GPS'),
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _field(
-                _time,
-                'Time (UTC)',
-                hint: 'HH:MM:SS',
-                changed: (_) => setState(_invalidateSky),
+            if (_fix != null) ...[
+              const SizedBox(height: 8),
+              Text(_fix!, style: const TextStyle(fontSize: 12)),
+            ],
+          ],
+        ),
+        const SizedBox(height: 16),
+        _Section(
+          title: 'Date & time (UTC)',
+          icon: Icons.schedule,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _field(
+                    _date,
+                    'Date (UTC)',
+                    hint: 'DD.MM.YYYY',
+                    changed: (_) => setState(_invalidateSky),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _field(
+                    _time,
+                    'Time (UTC)',
+                    hint: 'HH:MM:SS',
+                    changed: (_) => setState(_invalidateSky),
+                  ),
+                ),
+              ],
+            ),
+            OutlinedButton.icon(
+              onPressed: _today,
+              icon: const Icon(Icons.today_outlined),
+              label: const Text('Today'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _find,
+              icon: const Icon(Icons.search),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
               ),
+              label: const Text('Find stars'),
             ),
           ],
         ),
-        OutlinedButton.icon(
-          onPressed: _today,
-          icon: const Icon(Icons.today_outlined),
-          label: const Text('Today'),
-        ),
-        FilledButton(onPressed: _find, child: const Text('Find stars')),
         if (sky != null) ...[
-          const SizedBox(height: 8),
-          Text(
-            'Sun altitude ≈ ${sky.sunAltitude.toStringAsFixed(1)}°. '
-            '${sky.sunAltitude > -6 ? 'Bright sky may hide stars.' : 'Confirm the star visually.'}',
-          ),
-          if (_stars.isEmpty) const Text('No catalog stars above the horizon.'),
-          if (_stars.isNotEmpty)
-            DropdownButtonFormField<StarSight>(
-              key: ObjectKey(sky),
-              initialValue: star,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Star above horizon',
+          const SizedBox(height: 16),
+          _Section(
+            title: 'Star',
+            icon: Icons.star_outline,
+            children: [
+              Text(
+                'Sun altitude ≈ ${sky.sunAltitude.toStringAsFixed(1)}°. '
+                '${sky.sunAltitude > -6 ? 'Bright sky may hide stars.' : 'Confirm the star visually.'}',
+                style: const TextStyle(fontSize: 12, height: 1.4),
               ),
-              items: [
-                for (final sight in _stars)
-                  DropdownMenuItem(
-                    value: sight,
-                    enabled: sight.altitude < 85,
-                    child: Text(
-                      '${sight.star.name} · ${_bearing(sight.azimuth)} T',
-                    ),
+              if (_stars.isEmpty) const Text('No catalog stars above the horizon.'),
+              if (_stars.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                DropdownButtonFormField<StarSight>(
+                  key: ObjectKey(sky),
+                  initialValue: star,
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Star above horizon',
                   ),
+                  items: [
+                    for (final sight in _stars)
+                      DropdownMenuItem(
+                        value: sight,
+                        enabled: sight.altitude < 85,
+                        child: Text(
+                          '${sight.star.name} · ${_bearing(sight.azimuth)} T',
+                        ),
+                      ),
+                  ],
+                  onChanged: (value) {
+                    _star = value;
+                    _clearEntry();
+                  },
+                ),
               ],
-              onChanged: (value) {
-                _star = value;
-                _clearEntry();
-              },
-            ),
-          if (_stars.any((sight) => sight.altitude >= 85))
-            const Text(
-              'Azimuth is sensitive near the zenith. Select a star below 85°.',
-            ),
+              if (_stars.any((sight) => sight.altitude >= 85))
+                const Text(
+                  'Azimuth is sensitive near the zenith. Select a star below 85°.',
+                  style: TextStyle(fontSize: 12, height: 1.4),
+                ),
+            ],
+          ),
         ],
         if (star != null) ...[
-          if (_entry == null)
-            ExpansionTile(
-              title: const Text('Star data'),
+          if (_entry == null) ...[
+            const SizedBox(height: 16),
+            _Section(
+              title: 'Star data',
+              icon: Icons.info_outline,
               children: [SelectableText(_details(star))],
             ),
-          const SizedBox(height: 12),
-          _field(_heading, 'Ship heading (°)', numeric: true),
-          _field(_gyro, 'Observed gyro bearing (°)', numeric: true),
-          _field(
-            _compass,
-            'Observed magnetic compass bearing (°)',
-            numeric: true,
-          ),
-          _field(_variation, 'Local variation (°, optional)', numeric: true),
-          SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(value: false, label: Text('East')),
-              ButtonSegment(value: true, label: Text('West')),
+          ],
+          const SizedBox(height: 16),
+          _Section(
+            title: 'Observed bearings',
+            icon: Icons.explore,
+            children: [
+              _field(_heading, 'Ship heading (°)', numeric: true),
+              _field(_gyro, 'Observed gyro bearing (°)', numeric: true),
+              _field(
+                _compass,
+                'Observed magnetic compass bearing (°)',
+                numeric: true,
+              ),
             ],
-            selected: {_west},
-            onSelectionChanged: (value) {
-              _west = value.single;
-              _clearEntry();
-            },
           ),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: _calculate, child: const Text('Calculate')),
+          const SizedBox(height: 16),
+          _Section(
+            title: 'Variation',
+            icon: Icons.swap_horiz,
+            children: [
+              _field(_variation, 'Local variation (°, optional)', numeric: true),
+              const SizedBox(height: 4),
+              _EastWestSelector(
+                west: _west,
+                onChanged: (value) {
+                  _west = value;
+                  _clearEntry();
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          FilledButton.icon(
+            onPressed: _calculate,
+            icon: const Icon(Icons.calculate_outlined),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            label: const Text('Calculate'),
+          ),
         ],
         if (_entry != null) ...[
-          const SizedBox(height: 12),
-          Text(_error!, style: Theme.of(context).textTheme.titleLarge),
-          const Text(
-            'Estimated astronomical azimuth. Verify before recording.',
-          ),
-          ExpansionTile(
-            title: const Text('Calculation details'),
-            expandedAlignment: Alignment.centerLeft,
-            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            children: [SelectableText(_entry!)],
-          ),
-          OutlinedButton(
-            onPressed: () async {
+          const SizedBox(height: 20),
+          _ResultCard(
+            result: _error!,
+            entry: _entry!,
+            onCopy: () async {
               await Clipboard.setData(ClipboardData(text: _entry!));
               if (mounted) _notice('Log entry copied');
             },
-            child: const Text('Copy log entry'),
           ),
         ],
       ],
+    );
+  }
+}
+
+/// Карточка-секция с заголовком и иконкой.
+class _Section extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+  const _Section({
+    required this.title,
+    required this.icon,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardSolid,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: accent),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+/// Стилизованный переключатель East / West.
+class _EastWestSelector extends StatelessWidget {
+  final bool west;
+  final ValueChanged<bool> onChanged;
+  const _EastWestSelector({required this.west, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _SideTile(
+            label: 'East',
+            active: !west,
+            onTap: () => onChanged(false),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _SideTile(
+            label: 'West',
+            active: west,
+            onTap: () => onChanged(true),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SideTile extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+  const _SideTile({required this.label, required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? accent.withValues(alpha: 0.14) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: active ? accent : border),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: active ? accent : textMuted,
+              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Карточка результата с деталями и копированием.
+class _ResultCard extends StatelessWidget {
+  final String result;
+  final String entry;
+  final VoidCallback onCopy;
+  const _ResultCard({
+    required this.result,
+    required this.entry,
+    required this.onCopy,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: accent.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: accent, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'RESULT',
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            result,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 1.5),
+          ),
+          const SizedBox(height: 8),
+          ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: const EdgeInsets.only(top: 8),
+            title: const Text('Calculation details'),
+            expandedAlignment: Alignment.centerLeft,
+            children: [SelectableText(entry)],
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: onCopy,
+            icon: const Icon(Icons.copy_outlined),
+            label: const Text('Copy log entry'),
+          ),
+        ],
+      ),
     );
   }
 }

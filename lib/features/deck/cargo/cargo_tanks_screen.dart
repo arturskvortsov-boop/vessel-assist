@@ -45,47 +45,77 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
     }
   }
 
-  Widget _tankCard(CargoTank tank) {
-    final isFull = tank.fillPercentage >= 100;
-    final tankColor = isFull ? Colors.redAccent : accent;
-    
+    Widget _tankCard(CargoTank tank) {
+    final fill = tank.fillPercentage;
+    final isFull = fill >= 100;
+    final isHigh = fill > 85;
+    // Цвет по порогам: обычный → высокий (>85%) → полный (100%).
+    final tankColor = isFull
+        ? const Color(0xFFEF5350)
+        : isHigh
+            ? const Color(0xFFF59E0B)
+            : accent;
+    final gradient = isFull
+        ? const [Color(0xFFEF5350), Color(0xFF991B1B)]
+        : isHigh
+            ? const [Color(0xFFFBBF24), Color(0xFFB45309)]
+            : const [Color(0xFF31B6A5), Color(0xFF156D75)];
+
     return Material(
       color: cardSolid,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: isFull ? Colors.redAccent : border, width: isFull ? 2 : 1),
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: isHigh ? tankColor : border, width: isHigh ? 2 : 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Text(tank.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: text))),
-                PopupMenuButton<String>(
-                  tooltip: 'Tank settings',
-                  onSelected: (value) => value == 'edit' ? _edit(tank) : _delete(tank),
-                  itemBuilder: (_) => const [
-                    PopupMenuItem(value: 'edit', child: Text('Edit Tank')),
-                    PopupMenuItem(value: 'delete', child: Text('Delete Tank')),
-                  ],
+                Expanded(
+                  child: Text(
+                    tank.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: text),
+                  ),
+                ),
+                SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: PopupMenuButton<String>(
+                    padding: EdgeInsets.zero,
+                    tooltip: 'Tank settings',
+                    iconSize: 18,
+                    onSelected: (value) => value == 'edit' ? _edit(tank) : _delete(tank),
+                    itemBuilder: (_) => const [
+                      PopupMenuItem(value: 'edit', child: Text('Edit Tank')),
+                      PopupMenuItem(value: 'delete', child: Text('Delete Tank')),
+                    ],
+                  ),
                 ),
               ],
             ),
-            Text(tank.fuelType, style: const TextStyle(color: textMuted)),
-            const SizedBox(height: 20),
-            
+            Text(
+              tank.fuelType,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: textMuted, fontSize: 12),
+            ),
+            const SizedBox(height: 10),
+
+            // Компактный индикатор уровня.
             Container(
-              height: 120,
+              height: 72,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: tankColor, width: 2),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(10),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -94,15 +124,13 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
                         widthFactor: 1,
-                        heightFactor: (tank.fillPercentage / 100).clamp(0.0, 1.0),
+                        heightFactor: (fill / 100).clamp(0.0, 1.0),
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
-                              colors: isFull
-                                  ? const [Color(0xFFEF5350), Color(0xFF991B1B)]
-                                  : const [Color(0xFF31B6A5), Color(0xFF156D75)],
+                              colors: gradient,
                             ),
                           ),
                         ),
@@ -110,29 +138,51 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
                     ),
                     Center(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-                        child: Text('${tank.fillPercentage.toStringAsFixed(1)}%', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: text)),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          '${fill.toStringAsFixed(1)}%',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isHigh ? tankColor : text),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            
-            Text('${tank.volumeM3.toStringAsFixed(2)} m³ on board', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: text)),
-            const SizedBox(height: 4),
-            Text('Capacity: ${tank.capacityM3.toStringAsFixed(2)} m³', style: const TextStyle(color: textMuted, fontSize: 13)),
-            Text('Density: ${tank.densityMtPerM3.toStringAsFixed(4)} MT/m³', style: const TextStyle(color: textMuted, fontSize: 13)),
+            const SizedBox(height: 10),
+
+            Text(
+              '${tank.volumeM3.toStringAsFixed(2)} m³ on board',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: text),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Cap ${tank.capacityM3.toStringAsFixed(2)} m³ · ${tank.densityMtPerM3.toStringAsFixed(3)} MT/m³',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: textMuted, fontSize: 11),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '${tank.massMT.toStringAsFixed(3)} MT',
+              style: TextStyle(color: isHigh ? tankColor : accent, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            Text('${tank.massMT.toStringAsFixed(3)} MT', style: TextStyle(color: accent, fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
-              onPressed: () => _edit(tank),
-              icon: const Icon(Icons.edit_outlined),
-              label: const Text('Update Tank'),
-              style: OutlinedButton.styleFrom(minimumSize: const Size(double.infinity, 40)),
+            SizedBox(
+              width: double.infinity,
+              height: 34,
+              child: OutlinedButton.icon(
+                onPressed: () => _edit(tank),
+                icon: const Icon(Icons.edit_outlined, size: 16),
+                label: const Text('Update', style: TextStyle(fontSize: 12)),
+                style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
             ),
           ],
         ),
@@ -189,13 +239,18 @@ class _CargoTanksScreenState extends State<CargoTanksScreen> {
                     if (tanks.isEmpty)
                       const Padding(padding: EdgeInsets.all(32), child: Text('No tanks yet. Select Add Tank to create your first tank.', textAlign: TextAlign.center, style: TextStyle(color: textMuted)))
                     else
-                      LayoutBuilder(
+                                            LayoutBuilder(
                         builder: (context, constraints) {
-                          final columns = constraints.maxWidth >= 800 ? 2 : 1;
-                          final width = (constraints.maxWidth - 16 * (columns - 1)) / columns;
+                          final columns = constraints.maxWidth >= 760
+                              ? 3
+                              : constraints.maxWidth >= 480
+                                  ? 2
+                                  : 1;
+                          const gap = 12.0;
+                          final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
                           return Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
+                            spacing: gap,
+                            runSpacing: gap,
                             children: [
                               for (final tank in tanks)
                                 SizedBox(width: width, child: _tankCard(tank)),

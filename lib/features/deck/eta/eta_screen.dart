@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/eta_model.dart';
+import '../../../domain/models/eco_speed_model.dart';
 
 class EtaScreen extends StatefulWidget {
   const EtaScreen({super.key});
@@ -15,14 +15,20 @@ class EtaScreen extends StatefulWidget {
 }
 
 class _EtaScreenState extends State<EtaScreen> {
-  final _form = GlobalKey<FormState>();
+    final _form = GlobalKey<FormState>();
   final _distance = TextEditingController();
   final _speed = TextEditingController();
-    bool _required = false;
+  final _ecoSpeed = TextEditingController();
+  final _fullSpeed = TextEditingController();
+  String _mode = 'eta'; // 'eta' | 'speed' | 'eco'
   int _departureOffset = 0, _arrivalOffset = 0;
   late DateTime _departure, _target;
   EtaResult? _result;
+  EcoSpeedPlan? _ecoResult;
   String? _error;
+
+  bool get _required => _mode == 'speed';
+  bool get _isEco => _mode == 'eco';
 
   @override
   void initState() {
@@ -32,10 +38,12 @@ class _EtaScreenState extends State<EtaScreen> {
     _target = _departure.add(const Duration(days: 1));
   }
 
-  @override
+    @override
   void dispose() {
     _distance.dispose();
     _speed.dispose();
+    _ecoSpeed.dispose();
+    _fullSpeed.dispose();
     super.dispose();
   }
 
@@ -44,8 +52,9 @@ class _EtaScreenState extends State<EtaScreen> {
     return v != null && v.isFinite ? v : null;
   }
 
-  void _invalidate() {
+    void _invalidate() {
     _result = null;
+    _ecoResult = null;
     _error = null;
   }
 
@@ -178,10 +187,25 @@ class _EtaScreenState extends State<EtaScreen> {
     );
   }
 
-  void _calculate() {
+    void _calculate() {
     if (!_form.currentState!.validate()) return;
     try {
       final start = portTimeToUtc(_departure, _departureOffset);
+      if (_isEco) {
+        final plan = EcoSpeedPlan.calculate(
+          distance: _parse(_distance.text)!,
+          ecoSpeed: _parse(_ecoSpeed.text)!,
+          fullSpeed: _parse(_fullSpeed.text)!,
+          departure: start,
+          arrival: portTimeToUtc(_target, _arrivalOffset),
+        );
+        setState(() {
+          _ecoResult = plan;
+          _result = null;
+          _error = null;
+        });
+        return;
+      }
       final result = _required
           ? EtaResult.requiredSpeed(
               distanceNM: _parse(_distance.text)!,
@@ -193,16 +217,19 @@ class _EtaScreenState extends State<EtaScreen> {
               departureUTC: start);
       setState(() {
         _result = result;
+        _ecoResult = null;
         _error = null;
       });
     } on FormatException catch (e) {
       setState(() {
         _result = null;
+        _ecoResult = null;
         _error = e.message;
       });
     } on ArgumentError {
       setState(() {
         _result = null;
+        _ecoResult = null;
         _error = 'Calculated date is outside the supported range.';
       });
     }
@@ -284,6 +311,62 @@ class _EtaScreenState extends State<EtaScreen> {
     );
   }
 
+    Widget _ecoResultCard(EcoSpeedPlan p) {
+    return _card(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('ECO / FULL SPEED PLAN', style: TextStyle(color: textMuted, letterSpacing: 1.5)),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(child: _ecoModeBlock('Eco Speed', p.ecoHours, p.ecoDistance, Icons.eco_outlined)),
+              const SizedBox(width: 12),
+              Expanded(child: _ecoModeBlock('Full Speed', p.fullHours, p.fullDistance, Icons.speed)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text('Total: ${p.totalHours.toStringAsFixed(4)} h  •  ${(p.totalHours / 24).toStringAsFixed(4)} days'),
+          const SizedBox(height: 8),
+          Text('Target arrival: ${etaDateTime(_target)} ${etaOffsetLabel(_arrivalOffset)}'),
+          const SizedBox(height: 12),
+          const Text(
+            'The result gives the total time in each mode. It does not prescribe which mode to use first.',
+            style: TextStyle(color: textMuted, height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _ecoModeBlock(String title, double hours, double distance, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: accent.withValues(alpha: 0.25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: accent, size: 18),
+              const SizedBox(width: 6),
+              Text(title, style: TextStyle(color: accent, fontWeight: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text('${hours.toStringAsFixed(4)} h', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+          Text('${(hours / 24).toStringAsFixed(4)} days', style: const TextStyle(color: textMuted, fontSize: 12)),
+          const SizedBox(height: 6),
+          Text('${distance.toStringAsFixed(2)} NM', style: const TextStyle(color: textMuted, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
   @override
     Widget build(BuildContext context) => AppScaffold(
         title: 'ETA Calculator',
@@ -303,15 +386,11 @@ class _EtaScreenState extends State<EtaScreen> {
                         const SizedBox(height: 6),
                         const Text('Calculation Mode', style: TextStyle(color: textMuted, fontSize: 12, letterSpacing: 1)),
                         const SizedBox(height: 12),
-                        _ModeSelector(
-                          selected: _required ? 'speed' : 'eta',
+                                                _ModeSelector(
+                          selected: _mode,
                           onSelect: (v) {
-                            if (v == 'eco') {
-                              context.push('/deck/eco_speed');
-                              return;
-                            }
                             setState(() {
-                              _required = v == 'speed';
+                              _mode = v;
                               _invalidate();
                             });
                           },
@@ -342,8 +421,15 @@ class _EtaScreenState extends State<EtaScreen> {
                             label: const Text('Use Current Time'),
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        if (_required) _dateField(false) else _number(_speed, 'Planned Speed (kts)'),
+                                                const SizedBox(height: 12),
+                        if (_isEco) ...[
+                          _number(_ecoSpeed, 'Eco Speed (kts)'),
+                          _number(_fullSpeed, 'Full Speed (kts)'),
+                          _dateField(false),
+                        ] else if (_required)
+                          _dateField(false)
+                        else
+                          _number(_speed, 'Planned Speed (kts)'),
                         _card(
                           ExpansionTile(
                             tilePadding: EdgeInsets.zero,
@@ -376,7 +462,11 @@ class _EtaScreenState extends State<EtaScreen> {
                             foregroundColor: bg,
                             padding: const EdgeInsets.all(20),
                           ),
-                          label: Text(_required ? 'Calculate Required Speed' : 'Calculate ETA'),
+                          label: Text(_isEco
+                              ? 'Calculate Eco / Full Speed'
+                              : _required
+                                  ? 'Calculate Required Speed'
+                                  : 'Calculate ETA'),
                         ),
                       ],
                     ),
@@ -386,9 +476,13 @@ class _EtaScreenState extends State<EtaScreen> {
                       padding: const EdgeInsets.only(top: 18),
                       child: Text(_error!, style: const TextStyle(color: Color(0xFFFFB4AB))),
                     ),
-                  if (_result != null) ...[
+                                    if (_result != null) ...[
                     const SizedBox(height: 24),
                     _resultCard(_result!)
+                  ],
+                  if (_ecoResult != null) ...[
+                    const SizedBox(height: 24),
+                    _ecoResultCard(_ecoResult!)
                   ],
                   const SizedBox(height: 18),
                   const Text(

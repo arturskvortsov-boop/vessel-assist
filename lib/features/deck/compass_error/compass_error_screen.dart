@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/theme.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import 'landmark_bearing.dart';
 import 'star_compass_form.dart';
@@ -151,23 +152,18 @@ class _CompassErrorScreenState extends State<CompassErrorScreen> {
     super.dispose();
   }
 
-  @override
+    @override
     Widget build(BuildContext context) => AppScaffold(
     title: 'Compass Error Calculator',
     body: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(value: true, label: Text('By Star')),
-              ButtonSegment(value: false, label: Text('By Landmark')),
-            ],
-            selected: {_byStar},
-            showSelectedIcon: false,
-            onSelectionChanged: (selection) {
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: _MethodSelector(
+            byStar: _byStar,
+            onChanged: (value) {
               FocusScope.of(context).unfocus();
-              setState(() => _byStar = selection.single);
+              setState(() => _byStar = value);
             },
           ),
         ),
@@ -190,105 +186,127 @@ class _CompassErrorScreenState extends State<CompassErrorScreen> {
     ),
   );
 
-  Widget _landmarkForm(BuildContext context) => Center(
+    Widget _landmarkForm(BuildContext context) => Center(
     child: ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 680),
       child: Form(
         key: _form,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _field(
-                'landmark',
-                'Landmark name',
-                hint: 'Lighthouse, beacon or leading mark',
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Calculate true bearing from coordinates'),
-                value: _coordinates,
-                onChanged: (value) {
-                  _clearResult();
-                  setState(() => _coordinates = value);
-                },
-              ),
-              if (_coordinates) ...[
-                const Text(
-                  'Use charted coordinates in decimal degrees. North and east are positive.',
-                ),
-                const SizedBox(height: 10),
-                _field('lat', 'Ship latitude', min: -90, max: 90),
-                _field('lon', 'Ship longitude', min: -180, max: 180),
-                _field('targetLat', 'Landmark latitude', min: -90, max: 90),
-                _field('targetLon', 'Landmark longitude', min: -180, max: 180),
-              ] else
-                _field('true', 'Charted true bearing (°)', min: 0, max: 360),
-              _field(
-                'gyro',
-                'Observed gyro bearing (°)',
-                min: 0,
-                max: 360,
-                optional: true,
-              ),
-              _field(
-                'compass',
-                'Observed magnetic compass bearing (°)',
-                min: 0,
-                max: 360,
-                optional: true,
-              ),
-              _field(
-                'variation',
-                'Local variation (°, optional)',
-                min: 0,
-                max: 180,
-                optional: true,
-              ),
-              SegmentedButton<bool>(
-                segments: const [
-                  ButtonSegment(value: false, label: Text('East')),
-                  ButtonSegment(value: true, label: Text('West')),
+              _Section(
+                title: 'Landmark',
+                icon: Icons.terrain,
+                children: [
+                  _field(
+                    'landmark',
+                    'Landmark name',
+                    hint: 'Lighthouse, beacon or leading mark',
+                  ),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Calculate true bearing from coordinates'),
+                    value: _coordinates,
+                    onChanged: (value) {
+                      _clearResult();
+                      setState(() => _coordinates = value);
+                    },
+                  ),
+                  if (_coordinates) ...[
+                    const Text(
+                      'Use charted coordinates in decimal degrees. North and east are positive.',
+                      style: TextStyle(fontSize: 12, height: 1.4),
+                    ),
+                    const SizedBox(height: 12),
+                    _field('lat', 'Ship latitude', min: -90, max: 90),
+                    _field('lon', 'Ship longitude', min: -180, max: 180),
+                    _field('targetLat', 'Landmark latitude', min: -90, max: 90),
+                    _field('targetLon', 'Landmark longitude', min: -180, max: 180),
+                  ] else
+                    _field('true', 'Charted true bearing (°)', min: 0, max: 360),
                 ],
-                selected: {_variationWest},
-                onSelectionChanged: (value) {
-                  _clearResult();
-                  setState(() => _variationWest = value.single);
-                },
               ),
-              const SizedBox(height: 12),
-              _field(
-                'utc',
-                'Observation date and time UTC (optional)',
-                optional: true,
-                hint: 'YYYY-MM-DD HH:MM:SS',
+              const SizedBox(height: 16),
+              _Section(
+                title: 'Observed bearings',
+                icon: Icons.explore,
+                children: [
+                  _field(
+                    'gyro',
+                    'Observed gyro bearing (°)',
+                    min: 0,
+                    max: 360,
+                    optional: true,
+                  ),
+                  _field(
+                    'compass',
+                    'Observed magnetic compass bearing (°)',
+                    min: 0,
+                    max: 360,
+                    optional: true,
+                  ),
+                ],
               ),
-              _field(
-                'heading',
-                'Ship heading (°), optional',
-                min: 0,
-                max: 360,
-                optional: true,
+              const SizedBox(height: 16),
+              _Section(
+                title: 'Variation',
+                icon: Icons.swap_horiz,
+                children: [
+                  _field(
+                    'variation',
+                    'Local variation (°, optional)',
+                    min: 0,
+                    max: 180,
+                    optional: true,
+                  ),
+                  const SizedBox(height: 4),
+                  _EastWestSelector(
+                    west: _variationWest,
+                    onChanged: (value) {
+                      _clearResult();
+                      setState(() => _variationWest = value);
+                    },
+                  ),
+                ],
               ),
-              FilledButton(
+              const SizedBox(height: 16),
+              _Section(
+                title: 'Observation',
+                icon: Icons.schedule,
+                children: [
+                  _field(
+                    'utc',
+                    'Observation date and time UTC (optional)',
+                    optional: true,
+                    hint: 'YYYY-MM-DD HH:MM:SS',
+                  ),
+                  _field(
+                    'heading',
+                    'Ship heading (°), optional',
+                    min: 0,
+                    max: 360,
+                    optional: true,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              FilledButton.icon(
                 onPressed: _calculate,
-                child: const Text('Calculate'),
+                icon: const Icon(Icons.calculate_outlined),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                label: const Text('Calculate'),
               ),
               if (_result != null) ...[
-                const SizedBox(height: 16),
-                Text(_result!, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 8),
-                ExpansionTile(
-                  title: const Text('Calculation details'),
-                  expandedAlignment: Alignment.centerLeft,
-                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  children: [SelectableText(_entry!)],
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton(
-                  onPressed: _copy,
-                  child: const Text('Copy log entry'),
+                const SizedBox(height: 20),
+                _ResultCard(
+                  result: _result!,
+                  entry: _entry!,
+                  onCopy: _copy,
                 ),
               ],
             ],
@@ -297,4 +315,260 @@ class _CompassErrorScreenState extends State<CompassErrorScreen> {
       ),
     ),
   );
+}
+
+/// Сегментированный выбор метода: By Star / By Landmark.
+class _MethodSelector extends StatelessWidget {
+  final bool byStar;
+  final ValueChanged<bool> onChanged;
+  const _MethodSelector({required this.byStar, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _MethodTile(
+            label: 'By Star',
+            icon: Icons.star_outline,
+            active: byStar,
+            onTap: () => onChanged(true),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _MethodTile(
+            label: 'By Landmark',
+            icon: Icons.terrain,
+            active: !byStar,
+            onTap: () => onChanged(false),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MethodTile extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool active;
+  final VoidCallback onTap;
+  const _MethodTile({
+    required this.label,
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: active ? accent.withValues(alpha: 0.14) : cardSolid,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: active ? accent : border,
+              width: active ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 20, color: active ? accent : textMuted),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  color: active ? accent : textMuted,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Карточка-секция с заголовком и иконкой.
+class _Section extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+  const _Section({
+    required this.title,
+    required this.icon,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardSolid,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: accent),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+/// Стилизованный переключатель East / West.
+class _EastWestSelector extends StatelessWidget {
+  final bool west;
+  final ValueChanged<bool> onChanged;
+  const _EastWestSelector({required this.west, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _SideTile(
+            label: 'East',
+            active: !west,
+            onTap: () => onChanged(false),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _SideTile(
+            label: 'West',
+            active: west,
+            onTap: () => onChanged(true),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SideTile extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+  const _SideTile({required this.label, required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? accent.withValues(alpha: 0.14) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: active ? accent : border),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: active ? accent : textMuted,
+              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Карточка результата с деталями и копированием.
+class _ResultCard extends StatelessWidget {
+  final String result;
+  final String entry;
+  final VoidCallback onCopy;
+  const _ResultCard({
+    required this.result,
+    required this.entry,
+    required this.onCopy,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: accent.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: accent, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'RESULT',
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            result,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 1.5),
+          ),
+          const SizedBox(height: 8),
+          ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: const EdgeInsets.only(top: 8),
+            title: const Text('Calculation details'),
+            expandedAlignment: Alignment.centerLeft,
+            children: [SelectableText(entry)],
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: onCopy,
+            icon: const Icon(Icons.copy_outlined),
+            label: const Text('Copy log entry'),
+          ),
+        ],
+      ),
+    );
+  }
 }

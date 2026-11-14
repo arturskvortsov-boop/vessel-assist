@@ -20,7 +20,7 @@ import '../features/deck/eta/eta_screen.dart';
 import '../features/deck/port_distance/port_distance_screen.dart';
 import '../features/deck/true_wind/true_wind_screen.dart';
 import '../features/deck/compass_error/compass_error_screen.dart';
-import '../features/deck/eta/eco_speed_screen.dart';
+
 import '../features/deck/ports/ports_screen.dart';
 import '../features/deck/ukc/ukc_screen.dart';
 import '../features/deck/ballast/ballast_time_screen.dart';
@@ -106,7 +106,7 @@ final appRouter = GoRouter(
         GoRoute(path: 'port_distance', pageBuilder: (context, state) => _buildPage(const PortDistanceScreen())),
         GoRoute(path: 'true_wind', pageBuilder: (context, state) => _buildPage(const TrueWindScreen())),
         GoRoute(path: 'compass_error', pageBuilder: (context, state) => _buildPage(const CompassErrorScreen())),
-        GoRoute(path: 'eco_speed', pageBuilder: (context, state) => _buildPage(const EcoSpeedScreen())),
+        
         GoRoute(path: 'ukc', pageBuilder: (context, state) => _buildPage(const UkcScreen())),
         GoRoute(path: 'ports', pageBuilder: (context, state) => _buildPage(const PortsScreen())),
         GoRoute(path: 'ballast_time', pageBuilder: (context, state) => _buildPage(const BallastTimeScreen())),

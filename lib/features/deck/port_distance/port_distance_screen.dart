@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../core/theme.dart';
 import '../../../core/palette_state.dart';
@@ -47,14 +48,57 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
   final _speed = TextEditingController();
   Port? _departure;
   Port? _arrival;
-  SeaRoute? _result;
+    SeaRoute? _result;
   String? _routeError;
   bool _includeTime = false;
+
+  SeaPoint? _myPosition;
+  bool _locating = false;
+  String? _locationError;
 
   @override
   void dispose() {
     _speed.dispose();
     super.dispose();
+  }
+
+  /// Запрашивает текущую позицию с GPS и сохраняет её для отображения на карте.
+  Future<void> _locateMe() async {
+    setState(() {
+      _locating = true;
+      _locationError = null;
+    });
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        throw 'Location services are disabled.';
+      }
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw 'Location permission denied.';
+      }
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          timeLimit: Duration(seconds: 15),
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        _myPosition = (lat: pos.latitude, lon: pos.longitude);
+        _locating = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _locating = false;
+        _locationError = e is String ? e : 'Could not get your position.';
+      });
+    }
   }
 
   void _updatePort(bool departure, Port? port) {
@@ -199,7 +243,7 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 16),
+                                    const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
@@ -207,6 +251,38 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                     },
                     child: const Text('Calculate'),
                   ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: _locating ? null : _locateMe,
+                    icon: _locating
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            _myPosition == null
+                                ? Icons.my_location
+                                : Icons.gps_fixed,
+                          ),
+                    label: Text(
+                      _locating
+                          ? 'Locating…'
+                          : _myPosition == null
+                              ? 'Show my position'
+                              : 'Update my position',
+                    ),
+                  ),
+                  if (_locationError case final locError?) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      locError,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                   if (_routeError case final error?) ...[
                     const SizedBox(height: 12),
                     Text(
@@ -235,11 +311,12 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                               Text('Time at sea · ≈ ${_formatTime(minutes)}'),
                             ],
                             const SizedBox(height: 16),
-                            RouteMap(
+                                                        RouteMap(
                               route: result,
                               land: data.land,
                               departureCode: _departure!.code,
                               arrivalCode: _arrival!.code,
+                              myPosition: _myPosition,
                             ),
                             const SizedBox(height: 12),
                             const Text(
