@@ -98,7 +98,8 @@ class AdminMenuScreen extends StatelessWidget {
     final palette = SectionTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
+            child: GlassCard(
+        transparent: true,
         onTap: () => context.push(route),
         child: Padding(
           padding: const EdgeInsets.all(16),

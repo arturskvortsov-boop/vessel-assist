@@ -131,8 +131,8 @@ class _MenuCard extends StatelessWidget {
     final palette = SectionTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: cardSolid,
+            child: Material(
+        color: Colors.transparent,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

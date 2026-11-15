@@ -6,11 +6,16 @@ class GlassCard extends StatefulWidget {
   final VoidCallback? onTap;
   final Color? glowColor;
 
+  /// Если true — карточка без непрозрачной подложки (только рамка),
+  /// фон экрана просвечивает. Используется в меню-карточках.
+  final bool transparent;
+
   const GlassCard({
     super.key,
     required this.child,
     this.onTap,
     this.glowColor,
+    this.transparent = false,
   });
 
   @override
@@ -26,9 +31,9 @@ class _GlassCardState extends State<GlassCard> {
 
     // Непрозрачная подложка: анимированный фон не должен просвечивать
     // сквозь карточки. Blur (BackdropFilter) больше не нужен.
-    final inner = Container(
+        final inner = Container(
       decoration: BoxDecoration(
-        color: cardSolid,
+        color: widget.transparent ? Colors.transparent : cardSolid,
         border: Border.all(color: border.withValues(alpha: 0.5)),
         borderRadius: radius,
       ),
