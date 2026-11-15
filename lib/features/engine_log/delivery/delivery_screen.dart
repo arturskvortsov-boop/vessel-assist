@@ -438,10 +438,15 @@ class _ChecklistRowState extends State<_ChecklistRow> {
         if (_showNote)
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-            child: TextField(
+                        child: TextField(
               controller: _noteCtrl,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              minLines: 1,
+              textInputAction: TextInputAction.newline,
               decoration: const InputDecoration(
                 labelText: 'Note / Comment',
+                hintText: 'Type a comment…',
                 isDense: true,
                 border: OutlineInputBorder(),
               ),

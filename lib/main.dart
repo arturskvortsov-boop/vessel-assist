@@ -25,7 +25,6 @@ void main() async {
   await Hive.openBox('settings');
   await Hive.openBox('bunker_checklists');
   await Hive.openBox('tasks');
-  await Hive.openBox('lube_rob');
   await Hive.openBox('night_orders');
   await Hive.openBox('engine_hours');
   await Hive.openBox('changeover_history');

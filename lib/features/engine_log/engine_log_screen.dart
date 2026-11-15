@@ -44,17 +44,7 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
         },
         child: _screens[_currentIndex],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: palette.accent.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: NavigationBar(
+            bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
                     onDestinationSelected: (index) => setState(() => _currentIndex = index),
           backgroundColor: palette.field,
@@ -71,14 +61,13 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
               selectedIcon: Icon(Icons.engineering, color: palette.accent),
               label: 'Daily Ops',
             ),
-            NavigationDestination(
+                        NavigationDestination(
               icon: const Icon(Icons.security, color: textMuted),
               selectedIcon: Icon(Icons.security, color: palette.accent),
               label: 'Admin',
             ),
           ],
         ),
-      ),
     );
   }
 }

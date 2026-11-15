@@ -47,21 +47,9 @@ class _GlassCardState extends State<GlassCard> {
           onTapUp: widget.onTap == null ? null : (_) => setState(() => _pressed = false),
           onTapCancel: widget.onTap == null ? null : () => setState(() => _pressed = false),
           borderRadius: radius,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: radius,
-              boxShadow: [
-                                BoxShadow(
-                  color: (widget.glowColor ?? accent).withValues(alpha: 0.12),
-                  blurRadius: 15,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-                        child: ClipRRect(
-              borderRadius: radius,
-              child: inner,
-            ),
+                    child: ClipRRect(
+            borderRadius: radius,
+            child: inner,
           ),
         ),
       ),

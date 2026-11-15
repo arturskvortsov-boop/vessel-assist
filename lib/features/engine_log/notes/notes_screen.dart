@@ -84,6 +84,72 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
+  void _editNote(Note note) {
+    final titleCtrl = TextEditingController(text: note.title);
+    final bodyCtrl = TextEditingController(text: note.body);
+    String category = note.category;
+    bool isPinned = note.isPinned;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: cardSolid,
+          title: const Text('Edit Note', style: TextStyle(color: text)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
+                const SizedBox(height: 8),
+                TextField(controller: bodyCtrl, decoration: const InputDecoration(labelText: 'Note body'), maxLines: 4),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  initialValue: category,
+                  dropdownColor: cardSolid,
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  items: const [
+                    DropdownMenuItem(value: 'Inspector', child: Text('🔍 Inspector / PSC')),
+                    DropdownMenuItem(value: 'Superintendent', child: Text('👔 Superintendent')),
+                    DropdownMenuItem(value: 'Phone Prep', child: Text('📞 Phone Prep')),
+                    DropdownMenuItem(value: 'Task', child: Text('✅ Task')),
+                    DropdownMenuItem(value: 'General', child: Text('📝 General')),
+                  ],
+                  onChanged: (val) => setDialogState(() => category = val!),
+                ),
+                SwitchListTile(
+                  title: Text('Pin to top', style: TextStyle(color: accent, fontSize: 14)),
+                  value: isPinned,
+                  activeThumbColor: accent,
+                  contentPadding: EdgeInsets.zero,
+                  onChanged: (val) => setDialogState(() => isPinned = val),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            ElevatedButton(
+              onPressed: () {
+                final updated = Note(
+                  id: note.id,
+                  title: titleCtrl.text,
+                  body: bodyCtrl.text,
+                  category: category,
+                  isPinned: isPinned,
+                  timestamp: note.timestamp,
+                );
+                _box.put(updated.id, updated.toMap());
+                Navigator.pop(ctx);
+              },
+              child: const Text('Save'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   String _getIcon(String category) {
     switch (category) {
       case 'Inspector': return '🔍';
@@ -192,7 +258,7 @@ class _NotesScreenState extends State<NotesScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('${n.category} • $dateStr', style: const TextStyle(color: textMuted, fontSize: 10)),
-                              Row(
+                                                            Row(
                                 children: [
                                   IconButton(
                                     icon: Icon(n.isPinned ? Icons.push_pin : Icons.push_pin_outlined, color: accent, size: 18),
@@ -200,6 +266,10 @@ class _NotesScreenState extends State<NotesScreen> {
                                       n.isPinned = !n.isPinned;
                                       box.put(n.id, n.toMap());
                                     },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.edit, color: accent, size: 18),
+                                    onPressed: () => _editNote(n),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete, color: Colors.redAccent, size: 18),

@@ -47,15 +47,15 @@ class SectionPalette {
     background: Color(0xFF050B14),
   );
 
-  /// Машинное отделение — янтарная индустриальная палитра.
+  /// Машинное отделение — спокойная стальная палитра (сине-серый).
   static const engine = SectionPalette(
-    accent: Color(0xFFF59E0B), // янтарный
-    accentDark: Color(0xFFB45309),
-    secondary: Color(0xFFFB923C), // оранжевый
-    appBar: Color(0xFF1A1206),
-    field: Color(0xFF1A1206),
-    border: Color(0xFF3A2E1E),
-    background: Color(0xFF0A0703),
+    accent: Color(0xFF7FA8C9), // стальной голубой
+    accentDark: Color(0xFF4A6B85),
+    secondary: Color(0xFF9DB4C7), // светло-стальной
+    appBar: Color(0xFF16202B),
+    field: Color(0xFF16202B),
+    border: Color(0xFF2A3A4A),
+    background: Color(0xFF0B1219),
   );
 
   /// Администрирование — нейтральная серо-синяя палитра.

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
-import '../../../core/widgets/glass_card.dart';
 
 class BallastTimeScreen extends StatefulWidget {
   const BallastTimeScreen({super.key});
@@ -101,10 +100,10 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
     }
   }
 
-  Widget _field(TextEditingController controller, String label,
+    Widget _field(TextEditingController controller, String label,
       String unit, {bool allowZero = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: controller,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -112,7 +111,7 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
           labelText: label,
           suffixText: unit,
           filled: true,
-          fillColor: cardSolid,
+          fillColor: bg,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
         onChanged: (_) => _clear(),
@@ -129,92 +128,162 @@ class _BallastTimeScreenState extends State<BallastTimeScreen> {
     );
   }
 
-  @override
+  /// Карточка-секция с заголовком и иконкой.
+  Widget _section(String title, IconData icon, List<Widget> children) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: cardSolid,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: accent),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+    @override
   Widget build(BuildContext context) {
     PaletteState.set(AppSection.bridge);
     final minutes = _roundedMinutes;
-    final duration = minutes == null ? '—'
+    final duration = minutes == null
+        ? '—'
         : '${minutes ~/ 1440} d  ${_two((minutes % 1440) ~/ 60)} h  '
-          '${_two(minutes % 60)} min';
-        return AppScaffold(
+            '${_two(minutes % 60)} min';
+    return AppScaffold(
       title: 'Ballast Time',
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Center(child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Icon(Icons.water_outlined, color: accent, size: 46),
-            const SizedBox(height: 20),
-            const Text('Ballast Time Calculator', style: TextStyle(
-              fontSize: 30, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 10),
-            const Text('Estimated pumping duration and completion time.',
-              style: TextStyle(color: textMuted, height: 1.5)),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: OutlinedButton(
-                onPressed: () => context.push('/deck/ballast_sequence', extra: _start),
-                child: const Text('Ballast Sequence'),
-              ),
-            ),
-            const SizedBox(height: 24),
-            GlassCard(
-              child: Form(key: _form, child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _field(_volume, 'Volume to Pump', 'm³', allowZero: true),
-                  _field(_rate, 'Total Effective Pump Rate', 'm³/h'),
-                  const Text('START DATE & TIME (UTC)',
-                    style: TextStyle(color: textMuted, fontSize: 12)),
-                  const SizedBox(height: 10),
-                  OutlinedButton.icon(
-                    onPressed: _pickStart,
-                    icon: const Icon(Icons.calendar_month_outlined),
-                    label: Text('${_date(_start)}  ${_time(_start)} UTC'),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Заголовок.
+                Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: accent.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: accent.withValues(alpha: 0.3)),
+                      ),
+                      child: Icon(Icons.water_outlined, color: accent, size: 26),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Ballast Time Calculator',
+                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                          SizedBox(height: 2),
+                          Text('Estimated pumping duration and completion time.',
+                              style: TextStyle(color: textMuted, fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/deck/ballast_sequence', extra: _start),
+                  icon: const Icon(Icons.format_list_numbered, size: 18),
+                  label: const Text('Ballast Sequence'),
+                ),
+                const SizedBox(height: 16),
+
+                // Ввод.
+                Form(
+                  key: _form,
+                  child: _section('Input', Icons.edit_outlined, [
+                    _field(_volume, 'Volume to Pump', 'm³', allowZero: true),
+                    _field(_rate, 'Total Effective Pump Rate', 'm³/h'),
+                    const Text('START DATE & TIME (UTC)',
+                        style: TextStyle(color: textMuted, fontSize: 12, letterSpacing: 0.5)),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _pickStart,
+                      icon: const Icon(Icons.calendar_month_outlined, size: 18),
+                      label: Text('${_date(_start)}  ${_time(_start)} UTC'),
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton.icon(
+                      onPressed: _calculate,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: accent,
+                        foregroundColor: bg,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
+                      icon: const Icon(Icons.calculate_outlined),
+                      label: const Text('Calculate'),
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 16),
+
+                // Результат.
+                _section('Result', Icons.timer_outlined, [
+                  const Text('ESTIMATED DURATION',
+                      style: TextStyle(color: textMuted, letterSpacing: 1.4, fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Text(duration,
+                      style: TextStyle(
+                          color: accent, fontSize: 26, fontWeight: FontWeight.w700)),
+                  if (_exactMinutes != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      'Calculated: ${_exactMinutes!.toStringAsFixed(2)} min. '
+                      'Schedule rounded to the nearest minute.',
+                      style: const TextStyle(color: textMuted, height: 1.5, fontSize: 12),
+                    ),
+                  ],
+                  const SizedBox(height: 20),
+                  const Text('ESTIMATED COMPLETION (UTC)',
+                      style: TextStyle(color: textMuted, letterSpacing: 1.4, fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Text(
+                    _finish == null
+                        ? '—'
+                        : '${_date(_finish!)}  ${_time(_finish!)} UTC',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 18),
-                  FilledButton.icon(
-                    onPressed: _calculate,
-                    style: FilledButton.styleFrom(backgroundColor: accent,
-                      foregroundColor: bg,
-                      padding: const EdgeInsets.all(18)),
-                    icon: const Icon(Icons.calculate_outlined),
-                    label: const Text('Calculate'),
+                  const Text(
+                    'Assumes a constant effective pump rate. '
+                    'Include the combined effective rate when using multiple pumps. '
+                    'Stripping, interruptions and changing flow are not included.',
+                    style: TextStyle(color: textMuted, fontSize: 12, height: 1.5),
                   ),
-                ],
-              )),
+                ]),
+              ],
             ),
-            const SizedBox(height: 24),
-            GlassCard(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('ESTIMATED DURATION',
-                  style: TextStyle(color: textMuted, letterSpacing: 1.4)),
-                const SizedBox(height: 12),
-                Text(duration, style: TextStyle(color: accent,
-                  fontSize: 28, fontWeight: FontWeight.w700)),
-                if (_exactMinutes != null) ...[
-                  const SizedBox(height: 8),
-                  Text('Calculated: ${_exactMinutes!.toStringAsFixed(2)} min. '
-                    'Schedule rounded to the nearest minute.',
-                    style: const TextStyle(color: textMuted, height: 1.5)),
-                ],
-                const SizedBox(height: 24),
-                const Text('ESTIMATED COMPLETION (UTC)',
-                  style: TextStyle(color: textMuted, letterSpacing: 1.4)),
-                const SizedBox(height: 12),
-                Text(_finish == null ? '—'
-                    : '${_date(_finish!)}  ${_time(_finish!)} UTC',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 20),
-                const Text('Assumes a constant effective pump rate. '
-                  'Include the combined effective rate when using multiple pumps. '
-                  'Stripping, interruptions and changing flow are not included.',
-                  style: TextStyle(color: textMuted, fontSize: 12, height: 1.5)),
-              ]),
-            ),
-          ]),
-        )),
+          ),
+        ),
       ),
     );
   }

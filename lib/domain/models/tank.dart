@@ -2,6 +2,9 @@ class Tank {
   final String id;
   final String name;
   final String type;
+
+  /// Подтип топлива: 'hfo' (тяжёлое) или 'do' (дизельное). Только для type == 'fuel'.
+  final String? fuelType;
   final double capacity;
   double volume;
   double density;
@@ -12,6 +15,7 @@ class Tank {
     required this.name,
     required this.type,
     required this.capacity,
+    this.fuelType,
     this.volume = 0.0,
     this.density = 0.95,
     this.temp = 15.0,
@@ -23,6 +27,7 @@ class Tank {
       'id': id,
       'name': name,
       'type': type,
+      'fuelType': fuelType,
       'capacity': capacity,
       'volume': volume,
       'density': density,
@@ -36,6 +41,7 @@ class Tank {
       id: map['id'],
       name: map['name'],
       type: map['type'],
+      fuelType: map['fuelType'] as String?,
       capacity: (map['capacity'] as num).toDouble(),
       volume: (map['volume'] as num).toDouble(),
       density: (map['density'] as num).toDouble(),
