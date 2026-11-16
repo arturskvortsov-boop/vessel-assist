@@ -17,7 +17,7 @@ class SupportOutbox {
   static const _analyticsBatch = 'pending_analytics_batch_v1';
   static const _feedbackUrl = String.fromEnvironment(
     'VESSEL_FEEDBACK_URL',
-    defaultValue: 'https://script.google.com/macros/s/AKfycbw4J6GOVV4o05B-_xIVbVsygusFXwu6WR4cRqfjYZTYyYOr4RVyy1oC0h5PEqJI4tER/exec',
+    defaultValue: 'https://script.google.com/macros/s/AKfycbyhRlPmmW2HdGGDh9txV9A9-2FJqUai1jOwC21eUlxg6a5Sl4kkYrZ3Gq6Xv6lqVobi/exec',
   );
   static const _analyticsUrl = String.fromEnvironment(
     'VESSEL_ANALYTICS_URL',

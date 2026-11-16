@@ -36,7 +36,9 @@ function doPost(e) {
     }
     if (today >= 25 || MailApp.getRemainingDailyQuota() < 1) return receipt(false);
 
-    const email = typeof request.reply_to === 'string' ? request.reply_to : '';
+    const email = typeof request.reply_to === 'string' ? request.reply_to.trim() : '';
+    const hasReplyEmail = email.length <= 254 &&
+      /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test(email);
     const mail = {
       to: recipient,
       subject: 'Vessel Assist · ' + labels[request.type],
@@ -46,11 +48,12 @@ function doPost(e) {
         'App version: ' + field(request.app_version),
         'Platform: ' + field(request.platform),
         'Section: ' + field(request.section),
+        ...(hasReplyEmail ? ['Reply email: ' + email] : []),
         '',
         request.message.trim(),
       ].join('\n'),
     };
-    if (email.length <= 254 && /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test(email)) {
+    if (hasReplyEmail) {
       mail.replyTo = email;
     }
     MailApp.sendEmail(mail);
