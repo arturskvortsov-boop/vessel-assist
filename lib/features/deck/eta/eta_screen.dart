@@ -326,7 +326,7 @@ class _EtaScreenState extends State<EtaScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          Text('Total: ${p.totalHours.toStringAsFixed(4)} h  •  ${(p.totalHours / 24).toStringAsFixed(4)} days'),
+          Text('Total: ${p.totalHours.toStringAsFixed(2)} h  •  ${_ecoDuration(p.totalHours)}'),
           const SizedBox(height: 8),
           Text('Target arrival: ${etaDateTime(_target)} ${etaOffsetLabel(_arrivalOffset)}'),
           const SizedBox(height: 12),
@@ -338,6 +338,9 @@ class _EtaScreenState extends State<EtaScreen> {
       ),
     );
   }
+
+  String _ecoDuration(double hours) =>
+      etaDuration(Duration(minutes: (hours * 60).round()));
 
   Widget _ecoModeBlock(String title, double hours, double distance, IconData icon) {
     return Container(
@@ -358,8 +361,8 @@ class _EtaScreenState extends State<EtaScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          Text('${hours.toStringAsFixed(4)} h', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-          Text('${(hours / 24).toStringAsFixed(4)} days', style: const TextStyle(color: textMuted, fontSize: 12)),
+          Text('${hours.toStringAsFixed(2)} h', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+          Text(_ecoDuration(hours), style: const TextStyle(color: textMuted, fontSize: 12)),
           const SizedBox(height: 6),
           Text('${distance.toStringAsFixed(2)} NM', style: const TextStyle(color: textMuted, fontSize: 12)),
         ],

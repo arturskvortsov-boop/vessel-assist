@@ -25,20 +25,20 @@ List _polygons(Map<String, dynamic> geometry) => geometry['type'] == 'Polygon'
     : geometry['coordinates'] as List;
 
 class RouteMap extends StatefulWidget {
-  final SeaRoute route;
+  final SeaRoute? route;
   final List<List<List<SeaPoint>>> land;
-  final String departureCode;
-  final String arrivalCode;
+  final String? departureCode;
+  final String? arrivalCode;
 
   /// Текущая позиция судна (GPS), если доступна.
   final SeaPoint? myPosition;
 
   const RouteMap({
     super.key,
-    required this.route,
+    this.route,
     required this.land,
-    required this.departureCode,
-    required this.arrivalCode,
+    this.departureCode,
+    this.arrivalCode,
     this.myPosition,
   });
 
@@ -69,7 +69,9 @@ class _RouteMapState extends State<RouteMap> {
     // Панорамирование: сдвиг пальца + компенсация зума вокруг фокальной точки.
     final focal = d.localFocalPoint;
     final zoomFactor = newZoom / _startZoom;
-    final newPan = _startPan + (focal - _startFocal) +
+    final newPan =
+        _startPan +
+        (focal - _startFocal) +
         (_startFocal - _startPan) * (1 - zoomFactor);
     setState(() {
       _zoom = newZoom;
@@ -78,9 +80,9 @@ class _RouteMapState extends State<RouteMap> {
   }
 
   void _reset() => setState(() {
-        _zoom = 1.0;
-        _pan = Offset.zero;
-      });
+    _zoom = 1.0;
+    _pan = Offset.zero;
+  });
 
   @override
   Widget build(BuildContext context) => Column(
@@ -88,7 +90,9 @@ class _RouteMapState extends State<RouteMap> {
     children: [
       Semantics(
         image: true,
-        label: 'Approximate sea route from ${widget.departureCode} to ${widget.arrivalCode}',
+        label: widget.route == null
+            ? 'Map showing my position'
+            : 'Approximate sea route from ${widget.departureCode} to ${widget.arrivalCode}',
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: SizedBox(
@@ -131,7 +135,10 @@ class _RouteMapState extends State<RouteMap> {
                         }),
                       ),
                       const SizedBox(height: 6),
-                      _ZoomButton(icon: Icons.center_focus_strong, onTap: _reset),
+                      _ZoomButton(
+                        icon: Icons.center_focus_strong,
+                        onTap: _reset,
+                      ),
                     ],
                   ),
                 ),
@@ -145,13 +152,21 @@ class _RouteMapState extends State<RouteMap> {
         spacing: 16,
         runSpacing: 4,
         children: [
-          Text(
-            '● Departure · ${widget.departureCode}',
-            style: TextStyle(color: accent),
-          ),
-          Text('● Arrival · ${widget.arrivalCode}', style: TextStyle(color: gold)),
+          if (widget.route != null)
+            Text(
+              '● Departure · ${widget.departureCode}',
+              style: TextStyle(color: accent),
+            ),
+          if (widget.route != null)
+            Text(
+              '● Arrival · ${widget.arrivalCode}',
+              style: TextStyle(color: gold),
+            ),
           if (widget.myPosition != null)
-            Text('● My position', style: TextStyle(color: const Color(0xFF4ADE80))),
+            Text(
+              '● My position',
+              style: TextStyle(color: const Color(0xFF4ADE80)),
+            ),
         ],
       ),
       const SizedBox(height: 4),
@@ -186,7 +201,7 @@ class _ZoomButton extends StatelessWidget {
 }
 
 class _RoutePainter extends CustomPainter {
-  final SeaRoute route;
+  final SeaRoute? route;
   final List<List<List<SeaPoint>>> land;
   final SeaPoint? myPosition;
   final double zoom;
@@ -197,8 +212,11 @@ class _RoutePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (size.width < 48 || size.height < 48) return;
-    final track = <SeaPoint>[route.points.first];
-    for (final point in route.points.skip(1)) {
+    final routePoints = route?.points;
+    final first = routePoints?.first ?? myPosition;
+    if (first == null) return;
+    final track = <SeaPoint>[first];
+    for (final point in routePoints?.skip(1) ?? const <SeaPoint>[]) {
       final lon = track.last.lon;
       track.add((lat: point.lat, lon: lon + wrapLongitude(point.lon - lon)));
     }
@@ -214,7 +232,14 @@ class _RoutePainter extends CustomPainter {
       north = math.max(north, point.lat);
     }
     // Учитываем позицию судна в границах, чтобы точка была видна.
-    final my = myPosition;
+    final position = myPosition;
+    final my = position == null
+        ? null
+        : (
+            lat: position.lat,
+            lon:
+                track.first.lon + wrapLongitude(position.lon - track.first.lon),
+          );
     if (my != null) {
       west = math.min(west, my.lon);
       east = math.max(east, my.lon);
@@ -277,22 +302,24 @@ class _RoutePainter extends CustomPainter {
       tp.paint(canvas, p - Offset(tp.width / 2, tp.height / 2));
     }
 
-    final points = track.map((point) => project(point)).toList();
-    canvas.drawPath(
-      Path()..addPolygon(points, false),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5
-        ..strokeJoin = StrokeJoin.round
-        ..color = accent,
-    );
-    // Маркеры портов — фиксированный размер.
-    for (final (point, color) in [
-      (points.first, accent),
-      (points.last, gold),
-    ]) {
-      canvas.drawCircle(point, 6, Paint()..color = const Color(0xFF091D30));
-      canvas.drawCircle(point, 4, Paint()..color = color);
+    if (route != null) {
+      final points = track.map((point) => project(point)).toList();
+      canvas.drawPath(
+        Path()..addPolygon(points, false),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5
+          ..strokeJoin = StrokeJoin.round
+          ..color = accent,
+      );
+      // Маркеры портов — фиксированный размер.
+      for (final (point, color) in [
+        (points.first, accent),
+        (points.last, gold),
+      ]) {
+        canvas.drawCircle(point, 6, Paint()..color = const Color(0xFF091D30));
+        canvas.drawCircle(point, 4, Paint()..color = color);
+      }
     }
 
     // Точка текущей позиции судна (GPS) — фиксированный размер.

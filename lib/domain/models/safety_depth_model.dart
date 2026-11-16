@@ -61,7 +61,7 @@ class SafetyDepthResult {
   factory SafetyDepthResult.calculate(VesselSafetySettings vessel, SafetyDepthInput p,
       {DateTime? calculatedUTC}) {
     vessel.validate();
-    if ([p.foreDraft,p.aftDraft,p.displacementMT,p.waterDensity,p.chartedDepth]
+    if ([p.foreDraft,p.aftDraft,p.waterDensity,p.chartedDepth]
         .any((v) => !v.isFinite || v <= 0) ||
         [p.speedThroughWater,p.densityCorrection].any((v) => !v.isFinite || v < 0) ||
         !p.heelDegrees.isFinite || p.heelDegrees.abs() >= 90 ||

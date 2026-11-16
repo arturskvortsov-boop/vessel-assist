@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
+import '../../core/support_outbox.dart';
 import '../../core/palette_state.dart';
 import '../../core/section_theme.dart';
 import 'package:animations/animations.dart';
@@ -46,7 +47,11 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
       ),
             bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
-                    onDestinationSelected: (index) => setState(() => _currentIndex = index),
+                    onDestinationSelected: (index) {
+            if (index == _currentIndex) return;
+            setState(() => _currentIndex = index);
+            SupportOutbox.current?.record('screen_view', screen: const ['/engine/marpol', '/engine/daily_ops', '/engine/admin_tab'][index]);
+          },
           backgroundColor: palette.field,
           indicatorColor: palette.accent.withValues(alpha: 0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,

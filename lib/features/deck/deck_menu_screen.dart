@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animations/animations.dart';
 import '../../core/theme.dart';
+import '../../core/support_outbox.dart';
 import '../../core/palette_state.dart';
 import '../../core/section_theme.dart';
 import '../../core/widgets/app_scaffold.dart';
@@ -48,7 +49,11 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
-          onDestinationSelected: (index) => setState(() => _currentIndex = index),
+          onDestinationSelected: (index) {
+            if (index == _currentIndex) return;
+            setState(() => _currentIndex = index);
+            SupportOutbox.current?.record('screen_view', screen: const ['/deck/nav', '/deck/cargo', '/deck/ops'][index]);
+          },
                     backgroundColor: cardSolid,
           indicatorColor: palette.accent.withValues(alpha: 0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -76,6 +81,7 @@ class _NavigationTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _MenuCard(title: 'ETA Calculator', subtitle: 'Arrival time, required speed & eco/full split', icon: Icons.schedule, route: '/deck/eta'),
+        _MenuCard(title: 'Port Time Zone', subtitle: 'Local time and UTC offset by port', icon: Icons.public, route: '/deck/port_time_zone'),
         _MenuCard(title: 'Port Distance', subtitle: 'Sea distance & time at sea', icon: Icons.route, route: '/deck/port_distance'),
         _MenuCard(title: 'True Wind Calculator', subtitle: 'True and apparent wind vectors', icon: Icons.air, route: '/deck/true_wind'),
         _MenuCard(title: 'Compass Error Calculator', subtitle: 'Gyro and magnetic compass checks', icon: Icons.explore_outlined, route: '/deck/compass_error'),

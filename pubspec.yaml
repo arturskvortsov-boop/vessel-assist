@@ -46,6 +46,8 @@ dependencies:
   excel: ^4.0.6
   file_saver: ^0.2.14
   file_picker: ^10.3.3
+  http: ^1.6.0
+  package_info_plus: ^9.0.1
   open_filex: ^4.4.0
   path_provider: ^2.1.4
   image: ^4.3.0
@@ -64,6 +66,7 @@ dependencies:
   xml: ^6.6.1
   gal: 2.3.3
   archive: 3.6.1
+  timezone: ^0.11.2
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +106,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/data/port_time_zones.json
     - assets/data/ports.json
     - assets/data/sea_routes/
 

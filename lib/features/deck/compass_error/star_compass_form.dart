@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/dms_coordinate.dart';
+import '../../../core/widgets/dms_coordinate_fields.dart';
 import '../../../core/theme.dart';
 
 import 'package:flutter/services.dart';
@@ -253,66 +254,15 @@ class _StarCompassFormState extends State<StarCompassForm> {
     ),
   );
 
-  Widget _coordinateFields(String label, DmsCoordinate coordinate) {
-    void positionChanged() => setState(() {
-      _fix = null;
-      _invalidateSky();
-    });
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final (controller, unit) in [
-              (coordinate.degrees, 'Deg °'),
-              (coordinate.minutes, 'Min ′'),
-              (coordinate.seconds, 'Sec ″'),
-            ]) ...[
-              Expanded(
-                child: _field(
-                  controller,
-                  unit,
-                  numeric: true,
-                  changed: (_) => positionChanged(),
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
-            SizedBox(
-              width: 68,
-              child: DropdownButtonFormField<String>(
-                key: ValueKey(coordinate.hemisphere),
-                initialValue: coordinate.hemisphere,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 12,
-                  ),
-                ),
-                isExpanded: true,
-                items: [
-                  for (final direction in [
-                    coordinate.positive,
-                    coordinate.negative,
-                  ])
-                    DropdownMenuItem(value: direction, child: Text(direction)),
-                ],
-                onChanged: (direction) {
-                  if (direction == null) return;
-                  coordinate.hemisphere = direction;
-                  positionChanged();
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  Widget _coordinateFields(String label, DmsCoordinate coordinate) =>
+      DmsCoordinateFields(
+        label: label,
+        coordinate: coordinate,
+        onChanged: () => setState(() {
+          _fix = null;
+          _invalidateSky();
+        }),
+      );
 
   @override
   void dispose() {

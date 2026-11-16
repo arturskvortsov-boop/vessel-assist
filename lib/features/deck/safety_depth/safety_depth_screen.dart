@@ -4,6 +4,7 @@ import '../../../core/theme.dart';
 import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/safety_depth_model.dart';
+import '../../../domain/models/depth_accuracy.dart';
 
 class SafetyDepthScreen extends StatefulWidget {
   const SafetyDepthScreen({super.key});
@@ -32,6 +33,9 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
   final _heelCtrl = TextEditingController(text: '0');
   final _densCorrCtrl = TextEditingController(text: '0');
   String? _catzoc = 'A1';
+  final _tableCbCtrl = TextEditingController();
+  final _manualAllowanceCtrl = TextEditingController();
+  final _allowanceBasisCtrl = TextEditingController();
 
   SafetyDepthResult? _result;
   String? _error;
@@ -40,6 +44,14 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
   void initState() {
     super.initState();
     _loadProfile();
+  }
+
+  @override
+  void dispose() {
+    for (final controller in [_vesselNameCtrl, _lbpCtrl, _breadthCtrl, _foreCtrl, _aftCtrl, _dispCtrl, _densityCtrl, _chartedDepthCtrl, _speedCtrl, _heelCtrl, _densCorrCtrl, _tableCbCtrl, _manualAllowanceCtrl, _allowanceBasisCtrl]) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   void _loadProfile() {
@@ -62,7 +74,13 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vessel particulars saved.')));
   }
 
+  void _invalidate() {
+    _result = null;
+    _error = null;
+  }
+
   void _calculate() {
+    setState(_invalidate);
     if (!_form.currentState!.validate()) return;
     if (_catzoc == null) {
       setState(() => _error = 'Select CATZOC.');
@@ -87,8 +105,9 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
         heelDegrees: double.tryParse(_heelCtrl.text.replaceAll(',', '.')) ?? 0,
         densityCorrection: double.tryParse(_densCorrCtrl.text.replaceAll(',', '.')) ?? 0,
         catzoc: _catzoc!,
-        manualDepthAllowance: null, // Handle D/U logic if needed later
-        depthAllowanceBasis: '',
+        tableCb: double.tryParse(_tableCbCtrl.text.replaceAll(',', '.')),
+        manualDepthAllowance: double.tryParse(_manualAllowanceCtrl.text.replaceAll(',', '.')),
+        depthAllowanceBasis: _allowanceBasisCtrl.text,
       );
 
       final res = SafetyDepthResult.calculate(vessel, input);
@@ -120,6 +139,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: ctrl,
+        onChanged: (_) { if (_result != null || _error != null) setState(_invalidate); },
         decoration: InputDecoration(
           labelText: label,
           helperText: helper,
@@ -199,7 +219,7 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                     DropdownMenuItem(value: calculateCbMethod, child: Text('Calculate Cb')),
                     DropdownMenuItem(value: tableCbMethod, child: Text('Enter Cb from Tables')),
                   ],
-                  onChanged: (v) => setState(() => _cbMethod = v!),
+                  onChanged: (v) => setState(() { _cbMethod = v!; _invalidate(); }),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
@@ -229,7 +249,9 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                   ),
                   Row(
                     children: [
-                      Expanded(child: _field('Displacement (t)', _dispCtrl, isNum: true)),
+                      Expanded(child: _cbMethod == tableCbMethod
+                          ? _field('Cb from vessel tables', _tableCbCtrl, isNum: true)
+                          : _field('Displacement (t)', _dispCtrl, isNum: true)),
                       const SizedBox(width: 10),
                       Expanded(child: _field('Water Density (t/m³)', _densityCtrl, isNum: true)),
                     ],
@@ -253,9 +275,13 @@ class _SafetyDepthScreenState extends State<SafetyDepthScreen> {
                     dropdownColor: cardSolid,
                     decoration: const InputDecoration(labelText: 'CATZOC', border: OutlineInputBorder()),
                     items: ['A1', 'A2', 'B', 'C', 'D', 'U'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                    onChanged: (v) => setState(() => _catzoc = v),
+                    onChanged: (v) => setState(() { _catzoc = v; _invalidate(); }),
                   ),
                   
+                  if (requiresManualDepthAllowance(_catzoc ?? '')) ...[
+                    _field('Manual depth allowance (m)', _manualAllowanceCtrl, isNum: true),
+                    _field('Allowance basis / justification', _allowanceBasisCtrl),
+                  ],
                   if (_error != null)
                     Padding(padding: const EdgeInsets.only(top: 16), child: Text(_error!, style: const TextStyle(color: Colors.amber))),
                   

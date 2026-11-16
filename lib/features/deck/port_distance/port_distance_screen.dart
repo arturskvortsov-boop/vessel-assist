@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../core/theme.dart';
+import '../../../core/dms_coordinate.dart';
+import '../../../core/widgets/dms_coordinate_fields.dart';
 import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../domain/models/port.dart';
@@ -43,22 +45,35 @@ class _RouteData {
   }
 }
 
+enum _PositionSource { gps, manual }
+
 class _PortDistanceScreenState extends State<PortDistanceScreen> {
   late final Future<_RouteData> _data = _RouteData.load();
   final _speed = TextEditingController();
   Port? _departure;
   Port? _arrival;
-    SeaRoute? _result;
+  String _departureCoordinates = '';
+  String _arrivalCoordinates = '';
+  SeaRoute? _result;
   String? _routeError;
   bool _includeTime = false;
 
   SeaPoint? _myPosition;
+  bool _editingPosition = false;
+  final _latitude = DmsCoordinate('N', 'S', 90);
+  final _longitude = DmsCoordinate('E', 'W', 180);
   bool _locating = false;
   String? _locationError;
 
   @override
   void dispose() {
     _speed.dispose();
+    for (final controller in [
+      ..._latitude.controllers,
+      ..._longitude.controllers,
+    ]) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -66,6 +81,7 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
   Future<void> _locateMe() async {
     setState(() {
       _locating = true;
+      _editingPosition = false;
       _locationError = null;
     });
     try {
@@ -101,13 +117,48 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
     }
   }
 
+  void _choosePositionSource(_PositionSource source) {
+    if (source == _PositionSource.gps) {
+      _locateMe();
+      return;
+    }
+    setState(() {
+      _editingPosition = true;
+      final point = _myPosition;
+      if (point == null) {
+        for (final controller in [
+          ..._latitude.controllers,
+          ..._longitude.controllers,
+        ]) {
+          controller.clear();
+        }
+        _latitude.hemisphere = 'N';
+        _longitude.hemisphere = 'E';
+      } else {
+        _latitude.setDecimal(point.lat);
+        _longitude.setDecimal(point.lon);
+      }
+      _locationError = null;
+    });
+  }
+
+  void _setManualPosition(SeaPoint point) {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _myPosition = point;
+      _editingPosition = false;
+    });
+  }
+
   void _updatePort(bool departure, Port? port) {
     if ((departure ? _departure : _arrival) == port) return;
     setState(() {
       if (departure) {
         _departure = port;
+        _departureCoordinates = '';
       } else {
         _arrival = port;
+        _arrivalCoordinates = '';
       }
       _result = null;
       _routeError = null;
@@ -117,8 +168,12 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
   void _calculate(SeaNetwork network) {
     final departure = _departure;
     final arrival = _arrival;
-    final from = portPoint(departure?.coordinates ?? '');
-    final to = portPoint(arrival?.coordinates ?? '');
+    final from =
+        portPoint(departure?.coordinates ?? '') ??
+        manualPortPoint(_departureCoordinates);
+    final to =
+        portPoint(arrival?.coordinates ?? '') ??
+        manualPortPoint(_arrivalCoordinates);
     setState(() {
       _result = null;
       if (departure == null || arrival == null) {
@@ -126,7 +181,8 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
       } else if (departure.code == arrival.code) {
         _routeError = 'Select two different ports.';
       } else if (from == null || to == null) {
-        _routeError = 'Coordinates are unavailable for one of these ports.';
+        _routeError =
+            'Enter valid coordinates for each port without a map position.';
       } else {
         _result = network.shortestRoute(from, to);
         _routeError = _result == null
@@ -159,12 +215,16 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
       optionsBuilder: (value) {
         final query = value.text.trim().toLowerCase();
         if (query.length < 2) return const <Port>[];
-        return ports
-            .where(
-              (port) =>
-                  port.code.toLowerCase().contains(query) ||
-                  port.name.toLowerCase().contains(query) ||
-                  port.searchString.contains(query),
+        final exact = ports.where((port) => port.code.toLowerCase() == query);
+        return exact
+            .followedBy(
+              ports.where(
+                (port) =>
+                    port.code.toLowerCase() != query &&
+                    (port.code.toLowerCase().contains(query) ||
+                        port.name.toLowerCase().contains(query) ||
+                        port.searchString.contains(query)),
+              ),
             )
             .take(12);
       },
@@ -185,10 +245,34 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
     );
   }
 
+  Widget _coordinatesField(
+    Port port, {
+    required bool departure,
+  }) => TextFormField(
+    key: ValueKey((port.code, departure)),
+    initialValue: departure ? _departureCoordinates : _arrivalCoordinates,
+    decoration: InputDecoration(
+      labelText: departure ? 'Departure coordinates' : 'Arrival coordinates',
+      helperText:
+          'Latitude and longitude in decimal degrees, separated by a space.',
+      helperMaxLines: 2,
+      hintText: '54.35 18.65',
+    ),
+    onChanged: (value) => setState(() {
+      if (departure) {
+        _departureCoordinates = value;
+      } else {
+        _arrivalCoordinates = value;
+      }
+      _result = null;
+      _routeError = null;
+    }),
+  );
+
   @override
   Widget build(BuildContext context) {
     PaletteState.set(AppSection.bridge);
-        return AppScaffold(
+    return AppScaffold(
       title: 'Port Distance',
       body: FutureBuilder(
         future: _data,
@@ -203,6 +287,11 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           final result = _result;
+          final lat = _latitude.decimal;
+          final lon = _longitude.decimal;
+          final manualPosition = lat == null || lon == null
+              ? null
+              : (lat: lat, lon: lon);
           final minutes = result == null ? null : _timeMinutes(result.miles);
           return Center(
             child: ConstrainedBox(
@@ -227,6 +316,12 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                   _portField(data.ports, departure: true),
                   const SizedBox(height: 12),
                   _portField(data.ports, departure: false),
+                  if (_departure case final port?
+                      when portPoint(port.coordinates) == null)
+                    _coordinatesField(port, departure: true),
+                  if (_arrival case final port?
+                      when portPoint(port.coordinates) == null)
+                    _coordinatesField(port, departure: false),
                   if (_includeTime) ...[
                     const SizedBox(height: 12),
                     TextField(
@@ -243,7 +338,7 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                       ),
                     ),
                   ],
-                                    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
@@ -252,27 +347,90 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                     child: const Text('Calculate'),
                   ),
                   const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: _locating ? null : _locateMe,
-                    icon: _locating
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Icon(
+                  PopupMenuButton<_PositionSource>(
+                    enabled: !_locating,
+                    onSelected: _choosePositionSource,
+                    itemBuilder: (_) => const [
+                      PopupMenuItem(
+                        value: _PositionSource.gps,
+                        child: Text('Use GPS'),
+                      ),
+                      PopupMenuItem(
+                        value: _PositionSource.manual,
+                        child: Text('Enter position manually'),
+                      ),
+                    ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
                             _myPosition == null
                                 ? Icons.my_location
                                 : Icons.gps_fixed,
+                            size: 18,
                           ),
-                    label: Text(
-                      _locating
-                          ? 'Locating…'
-                          : _myPosition == null
-                              ? 'Show my position'
-                              : 'Update my position',
+                          const SizedBox(width: 8),
+                          Text(
+                            _locating
+                                ? 'Locating…'
+                                : _myPosition == null
+                                ? 'Show my position'
+                                : 'Update my position',
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
+                  if (_editingPosition) ...[
+                    const SizedBox(height: 8),
+                    DmsCoordinateFields(
+                      label: 'Latitude',
+                      coordinate: _latitude,
+                      onChanged: () => setState(() {}),
+                    ),
+                    const SizedBox(height: 12),
+                    DmsCoordinateFields(
+                      label: 'Longitude',
+                      coordinate: _longitude,
+                      onChanged: () => setState(() {}),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        FilledButton(
+                          onPressed: manualPosition == null
+                              ? null
+                              : () => _setManualPosition(manualPosition),
+                          child: const Text('Set position'),
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              setState(() => _editingPosition = false),
+                          child: const Text('Cancel'),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_myPosition case final point?) ...[
+                    const SizedBox(height: 8),
+                    Text('My position · ${formatPositionDms(point)}'),
+                    if (result == null)
+                      RouteMap(land: data.land, myPosition: point),
+                  ],
                   if (_locationError case final locError?) ...[
                     const SizedBox(height: 8),
                     Text(
@@ -311,7 +469,7 @@ class _PortDistanceScreenState extends State<PortDistanceScreen> {
                               Text('Time at sea · ≈ ${_formatTime(minutes)}'),
                             ],
                             const SizedBox(height: 16),
-                                                        RouteMap(
+                            RouteMap(
                               route: result,
                               land: data.land,
                               departureCode: _departure!.code,

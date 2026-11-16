@@ -22,6 +22,31 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
   final _deadlineCtrl = TextEditingController();
   String _priority = 'Medium';
 
+  bool _saving = false;
+  static const _priorityOrder = {'High': 0, 'Medium': 1, 'Low': 2};
+
+  Future<void> _write(
+    Future<void> Function() operation, {
+    VoidCallback? onSaved,
+  }) async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await operation();
+      if (mounted) setState(() => onSaved?.call());
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not save the task change. Try again.'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
   void _addTask(Box<dynamic> box) {
     if (_nameCtrl.text.trim().isEmpty) return;
 
@@ -35,14 +60,15 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
 
-    box.put(newTask.id, newTask.toMap());
-
-    setState(() {
-      _nameCtrl.clear();
-      _assigneeCtrl.clear();
-      _deadlineCtrl.clear();
-      _priority = 'Medium';
-    });
+    _write(
+      () => box.put(newTask.id, newTask.toMap()),
+      onSaved: () {
+        _nameCtrl.clear();
+        _assigneeCtrl.clear();
+        _deadlineCtrl.clear();
+        _priority = 'Medium';
+      },
+    );
   }
 
   void _toggleStatus(Box<dynamic> box, String id, String currentStatus) {
@@ -55,8 +81,7 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
       task.status = 'Open';
     }
 
-    box.put(id, task.toMap());
-    setState(() {});
+    _write(() => box.put(id, task.toMap()));
   }
 
   @override
@@ -73,7 +98,7 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
     builder: (context, snapshot) {
       final box = snapshot.data;
       if (box != null) return _buildTasks(box);
-            return AppScaffold(
+      return AppScaffold(
         title: 'Crew Tasks',
         body: Center(
           child: snapshot.hasError
@@ -90,10 +115,13 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
       // Сначала невыполненные, потом по приоритету
       if (a.status == 'Done' && b.status != 'Done') return 1;
       if (a.status != 'Done' && b.status == 'Done') return -1;
-      return b.timestamp.compareTo(a.timestamp);
+      final priority = (_priorityOrder[a.priority] ?? 1).compareTo(
+        _priorityOrder[b.priority] ?? 1,
+      );
+      return priority == 0 ? b.timestamp.compareTo(a.timestamp) : priority;
     });
 
-        return AppScaffold(
+    return AppScaffold(
       title: 'Crew Tasks',
       body: Column(
         children: [
@@ -105,6 +133,7 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
               children: [
                 TextField(
                   controller: _nameCtrl,
+                  enabled: !_saving,
                   decoration: const InputDecoration(labelText: 'Task Name'),
                 ),
                 const SizedBox(height: 8),
@@ -113,6 +142,7 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
                     Expanded(
                       child: TextField(
                         controller: _assigneeCtrl,
+                        enabled: !_saving,
                         decoration: const InputDecoration(
                           labelText: 'Assignee',
                         ),
@@ -132,7 +162,7 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
                               31,
                             ),
                           );
-                          if (picked != null && mounted) {
+                          if (picked != null && mounted && !_saving) {
                             setState(
                               () => _deadlineCtrl.text =
                                   "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}",
@@ -173,12 +203,14 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
                           ),
                           DropdownMenuItem(value: 'High', child: Text('High')),
                         ],
-                        onChanged: (val) => setState(() => _priority = val!),
+                        onChanged: _saving
+                            ? null
+                            : (val) => setState(() => _priority = val!),
                       ),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: () => _addTask(box),
+                      onPressed: _saving ? null : () => _addTask(box),
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(100, 50),
                       ),
@@ -205,7 +237,15 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
                     itemBuilder: (context, index) {
                       final task = tasksData[index];
                       final isDone = task.status == 'Done';
-                      final isHigh = task.priority == 'High';
+                      final priority = _priorityOrder.containsKey(task.priority)
+                          ? task.priority
+                          : 'Medium';
+                      final priorityColor = switch (priority) {
+                        'High' => Colors.redAccent,
+                        'Low' => textMuted,
+                        _ => Colors.amberAccent,
+                      };
+                      final isHigh = priority == 'High';
 
                       Color statusColor = textMuted;
                       if (task.status == 'In Progress') {
@@ -226,73 +266,106 @@ class _DeckTasksScreenState extends State<DeckTasksScreen> {
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          title: Text(
-                            task.name,
-                            style: TextStyle(
-                              color: isDone ? textMuted : text,
-                              decoration: isDone
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                              fontWeight: FontWeight.bold,
+                        child: Stack(
+                          children: [
+                            ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              title: Padding(
+                                padding: const EdgeInsets.only(right: 48),
+                                child: Text(
+                                  task.name,
+                                  style: TextStyle(
+                                    color: isDone ? textMuted : text,
+                                    decoration: isDone
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Assignee: ${task.assignee.isEmpty ? "-" : task.assignee}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  if (task.deadline.isNotEmpty)
+                                    Text(
+                                      'Deadline: ${task.deadline}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    task.status,
+                                    style: TextStyle(
+                                      color: statusColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      task.status == 'Open'
+                                          ? Icons.radio_button_unchecked
+                                          : (task.status == 'In Progress'
+                                                ? Icons.timelapse
+                                                : Icons.check_circle),
+                                      color: statusColor,
+                                    ),
+                                    onPressed: () => _toggleStatus(
+                                      box,
+                                      task.id,
+                                      task.status,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.redAccent,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      _write(() => box.delete(task.id));
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(
-                                'Assignee: ${task.assignee.isEmpty ? "-" : task.assignee}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              if (task.deadline.isNotEmpty)
-                                Text(
-                                  'Deadline: ${task.deadline}',
-                                  style: const TextStyle(fontSize: 12),
+                            Positioned(
+                              top: 8,
+                              right: 12,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: priorityColor.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              const SizedBox(height: 4),
-                              Text(
-                                task.status,
-                                style: TextStyle(
-                                  color: statusColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  child: Text(
+                                    priority,
+                                    style: TextStyle(
+                                      color: priorityColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  task.status == 'Open'
-                                      ? Icons.radio_button_unchecked
-                                      : (task.status == 'In Progress'
-                                            ? Icons.timelapse
-                                            : Icons.check_circle),
-                                  color: statusColor,
-                                ),
-                                onPressed: () =>
-                                    _toggleStatus(box, task.id, task.status),
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  box.delete(task.id);
-                                  setState(() {});
-                                },
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },

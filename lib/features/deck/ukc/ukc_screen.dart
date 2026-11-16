@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../core/theme.dart';
 import '../../../core/palette_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -48,7 +49,6 @@ class _UkcScreenState extends State<UkcScreen> {
 
 
     // --- Advanced Overrides ---
-  bool _useManualCb = false;
   final _manualCbCtrl = TextEditingController();
   bool _useManualDepth = false;
   final _manualDepthCtrl = TextEditingController();
@@ -63,6 +63,12 @@ class _UkcScreenState extends State<UkcScreen> {
     _foreDraftCtrl.addListener(_updateLiveDrafts);
     _aftDraftCtrl.addListener(_updateLiveDrafts);
     _addMaxDraftCtrl.addListener(_updateLiveDrafts);
+  }
+
+  @override
+  void dispose() {
+    for (final controller in [_vesselNameCtrl, _lbpCtrl, _breadthCtrl, _foreDraftCtrl, _aftDraftCtrl, _addMaxDraftCtrl, _displacementCtrl, _waterDensityCtrl, _heelCtrl, _densCorrCtrl, _portCtrl, _speedCtrl, _manualSquatCtrl, _minDepthCtrl, _tideCtrl, _swellCtrl, _manualCbCtrl, _manualDepthCtrl, _depthBasisCtrl]) { controller.dispose(); }
+    super.dispose();
   }
 
   void _updateLiveDrafts() {
@@ -83,28 +89,47 @@ class _UkcScreenState extends State<UkcScreen> {
     }
   }
 
+  void _invalidate() {
+    _result = null;
+    _error = null;
+    _cbUsedStr = '-';
+  }
+
+  double? _number(TextEditingController ctrl, String label, {double? fallback}) {
+    final text = ctrl.text.trim();
+    if (text.isEmpty) return fallback;
+    final value = double.tryParse(text.replaceAll(',', '.'));
+    if (value == null || !value.isFinite) {
+      throw FormatException('Enter a valid number for $label.');
+    }
+    return value;
+  }
+
+  double _requiredNumber(TextEditingController ctrl, String label) =>
+      _number(ctrl, label) ?? (throw FormatException('Enter $label.'));
+
   void _calculate() {
     try {
       final input = UkcInput(
-        length: double.tryParse(_lbpCtrl.text.replaceAll(',', '.')) ?? 0,
-        breadth: double.tryParse(_breadthCtrl.text.replaceAll(',', '.')) ?? 0,
-        fore: double.tryParse(_foreDraftCtrl.text.replaceAll(',', '.')) ?? 0,
-        aft: double.tryParse(_aftDraftCtrl.text.replaceAll(',', '.')) ?? 0,
-        waterDensity: double.tryParse(_waterDensityCtrl.text.replaceAll(',', '.')) ?? 1.025,
-        depth: double.tryParse(_minDepthCtrl.text.replaceAll(',', '.')) ?? 0,
-        tide: double.tryParse(_tideCtrl.text.replaceAll(',', '.')) ?? 0,
-        speed: double.tryParse(_speedCtrl.text.replaceAll(',', '.')) ?? 0,
-        heel: double.tryParse(_heelCtrl.text.replaceAll(',', '.')) ?? 0,
-        swell: double.tryParse(_swellCtrl.text.replaceAll(',', '.')) ?? 0,
-        densityCorrection: double.tryParse(_densCorrCtrl.text.replaceAll(',', '.')) ?? 0,
+        length: _number(_lbpCtrl, 'LBP', fallback: 0)!,
+        breadth: _number(_breadthCtrl, 'breadth', fallback: 0)!,
+        fore: _number(_foreDraftCtrl, 'forward draft', fallback: 0)!,
+        aft: _number(_aftDraftCtrl, 'aft draft', fallback: 0)!,
+        waterDensity: _number(_waterDensityCtrl, 'water density', fallback: 1.025)!,
+        depth: _number(_minDepthCtrl, 'charted depth', fallback: 0)!,
+        tide: _number(_tideCtrl, 'tide', fallback: 0)!,
+        speed: _requiredNumber(_speedCtrl, 'speed'),
+        heel: _number(_heelCtrl, 'heel', fallback: 0)!,
+        swell: _number(_swellCtrl, 'swell correction', fallback: 0)!,
+        densityCorrection: _number(_densCorrCtrl, 'density correction', fallback: 0)!,
         catzoc: _catzoc,
         confined: _waterType == 'Confined Water',
         
-        maxDraft: double.tryParse(_addMaxDraftCtrl.text.replaceAll(',', '.')),
-        displacement: double.tryParse(_displacementCtrl.text.replaceAll(',', '.')),
-        manualCb: _useManualCb ? double.tryParse(_manualCbCtrl.text.replaceAll(',', '.')) : null,
-        manualSquat: _manualSquat ? double.tryParse(_manualSquatCtrl.text.replaceAll(',', '.')) : null,
-        manualDepth: _useManualDepth ? double.tryParse(_manualDepthCtrl.text.replaceAll(',', '.')) : null,
+        maxDraft: _number(_addMaxDraftCtrl, 'additional maximum draft'),
+        displacement: _cbMethod == 'Calculate Cb' ? _requiredNumber(_displacementCtrl, 'displacement') : null,
+        manualCb: _cbMethod == 'Enter Cb from Tables' ? _requiredNumber(_manualCbCtrl, 'Cb') : null,
+        manualSquat: _manualSquat ? _requiredNumber(_manualSquatCtrl, 'manual squat') : null,
+        manualDepth: _useManualDepth ? _number(_manualDepthCtrl, 'manual depth allowance') : null,
         depthBasis: _depthBasisCtrl.text,
       );
 
@@ -166,7 +191,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     DropdownMenuItem(value: 'Calculate Cb', child: Text('Calculate Cb')),
                     DropdownMenuItem(value: 'Enter Cb from Tables', child: Text('Enter Cb from Tables')),
                   ],
-                  onChanged: (val) => setState(() => _cbMethod = val!),
+                  onChanged: (val) => setState(() { _cbMethod = val!; _invalidate(); }),
                 ),
               ],
             ),
@@ -191,13 +216,16 @@ class _UkcScreenState extends State<UkcScreen> {
                 _buildReadOnlyRow('Mean Draft:', '$_meanDraftStr m'),
                 _buildReadOnlyRow('Maximum Draft:', '$_maxDraftStr m'),
                 Divider(color: border, height: 24),
-                _buildField('Displacement (t)', _displacementCtrl),
+                if (_cbMethod == 'Enter Cb from Tables')
+                  _buildField('Cb Value', _manualCbCtrl)
+                else
+                  _buildField('Displacement (t)', _displacementCtrl),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(child: _buildField('Water Density (t/m³)', _waterDensityCtrl)),
                     const SizedBox(width: 10),
-                    Expanded(child: _buildField('Heel (°)', _heelCtrl)),
+                    Expanded(child: _buildField('Heel (°)', _heelCtrl, signed: true)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -223,7 +251,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     DropdownMenuItem(value: 'Confined Water', child: Text('Confined Water')),
                     DropdownMenuItem(value: 'Open Water', child: Text('Open Water')),
                   ],
-                  onChanged: (val) => setState(() => _waterType = val!),
+                  onChanged: (val) => setState(() { _waterType = val!; _invalidate(); }),
                 ),
                 const SizedBox(height: 12),
                 _buildField('Speed Through Water (kn)', _speedCtrl),
@@ -233,7 +261,7 @@ class _UkcScreenState extends State<UkcScreen> {
                   value: _manualSquat,
                   activeThumbColor: accent,
                   contentPadding: EdgeInsets.zero,
-                  onChanged: (val) => setState(() => _manualSquat = val),
+                  onChanged: (val) => setState(() { _manualSquat = val; _invalidate(); }),
                 ),
                 if (_manualSquat) 
                   _buildField('Squat at Entered STW (m)', _manualSquatCtrl),
@@ -242,7 +270,7 @@ class _UkcScreenState extends State<UkcScreen> {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Expanded(child: _buildField('Tide / Water Level (m)', _tideCtrl)),
+                    Expanded(child: _buildField('Tide / Water Level (m)', _tideCtrl, signed: true)),
                     const SizedBox(width: 10),
                     Expanded(child: _buildField('Swell Correction (m)', _swellCtrl)),
                   ],
@@ -260,7 +288,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     DropdownMenuItem(value: 'D', child: Text('D')),
                     DropdownMenuItem(value: 'U', child: Text('U')),
                   ],
-                  onChanged: (val) => setState(() => _catzoc = val!),
+                  onChanged: (val) => setState(() { _catzoc = val!; _invalidate(); }),
                 ),
               ],
             ),
@@ -272,31 +300,26 @@ class _UkcScreenState extends State<UkcScreen> {
             child: GlassCard(
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: ExpansionTile(
                                     title: Text('Advanced Overrides', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
                   children: [
-                    SwitchListTile(
-                      title: const Text('Manual Cb', style: TextStyle(color: text, fontSize: 14)),
-                      value: _useManualCb,
-                      activeThumbColor: accent,
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (val) => setState(() => _useManualCb = val),
-                    ),
-                    if (_useManualCb) _buildField('Cb Value', _manualCbCtrl),
                     
                     SwitchListTile(
                       title: const Text('Manual Depth Allowance (D/U)', style: TextStyle(color: text, fontSize: 14)),
                       value: _useManualDepth,
                       activeThumbColor: accent,
                       contentPadding: EdgeInsets.zero,
-                      onChanged: (val) => setState(() => _useManualDepth = val),
+                      onChanged: (val) => setState(() { _useManualDepth = val; _invalidate(); }),
                     ),
                     if (_useManualDepth) ...[
                       _buildField('Allowance (m)', _manualDepthCtrl),
                       _buildField('Basis / Justification', _depthBasisCtrl, isNumber: false),
                     ]
                   ],
+                  ),
                 ),
               ),
             ),
@@ -375,7 +398,9 @@ class _UkcScreenState extends State<UkcScreen> {
             child: GlassCard(
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: ExpansionTile(
                   title: Text('About This Calculation', style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
                   iconColor: accent,
                   collapsedIconColor: textMuted,
@@ -393,6 +418,7 @@ class _UkcScreenState extends State<UkcScreen> {
                     const SizedBox(height: 16),
                     const Text('These are approximate selected methods, not a universal IMO formula. Use a passage plan that accounts for additional uncertainties within the relevant allowances. Avoid coastal navigation where charting does not guarantee detection of every obstruction. A manual D/U allowance cannot replace survey reliability. This calculation is not a passage-safety approval.', style: TextStyle(color: Colors.orangeAccent, fontSize: 11, fontStyle: FontStyle.italic, height: 1.5)),
                   ],
+                  ),
                 ),
               ),
             ),
@@ -415,7 +441,10 @@ class _UkcScreenState extends State<UkcScreen> {
           GlassCard(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(children: children),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(children: children),
+              ),
             ),
           ),
         ],
@@ -423,18 +452,42 @@ class _UkcScreenState extends State<UkcScreen> {
     );
   }
 
-  Widget _buildField(String label, TextEditingController ctrl, {bool isNumber = true, String? helper}) {
+  Widget _buildField(
+    String label,
+    TextEditingController ctrl, {
+    bool isNumber = true,
+    String? helper,
+    bool signed = false,
+  }) {
+    final pattern = signed ? _signedNumber : _unsignedNumber;
     return TextField(
       controller: ctrl,
+      onChanged: (_) {
+        if (_result != null || _error != null) setState(_invalidate);
+      },
+      inputFormatters: isNumber
+          ? [
+              TextInputFormatter.withFunction(
+                (previous, next) => pattern.hasMatch(next.text)
+                    ? next
+                    : previous,
+              ),
+            ]
+          : null,
       decoration: InputDecoration(
         labelText: label,
         helperText: helper,
         isDense: true,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      keyboardType: isNumber ? const TextInputType.numberWithOptions(decimal: true, signed: true) : TextInputType.text,
+      keyboardType: isNumber
+          ? TextInputType.numberWithOptions(decimal: true, signed: signed)
+          : TextInputType.text,
     );
   }
+
+  static final _signedNumber = RegExp(r'^-?\d*([.,]\d*)?$');
+  static final _unsignedNumber = RegExp(r'^\d*([.,]\d*)?$');
 
   Widget _buildReadOnlyRow(String label, String value) {
     return Padding(

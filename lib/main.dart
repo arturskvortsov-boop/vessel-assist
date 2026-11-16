@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'core/theme.dart';
 import 'core/router.dart';
+import 'core/support_outbox.dart';
 import 'core/widgets/global_clock.dart';
 import 'core/widgets/important_notice.dart';
 
@@ -39,6 +40,13 @@ void main() async {
   await Hive.openBox('orb_history');
   await Hive.openBox('cargo_tanks'); 
   
+  try {
+    await SupportOutbox.initialize();
+    SupportOutbox.current?.record('app_open');
+  } catch (error) {
+    debugPrint('Could not initialize support outbox.');
+  }
+
   runApp(
     const ProviderScope(
       child: VesselApp(),

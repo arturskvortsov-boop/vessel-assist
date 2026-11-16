@@ -31,16 +31,24 @@ class _PortsScreenState extends State<PortsScreen> {
       final Map<String, dynamic> data = jsonDecode(jsonString);
       final List<dynamic> portsJson = data['ports'];
       
+      if (!mounted) return;
       setState(() {
         _allPorts = portsJson.map((p) => Port.fromJson(p)).toList();
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading ports: $e')));
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   void _search(String query) {

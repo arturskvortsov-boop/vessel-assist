@@ -24,6 +24,42 @@ SeaPoint? portPoint(String value) {
   );
 }
 
+SeaPoint? manualPortPoint(String input) {
+  final parts = input.trim().split(RegExp(r'\s+'));
+  if (parts.length != 2) return null;
+  final lat = double.tryParse(parts.first.replaceAll(',', '.'));
+  final lon = double.tryParse(parts.last.replaceAll(',', '.'));
+  if (lat == null ||
+      lon == null ||
+      !lat.isFinite ||
+      !lon.isFinite ||
+      lat.abs() > 90 ||
+      lon.abs() > 180) {
+    return null;
+  }
+  return (lat: lat, lon: lon);
+}
+
+String formatPositionDms(SeaPoint point) {
+  String axis(double value, String positive, String negative, int width) {
+    final hundredths = (value.abs() * 360000).round();
+    final degrees = (hundredths ~/ 360000).toString().padLeft(width, '0');
+    final minutes = (hundredths ~/ 6000 % 60).toString().padLeft(2, '0');
+    final remainder = hundredths % 6000;
+    final whole = remainder % 100 == 0;
+    final seconds = (remainder / 100)
+        .toStringAsFixed(whole ? 0 : 2)
+        .padLeft(whole ? 2 : 5, '0');
+    final hemisphere = value < 0 ? negative : positive;
+    return '$degrees° $minutes′ $seconds″ $hemisphere';
+  }
+
+  return [
+    axis(point.lat, 'N', 'S', 2),
+    axis(point.lon, 'E', 'W', 3),
+  ].join(' · ');
+}
+
 double wrapLongitude(double longitude) => (longitude + 180) % 360 - 180;
 
 double distanceNm(SeaPoint a, SeaPoint b) {
@@ -104,7 +140,7 @@ class SeaNetwork {
   SeaRoute? shortestRoute(SeaPoint from, SeaPoint to) {
     final start = _nearest(from);
     final finish = _nearest(to);
-    if (start == null || finish == null || start == finish) return null;
+    if (start == null || finish == null) return null;
 
     final miles = List.filled(_points.length, double.infinity);
     final previous = List.filled(_points.length, -1);
