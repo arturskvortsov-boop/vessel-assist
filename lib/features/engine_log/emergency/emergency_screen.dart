@@ -62,18 +62,28 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     final titleCtrl = TextEditingController();
     final stepsCtrl = TextEditingController();
 
-    showDialog(
+        showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: cardSolid,
         title: const Text('Add Procedure / Script', style: TextStyle(color: text)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
-            const SizedBox(height: 8),
-            TextField(controller: stepsCtrl, decoration: const InputDecoration(labelText: 'Steps / Script'), maxLines: 6),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
+              const SizedBox(height: 8),
+              TextField(
+                controller: stepsCtrl,
+                decoration: const InputDecoration(labelText: 'Steps / Script'),
+                maxLines: 6,
+                minLines: 3,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
@@ -101,18 +111,28 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     final titleCtrl = TextEditingController(text: p.title);
     final stepsCtrl = TextEditingController(text: p.steps);
 
-    showDialog(
+        showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: cardSolid,
         title: const Text('Edit Procedure', style: TextStyle(color: text)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
-            const SizedBox(height: 8),
-            TextField(controller: stepsCtrl, decoration: const InputDecoration(labelText: 'Steps / Script'), maxLines: 6),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
+              const SizedBox(height: 8),
+              TextField(
+                controller: stepsCtrl,
+                decoration: const InputDecoration(labelText: 'Steps / Script'),
+                maxLines: 6,
+                minLines: 3,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
@@ -139,20 +159,23 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     final nameCtrl = TextEditingController();
     final phoneCtrl = TextEditingController();
 
-    showDialog(
+        showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: cardSolid,
         title: const Text('Add Contact', style: TextStyle(color: text)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: roleCtrl, decoration: const InputDecoration(labelText: 'Role (e.g. Superintendent)')),
-            const SizedBox(height: 8),
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Name')),
-            const SizedBox(height: 8),
-            TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'Phone Number')),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: roleCtrl, decoration: const InputDecoration(labelText: 'Role (e.g. Superintendent)')),
+              const SizedBox(height: 8),
+              TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Name')),
+              const SizedBox(height: 8),
+              TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'Phone Number')),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
