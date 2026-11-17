@@ -94,10 +94,10 @@ class AppScaffold extends StatelessWidget {
           )
         : body;
 
-    // Если экран передал свой FAB — показываем его, иначе (при showHomeFab)
-    // показываем кнопку "Домой" в виде якоря.
+        // Если экран передал свой FAB — показываем его, иначе (при showHomeFab)
+    // показываем колонку кнопок: Поиск + Домой (якорь).
         final fab = floatingActionButton ??
-        (showHomeFab ? const _HomeAnchorFab() : null);
+        (showHomeFab ? const _NavFabs() : null);
 
     final palette = SectionPalette.of(section);
 
@@ -139,24 +139,41 @@ class AppScaffold extends StatelessWidget {
   }
 }
 
-/// Плавающая кнопка "Домой" в стиле якоря.
-/// Ведёт на главный экран. Располагается справа снизу (под правый палец),
-/// автоматически поднимается над нижней навигацией и учитывает SafeArea.
-class _HomeAnchorFab extends StatelessWidget {
-  const _HomeAnchorFab();
+/// Колонка плавающих кнопок в правом нижнем углу: Поиск и Домой (якорь).
+/// Доступна на всех внутренних экранах. Располагается справа снизу
+/// (под правый палец), автоматически поднимается над нижней навигацией.
+class _NavFabs extends StatelessWidget {
+  const _NavFabs();
 
-    @override
+  @override
   Widget build(BuildContext context) {
     final palette = SectionTheme.of(context);
-    return FloatingActionButton(
-      heroTag: 'home_anchor_fab',
-      backgroundColor: cardSolid,
-      foregroundColor: palette.accent,
-      elevation: 6,
-      tooltip: 'Home',
-      shape: CircleBorder(side: BorderSide(color: border)),
-      onPressed: () => context.go('/'),
-      child: const Icon(Icons.anchor),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FloatingActionButton(
+          heroTag: 'search_fab',
+          mini: true,
+          backgroundColor: cardSolid,
+          foregroundColor: palette.accent,
+          elevation: 4,
+          tooltip: 'Search',
+          shape: CircleBorder(side: BorderSide(color: border)),
+          onPressed: () => context.push('/search'),
+          child: const Icon(Icons.search),
+        ),
+        const SizedBox(height: 12),
+        FloatingActionButton(
+          heroTag: 'home_anchor_fab',
+          backgroundColor: cardSolid,
+          foregroundColor: palette.accent,
+          elevation: 6,
+          tooltip: 'Home',
+          shape: CircleBorder(side: BorderSide(color: border)),
+          onPressed: () => context.go('/'),
+          child: const Icon(Icons.anchor),
+        ),
+      ],
     );
   }
 }
