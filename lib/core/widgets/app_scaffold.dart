@@ -119,9 +119,22 @@ class AppScaffold extends StatelessWidget {
             actions: actions,
             bottom: bottom,
           ),
-          floatingActionButton: fab,
+                    floatingActionButton: fab,
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          bottomNavigationBar: bottomNavigationBar,
+          bottomNavigationBar: bottomNavigationBar == null
+              ? null
+              // NavigationBar (M3) сам добавляет нижний safe-area отступ, а
+              // Scaffold — ещё раз. Убираем встроенный, оставляем один SafeArea,
+              // чтобы навигация прижималась к краю (0 на десктопе, реальный
+              // отступ только под home indicator на iPhone).
+                            : SafeArea(
+                  top: false,
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeBottom: true,
+                    child: bottomNavigationBar!,
+                  ),
+                ),
           body: showBackground ? _wrapBackground(content) : content,
         ),
       ),
