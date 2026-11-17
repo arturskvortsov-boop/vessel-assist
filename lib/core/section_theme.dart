@@ -48,6 +48,7 @@ class SectionThemeData {
       appBarTitle = GoogleFonts.inter(
         color: palette.accent,
         fontSize: 18,
+        height: 1.2,
         fontWeight: FontWeight.w700,
       );
     } else {
@@ -55,6 +56,7 @@ class SectionThemeData {
       appBarTitle = TextStyle(
         color: palette.accent,
         fontSize: 18,
+        height: 1.2,
         fontWeight: FontWeight.w700,
       );
     }
@@ -81,6 +83,8 @@ class SectionThemeData {
         foregroundColor: palette.accent,
         elevation: 0,
         centerTitle: true,
+        toolbarHeight: 56,
+        titleSpacing: 0,
         titleTextStyle: appBarTitle,
       ),
       tabBarTheme: TabBarThemeData(

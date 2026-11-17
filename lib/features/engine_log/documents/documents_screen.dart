@@ -76,7 +76,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     }
   }
 
-  Future<void> _scanDocument() async {
+    Future<void> _scanDocument() async {
     if (kIsWeb) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Camera and storage are only available on mobile devices.')));
       return;
@@ -85,6 +85,10 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 90);
     
     if (image != null) {
+      // Спрашиваем имя файла перед сохранением.
+      final name = await _askFileName(defaultName: 'Scan_${DateTime.now().millisecondsSinceEpoch}');
+      if (name == null) return; // отменили
+
       // Конвертируем фото в PDF
       final pdf = pw.Document();
       final imageBytes = await image.readAsBytes();
@@ -101,8 +105,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       );
 
       final dir = await _getDocsDir();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final pdfPath = '${dir.path}/Scan_$timestamp.pdf';
+      final pdfPath = '${dir.path}/$name.pdf';
       final file = File(pdfPath);
       await file.writeAsBytes(await pdf.save());
 
@@ -110,6 +113,66 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Document scanned and saved as PDF!')));
+      }
+    }
+  }
+
+  /// Спрашивает у пользователя имя файла (без расширения).
+  /// Возвращает null, если отменили.
+  Future<String?> _askFileName({required String defaultName}) async {
+    final ctrl = TextEditingController(text: defaultName);
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: cardSolid,
+        title: const Text('File name', style: TextStyle(color: text)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            hintText: 'e.g. Main Engine Manual',
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              final name = ctrl.text.trim();
+              Navigator.pop(ctx, name.isEmpty ? defaultName : name);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Переименовывает файл (сохраняя расширение).
+  Future<void> _renameFile(FileSystemEntity entity) async {
+    final path = entity.path;
+    final sep = Platform.pathSeparator;
+    final fileName = path.split(sep).last;
+    final dot = fileName.lastIndexOf('.');
+    final ext = dot >= 0 ? fileName.substring(dot) : '';
+    final baseName = dot >= 0 ? fileName.substring(0, dot) : fileName;
+
+    final newName = await _askFileName(defaultName: baseName);
+    if (newName == null) return;
+
+    final dir = path.substring(0, path.length - fileName.length);
+    final newPath = '$dir$newName$ext';
+    if (newPath == path) return;
+
+    try {
+      if (entity is File) {
+        await entity.rename(newPath);
+      }
+      _loadFiles();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Rename failed: $e')));
       }
     }
   }
@@ -169,9 +232,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 color: isPdf ? Colors.redAccent : accent,
                               ),
                               title: Text(fileName, style: const TextStyle(color: text, fontSize: 14)),
-                              trailing: Row(
+                                                            trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  IconButton(
+                                    icon: Icon(Icons.drive_file_rename_outline, color: accent),
+                                    tooltip: 'Rename',
+                                    onPressed: () => _renameFile(file),
+                                  ),
                                   IconButton(
                                     icon: const Icon(Icons.delete, color: Colors.grey),
                                     onPressed: () async {

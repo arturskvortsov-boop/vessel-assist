@@ -55,6 +55,7 @@ import '../features/engine_log/backup/backup_screen.dart';
 import '../features/engine_log/pump/pump_screen.dart';
 import '../features/engine_log/voyage/voyage_screen.dart';
 import '../features/engine_log/documents/documents_screen.dart';
+import '../features/search/search_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -96,6 +97,7 @@ final appRouter = GoRouter(
   initialLocation: '/splash',
     routes: [
     GoRoute(path: '/help', pageBuilder: (context, state) => _buildPage(state, const HelpFeedbackScreen())),
+    GoRoute(path: '/search', pageBuilder: (context, state) => _buildPage(state, const SearchScreen())),
     GoRoute(path: '/splash', pageBuilder: (context, state) => _buildPage(state, const SplashScreen())),
     GoRoute(path: '/', pageBuilder: (context, state) => _buildPage(state, const MainMenuScreen())),
     GoRoute(
@@ -188,10 +190,12 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Дашборд всегда в морской палитре (мостик).
     PaletteState.set(AppSection.bridge);
-    return Scaffold(
+        return Scaffold(
       body: NauticalBackground(
         child: SafeArea(
-          child: ListView(
+          child: Stack(
+            children: [
+              ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             children: [
               Text(
@@ -240,12 +244,28 @@ class MainMenuScreen extends StatelessWidget {
                   onTap: () => context.push('/admin'), // Теперь push
                 ),
               ),
-              const SizedBox(height: 16),
+                            const SizedBox(height: 16),
               Center(
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/help'),
                   icon: const Icon(Icons.chat_bubble_outline),
                   label: const Text('Help & Feedback'),
+                ),
+              ),
+            ],
+          ),
+              // Кнопка глобального поиска (правый верхний угол).
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Material(
+                  color: cardSolid,
+                  shape: CircleBorder(side: BorderSide(color: border)),
+                  child: IconButton(
+                    tooltip: 'Search',
+                    icon: Icon(Icons.search, color: accent),
+                    onPressed: () => context.push('/search'),
+                  ),
                 ),
               ),
             ],

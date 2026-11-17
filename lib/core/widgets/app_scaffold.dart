@@ -109,8 +109,8 @@ class AppScaffold extends StatelessWidget {
         child: Scaffold(
           backgroundColor: bg,
           extendBodyBehindAppBar: false,
-          appBar: AppBar(
-            title: Text(title),
+                    appBar: AppBar(
+            title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () =>

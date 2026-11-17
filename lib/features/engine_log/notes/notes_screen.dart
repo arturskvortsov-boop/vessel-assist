@@ -22,8 +22,9 @@ class _NotesScreenState extends State<NotesScreen> {
     String category = 'General';
     bool isPinned = false;
 
-    showDialog(
+        showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: cardSolid,
@@ -90,8 +91,9 @@ class _NotesScreenState extends State<NotesScreen> {
     String category = note.category;
     bool isPinned = note.isPinned;
 
-    showDialog(
+        showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: cardSolid,
