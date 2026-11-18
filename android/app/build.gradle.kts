@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.vessel_assist"
-        minSdk = flutter.minSdkVersion
+        minSdk = maxOf(24, flutter.minSdkVersion)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

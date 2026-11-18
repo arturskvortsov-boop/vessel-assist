@@ -1,4 +1,5 @@
-import 'package:file_saver/file_saver.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -23,6 +24,11 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
   final _pages = <_ScanPage>[];
   bool _busy = false;
 
+  bool get _supportsScanner =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
   bool get _supportsCamera =>
       kIsWeb ||
       defaultTargetPlatform == TargetPlatform.android ||
@@ -33,12 +39,24 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<void> _addPages({required bool camera}) async {
+  Future<void> _addPages({required bool camera, bool scan = false}) async {
     if (_busy) return;
     setState(() => _busy = true);
     try {
       final List<XFile> files;
-      if (camera) {
+      if (scan) {
+        final result = await CunningDocumentScanner.scanDocuments(
+          scannerSource: ScannerSource.cameraAndGallery,
+        );
+        files = result == null
+            ? <XFile>[]
+            : result.images.map((path) => XFile(path)).toList();
+        if (result != null && result.discardedPages > 0 && mounted) {
+          _notice(
+            'Some pages exceeded the scanner limit. Scan them in another batch.',
+          );
+        }
+      } else if (camera) {
         final photo = kIsWeb
             ? await takeBrowserPhoto(context)
             : await _picker.pickImage(
@@ -79,10 +97,21 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
     } catch (_) {
       if (mounted) {
         _notice(
-          camera ? 'Could not open the camera.' : 'Could not open photos.',
+          scan
+              ? 'Could not open the document scanner. Check camera permission or use Take photo.'
+              : camera
+              ? 'Could not open the camera.'
+              : 'Could not open photos.',
         );
       }
     } finally {
+      if (scan) {
+        try {
+          await CunningDocumentScanner.cleanCache();
+        } catch (_) {
+          // Pages already loaded in memory remain available for PDF export.
+        }
+      }
       if (mounted) setState(() => _busy = false);
     }
   }
@@ -100,14 +129,21 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
           .toIso8601String()
           .substring(0, 19)
           .replaceAll(':', '-');
-      final path = await FileSaver.instance.saveFile(
-        name: 'Scan_$timestamp',
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save scanned PDF',
+        fileName: 'Scan_$timestamp.pdf',
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
         bytes: bytes,
-        ext: 'pdf',
-        mimeType: MimeType.pdf,
       );
-      if (mounted) {
-        _notice(kIsWeb ? 'PDF download started.' : 'PDF saved to $path');
+      if (!kIsWeb &&
+          path != null &&
+          defaultTargetPlatform != TargetPlatform.android &&
+          defaultTargetPlatform != TargetPlatform.iOS) {
+        await XFile.fromData(bytes).saveTo(path);
+      }
+      if (mounted && (kIsWeb || path != null)) {
+        _notice(kIsWeb ? 'PDF download started.' : 'PDF saved.');
       }
     } catch (_) {
       if (mounted) _notice('Could not save the PDF.');
@@ -119,7 +155,7 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
   @override
   Widget build(BuildContext context) {
     PaletteState.set(AppSection.admin);
-        return AppScaffold(
+    return AppScaffold(
       title: 'Scan to PDF',
       section: AppSection.admin,
       background: AppBackground.neutral,
@@ -135,6 +171,14 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
+                    if (_supportsScanner)
+                      FilledButton.icon(
+                        onPressed: _busy
+                            ? null
+                            : () => _addPages(camera: true, scan: true),
+                        icon: const Icon(Icons.document_scanner_outlined),
+                        label: const Text('Scan document'),
+                      ),
                     if (_supportsCamera)
                       OutlinedButton.icon(
                         onPressed: _busy ? null : () => _addPages(camera: true),
@@ -152,8 +196,12 @@ class _ScanToPdfScreenState extends State<ScanToPdfScreen> {
                 if (_busy) const LinearProgressIndicator(),
                 Expanded(
                   child: _pages.isEmpty
-                      ? const Center(
-                          child: Text('Add photos to create PDF pages.'),
+                      ? Center(
+                          child: Text(
+                            _supportsScanner
+                                ? 'Scan a document with automatic edge detection, or add photos.'
+                                : 'Add photos to create PDF pages.',
+                          ),
                         )
                       : ReorderableListView.builder(
                           buildDefaultDragHandles: false,

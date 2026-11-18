@@ -10,7 +10,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 enum _Delivery { accepted, rejected, retry }
 
 class SupportOutbox {
-  SupportOutbox(this._box, this._settings, this._appVersion);
+  SupportOutbox(
+    this._box,
+    this._settings,
+    this._appVersion, {
+    this.client,
+  });
+
+  final http.Client? client;
 
   static SupportOutbox? current;
   static const _lastAnalyticsSent = 'analytics_last_sent_utc';
@@ -208,13 +215,32 @@ class SupportOutbox {
   }
 
   Future<_Delivery> _post(Uri target, String body, String id) async {
-    final response = await http
-        .post(
-          target,
-          headers: {'Content-Type': 'text/plain; charset=utf-8'},
-          body: body,
-        )
-        .timeout(const Duration(seconds: 10));
+    final transport = client ?? http.Client();
+    late http.Response response;
+    try {
+      response = await transport
+          .post(
+            target,
+            headers: {'Content-Type': 'text/plain; charset=utf-8'},
+            body: body,
+          )
+          .timeout(const Duration(seconds: 60));
+      // Native Dart does not follow a POST's 302 redirect automatically.
+      if (response.statusCode == 302 || response.statusCode == 303) {
+        final location = response.headers['location'];
+        if (location == null) return _Delivery.retry;
+        final receiptUrl = target.resolve(location);
+        if (receiptUrl.scheme != 'https' ||
+            receiptUrl.host != 'script.googleusercontent.com') {
+          return _Delivery.retry;
+        }
+        response = await transport
+            .get(receiptUrl)
+            .timeout(const Duration(seconds: 60));
+      }
+    } finally {
+      if (client == null) transport.close();
+    }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       return _Delivery.retry;
     }

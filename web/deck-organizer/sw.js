@@ -1,5 +1,5 @@
 const CACHE='deck-organizer-offline-vessel-assist-v1';
-// Refresh cached files in place to include the separate PDF compression screen.
+// Refresh cached files in place for dated note reminders.
 self.addEventListener('install',event=>event.waitUntil((async()=>{
  const response=await fetch(new URL('offline-files.json',self.registration.scope),{cache:'reload'});
  if(!response.ok)throw Error('Missing offline manifest');

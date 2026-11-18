@@ -3,7 +3,7 @@
 <p id="offlineStatus" class="hint" role="status">Offline OCR has not been prepared yet.</p>
 <nav aria-label="Sections"><button data-tab="notes" class="active">Notes</button><button data-tab="docs">Documents</button><button data-tab="reminders">Reminders <span id="badge"></span></button></nav>
 <div class="toolbar"><input id="search" type="search" placeholder="Search notes or documents" aria-label="Search"><button id="add" class="primary">New note</button></div>
-<p id="reminderHint" class="hint" hidden>Reminders appear here while the app is open or on your next visit. This version does not send alerts when the browser is closed.</p>
+<p id="reminderHint" class="hint" hidden>All notes marked Remind me appear here, ordered by reminder date. Check this list when you open the app.</p>
 <main id="list" aria-live="polite"><p>Loading local records…</p></main>
 <div id="toast" role="status" hidden></div>
 <dialog id="editor"><form id="editForm"><div class="dialogHead"><h2 id="editHeading">New note</h2><button type="button" data-close="editor">Close</button></div>
@@ -11,6 +11,7 @@
 <div id="docFields" hidden><div class="grid"><label>Document / Certificate Number<input id="docNumber" maxlength="120"></label><label>Issue Date<input id="issue" type="date"></label><label>Expiry Date<input id="expiry" type="date"></label><label>Remind me before expiry<select id="lead"><option value="30">30 days</option><option value="14">14 days</option><option value="7">7 days</option><option value="1">1 day</option><option value="0">On expiry date</option></select></label></div><p class="hint">Check the expiry date against the original document before saving.</p></div>
 <label id="bodyLabel">Note / Comments<textarea id="body" rows="7" maxlength="100000"></textarea></label>
 <label id="pinLabel" class="check"><input id="pin" type="checkbox">Pin this note</label>
+<div id="noteReminderFields"><label class="check"><input id="remind" type="checkbox">Remind me</label><label id="remindDateLabel" hidden>Reminder date<input id="remindDate" type="date" min="1900-01-01" max="2200-12-31"></label></div>
 <div class="actions"><button type="button" id="attach">Attach file</button><button type="button" id="scan">Scan file to text</button><button type="button" id="camera">Open camera</button></div>
 <p class="hint">JPEG, PNG, WebP or PDF. Up to 20 MB per file; up to 5 attachments. Scanned PDF recognition is limited to 20 pages per operation.</p><div id="attachments"></div>
 <p id="editError" class="error" role="alert"></p><div class="actions bottom"><button type="submit" class="primary" id="save">Save</button><button type="button" id="delete" class="danger">Delete</button></div>

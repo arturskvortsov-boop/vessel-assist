@@ -1,3 +1,4 @@
+export function isNoteReminder(record){return record.kind==='notes'&&record.remind===true;}
 export function validDate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s||''))return false;const [y,m,d]=s.split('-').map(Number);const t=new Date(Date.UTC(y,m-1,d));return y>=1900&&y<=2200&&t.getUTCFullYear()===y&&t.getUTCMonth()===m-1&&t.getUTCDate()===d;}
 export function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 export function daysUntil(expiry,now=today()){if(!validDate(expiry)||!validDate(now))throw Error('Invalid date');return Math.round((Date.parse(expiry+'T00:00:00Z')-Date.parse(now+'T00:00:00Z'))/86400000);}
@@ -19,6 +20,7 @@ export function dateCandidates(text){
 export function validateRecord(r){
  if(!r||!['notes','docs'].includes(r.kind)||typeof r.id!=='string'||!r.id||typeof r.title!=='string'||!r.title.trim()||r.title.length>200||typeof r.body!=='string'||r.body.length>100000)throw Error('Invalid record');
  if(r.kind==='docs'&&(!validDate(r.expiry)||![0,1,7,14,30].includes(r.lead)|| (r.issue&&!validDate(r.issue)) || (r.issue&&r.issue>r.expiry)))throw Error('Invalid certificate dates or reminder');
+ if(isNoteReminder(r)&&!validDate(r.remindDate))throw Error('Choose a valid reminder date.');
  if(!Array.isArray(r.attachments)||r.attachments.length>5)throw Error('Invalid attachments');
  return r;
 }

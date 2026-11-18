@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+export '../../admin/pdf_compress_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -71,21 +73,15 @@ class _DeckOrganizerScreenState extends State<DeckOrganizerScreen>
     }
   }
 
-  bool _due(Map<String, dynamic> record) {
-    final expiry = DateTime.tryParse(record['expiry'] as String? ?? '');
-    if (expiry == null) return false;
-    final now = DateTime.now();
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final expiryDay = DateTime.utc(expiry.year, expiry.month, expiry.day);
-    return expiryDay.difference(today).inDays <= (record['lead'] as int? ?? 30);
-  }
+  bool _reminder(Map<String, dynamic> record) =>
+      record['document'] != true && record['remind'] == true;
 
   Future<void> _edit([Map<String, dynamic>? record]) async {
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (_) => _RecordEditor(
         record: record,
-        document: record?['document'] as bool? ?? _tab != 0,
+        document: record?['document'] as bool? ?? _tab == 1,
       ),
     );
     if (!mounted || result == null) return;
@@ -146,16 +142,24 @@ class _DeckOrganizerScreenState extends State<DeckOrganizerScreen>
   }
 
   Widget _buildList(List<Map<String, dynamic>> records) {
-    final reminders = records.where(_due).length;
+    final reminders = records.where(_reminder).length;
     final visible =
         records.where((record) {
-          if ((record['document'] == true) != (_tab != 0)) return false;
-          if (_tab == 2 && !_due(record)) return false;
+          if (_tab == 2) {
+            if (!_reminder(record)) return false;
+          } else if ((record['document'] == true) != (_tab == 1)) {
+            return false;
+          }
           return [record['title'], record['body'], record['number']].any(
             (value) => value is String && value.toLowerCase().contains(_query),
           );
         }).toList()..sort((a, b) {
-          if (_tab != 0) {
+          if (_tab == 2) {
+            return (a['remindDate'] as String? ?? '').compareTo(
+              b['remindDate'] as String? ?? '',
+            );
+          }
+          if (_tab == 1) {
             return (a['expiry'] as String).compareTo(b['expiry'] as String);
           }
           if ((a['pinned'] == true) != (b['pinned'] == true)) {
@@ -195,7 +199,7 @@ class _DeckOrganizerScreenState extends State<DeckOrganizerScreen>
           alignment: Alignment.centerRight,
           child: FilledButton(
             onPressed: _saving ? null : () => _edit(),
-            child: Text(_tab == 0 ? 'New note' : 'New document'),
+            child: Text(_tab == 1 ? 'New document' : 'New note'),
           ),
         ),
         if (visible.isEmpty)
@@ -216,6 +220,8 @@ class _DeckOrganizerScreenState extends State<DeckOrganizerScreen>
                         : record['title'] as String,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
+                  if (_reminder(record))
+                    Text('Reminder: ${record['remindDate'] ?? ''}'),
                   if (record['document'] == true)
                     Text('Expiry: ${record['expiry']}'),
                   if ((record['number'] as String? ?? '').isNotEmpty)
@@ -272,6 +278,8 @@ class _RecordEditorState extends State<_RecordEditor> {
   late String _expiry = widget.record?['expiry'] as String? ?? '';
   late int _lead = widget.record?['lead'] as int? ?? 30;
   late bool _pinned = widget.record?['pinned'] == true;
+  late bool _remind = widget.record?['remind'] == true;
+  late String _remindDate = widget.record?['remindDate'] as String? ?? '';
   String? _dateError;
 
   @override
@@ -302,6 +310,20 @@ class _RecordEditorState extends State<_RecordEditor> {
     });
   }
 
+  Future<void> _pickReminderDate() async {
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(_remindDate) ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2200),
+    );
+    if (selected == null || !mounted) return;
+    setState(() {
+      _remindDate = selected.toIso8601String().split('T').first;
+      _dateError = null;
+    });
+  }
+
   void _submit() {
     if (!_form.currentState!.validate()) return;
     if (widget.document && (_expiry.isEmpty || _issue.compareTo(_expiry) > 0)) {
@@ -310,6 +332,10 @@ class _RecordEditorState extends State<_RecordEditor> {
             ? 'Choose an expiry date.'
             : 'Expiry must be on or after the issue date.',
       );
+      return;
+    }
+    if (!widget.document && _remind && _remindDate.isEmpty) {
+      setState(() => _dateError = 'Choose a reminder date.');
       return;
     }
     Navigator.pop(context, <String, dynamic>{
@@ -321,6 +347,8 @@ class _RecordEditorState extends State<_RecordEditor> {
       'expiry': _expiry,
       'lead': _lead,
       'pinned': _pinned,
+      'remind': !widget.document && _remind,
+      'remindDate': _remindDate,
       'updated': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -385,12 +413,33 @@ class _RecordEditorState extends State<_RecordEditor> {
                 ],
                 onChanged: (value) => setState(() => _lead = value!),
               ),
-            ] else
+            ] else ...[
               CheckboxListTile(
                 value: _pinned,
                 title: const Text('Pin note'),
                 onChanged: (value) => setState(() => _pinned = value ?? false),
               ),
+              CheckboxListTile(
+                value: _remind,
+                title: const Text('Remind me'),
+                onChanged: (value) => setState(() {
+                  _remind = value ?? false;
+                  _dateError = null;
+                }),
+              ),
+              if (_remind)
+                TextButton(
+                  onPressed: _pickReminderDate,
+                  child: Text(
+                    'Reminder date: ${_remindDate.isEmpty ? 'Choose' : _remindDate}',
+                  ),
+                ),
+              if (_dateError != null)
+                Text(
+                  _dateError!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+            ],
           ],
         ),
       ),
@@ -402,20 +451,5 @@ class _RecordEditorState extends State<_RecordEditor> {
       ),
       FilledButton(onPressed: _submit, child: const Text('Save')),
     ],
-  );
-}
-
-class PdfCompressScreen extends StatelessWidget {
-  const PdfCompressScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Compress PDF')),
-    body: const Center(
-      child: Padding(
-        padding: EdgeInsets.all(24),
-        child: Text('PDF compression is available in the web version.'),
-      ),
-    ),
   );
 }

@@ -46,7 +46,6 @@ class DateTimeStamperScreen extends StatefulWidget {
 }
 
 class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
-  final _picker = ImagePicker();
   final _photos = <XFile>[];
   final _dateFormat = DateFormat('dd.MM.yyyy');
   _StampMode _mode = _StampMode.date;
@@ -294,17 +293,26 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
   Future<void> _addPhotos({required bool fromFiles}) async {
     setState(() => _busy = true);
     try {
-      final List<XFile> photos;
-      if (fromFiles) {
-        final selection = await FilePicker.platform.pickFiles(
-          type: FileType.image,
-          allowMultiple: true,
-          withData: kIsWeb,
-        );
-        photos = selection?.xFiles ?? [];
-      } else {
-        photos = await _picker.pickMultiImage(requestFullMetadata: false);
-      }
+      final selection = await FilePicker.platform.pickFiles(
+        type: fromFiles ? FileType.custom : FileType.image,
+        allowedExtensions: fromFiles
+            ? [
+                'jpg',
+                'jpeg',
+                'png',
+                'webp',
+                'bmp',
+                'gif',
+                'tif',
+                'tiff',
+                'heic',
+                'heif',
+              ]
+            : null,
+        allowMultiple: true,
+        withData: kIsWeb,
+      );
+      final photos = selection?.xFiles ?? <XFile>[];
       if (mounted) setState(() => _photos.addAll(photos));
     } catch (_) {
       if (mounted) _notice('Could not open photos.');
@@ -493,7 +501,7 @@ class _DateTimeStamperScreenState extends State<DateTimeStamperScreen> {
     PaletteState.set(AppSection.admin);
     final stamp = _stamp;
     final canExport = !_busy && _photos.isNotEmpty && stamp != null;
-        return AppScaffold(
+    return AppScaffold(
       title: 'Date & Time Stamper',
       section: AppSection.admin,
       background: AppBackground.neutral,

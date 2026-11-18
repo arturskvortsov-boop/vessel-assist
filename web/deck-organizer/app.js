@@ -1,5 +1,5 @@
 import {compressAttachment, download} from './pdf-compress-ui.js';
-import {reminder,dateCandidates,validateRecord,validDate} from './model.js';
+import {today,isNoteReminder,reminder,dateCandidates,validateRecord,validDate} from './model.js';
 const $=id=>document.getElementById(id),MAX=20*1024*1024;
 let db,records=[],tab='notes',draft=null,pending=null,previewUrl=null,cameraStream=null,worker=null,job=0,activePdf=null;
 const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -10,16 +10,17 @@ function openDb(){return new Promise((resolve,reject)=>{const q=indexedDB.open('
 function transaction(mode,action){return new Promise((resolve,reject)=>{const tx=db.transaction('records',mode);const store=tx.objectStore('records');let result;try{result=action(store);}catch(e){tx.abort();reject(e);return;}tx.oncomplete=()=>resolve(result?.result);tx.onerror=()=>reject(tx.error||Error('Storage failed'));tx.onabort=()=>reject(tx.error||Error('Storage failed; your changes were not saved.'));});}
 async function reload(){records=await transaction('readonly',s=>s.getAll());render();}
 function render(){
- const due=records.filter(r=>r.kind==='docs'&&reminder(r).due);$('badge').textContent=due.length||'';
- $('add').textContent=tab==='notes'?'New note':'New document';$('reminderHint').hidden=tab!=='reminders';
+ const due=records.filter(isNoteReminder);$('badge').textContent=due.length||'';
+ $('add').textContent=tab==='docs'?'New document':'New note';$('reminderHint').hidden=tab!=='reminders';
  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
- const query=$('search').value.trim().toLowerCase();let list=records.filter(r=>tab==='reminders'?r.kind==='docs'&&reminder(r).due:r.kind===tab);
+ const query=$('search').value.trim().toLowerCase();let list=records.filter(r=>tab==='reminders'?isNoteReminder(r):r.kind===tab);
  list=list.filter(r=>(r.title+' '+r.body+' '+(r.number||'')).toLowerCase().includes(query));
- list.sort((a,b)=>tab==='notes'?(Number(b.pinned)-Number(a.pinned)||b.updated-a.updated):a.expiry.localeCompare(b.expiry));
+ list.sort((a,b)=>tab==='notes'?(Number(b.pinned)-Number(a.pinned)||b.updated-a.updated):tab==='reminders'?(a.remindDate||'').localeCompare(b.remindDate||''):a.expiry.localeCompare(b.expiry));
  const root=$('list');root.replaceChildren();
- if(!list.length){root.append(node('div',query?'No matching records.':tab==='reminders'?'No documents due for a reminder.':tab==='notes'?'Create your first note or scan text from a photo.':'Add a document and its confirmed expiry date.','empty'));return;}
+ if(!list.length){root.append(node('div',query?'No matching records.':tab==='reminders'?'No notes marked Remind me.':tab==='notes'?'Create your first note or scan text from a photo.':'Add a document and its confirmed expiry date.','empty'));return;}
  for(const r of list){const c=node('article',undefined,'card');c.append(node('h3',(r.pinned&&r.kind==='notes'?'Pinned · ':'')+r.title));
   if(r.kind==='docs'){const status=reminder(r);c.append(node('p',`${r.expiry} · ${status.label}`,status.days<0?'expired':status.due?'due':'meta'));if(r.number)c.append(node('p',r.number,'meta'));}
+  if(isNoteReminder(r))c.append(node('p','Reminder: '+r.remindDate,'meta'));
   if(r.body)c.append(node('p',r.body.slice(0,800),'text'));
   const actions=node('div',undefined,'actions');
   actions.append(
@@ -30,11 +31,14 @@ function render(){
   c.append(actions);root.append(c);
  }
 }
-function edit(r){draft=r?structuredClone(r):{id:crypto.randomUUID(),kind:tab==='notes'?'notes':'docs',title:'',body:'',pinned:false,number:'',issue:'',expiry:'',lead:30,attachments:[],updated:Date.now()};
+function edit(r){draft=r?structuredClone(r):{id:crypto.randomUUID(),kind:tab==='docs'?'docs':'notes',title:'',body:'',pinned:false,number:'',issue:'',expiry:'',lead:30,attachments:[],updated:Date.now()};
  $('editHeading').textContent=(r?'Edit ':'New ')+(draft.kind==='notes'?'note':'document');$('title').value=draft.title;$('body').value=draft.body;$('pin').checked=!!draft.pinned;
  $('docNumber').value=draft.number||'';$('issue').value=draft.issue||'';$('expiry').value=draft.expiry||'';$('lead').value=String(draft.lead??30);
+ $('remind').checked=draft.remind===true;$('remindDate').value=draft.remindDate||'';$('noteReminderFields').hidden=draft.kind!=='notes';updateNoteReminder();
  $('expiry').required=draft.kind==='docs';$('docFields').hidden=draft.kind!=='docs';$('pinLabel').hidden=draft.kind!=='notes';$('delete').hidden=!r;$('editError').textContent='';attachments();$('editor').showModal();
 }
+function updateNoteReminder(){const enabled=draft.kind==='notes'&&$('remind').checked;$('remindDateLabel').hidden=!enabled;$('remindDate').required=enabled;}
+$('remind').onchange=updateNoteReminder;
 function attachments(){
  const root=$('attachments');
  root.replaceChildren();
@@ -73,6 +77,7 @@ $('attach').onclick=()=>pick('attach');$('scan').onclick=()=>pick('scan');
 $('editForm').onsubmit=async e=>{e.preventDefault();$('editError').textContent='';$('save').disabled=true;try{
  const r={...draft,title:$('title').value.trim(),body:$('body').value,pinned:$('pin').checked,updated:Date.now()};
  if(r.kind==='docs'){r.number=$('docNumber').value.trim();r.issue=$('issue').value;r.expiry=$('expiry').value;r.lead=+$('lead').value;}
+ if(r.kind==='notes'){r.remind=$('remind').checked;r.remindDate=$('remindDate').value;}
  validateRecord(r);await transaction('readwrite',s=>s.put(r));$('editor').close();await reload();toast('Saved on this device.');
  }catch(e){$('editError').textContent=e.message||'Could not save. Browser storage may be full.';}finally{$('save').disabled=false;}};
 async function deleteRecord(record, fromEditor=false){
@@ -159,6 +164,6 @@ $('offline').onclick=prepareOffline;
 window.addEventListener('beforeunload',e=>{if($('editor').open){e.preventDefault();e.returnValue='';}stopCamera();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCamera();else if(db)render();});
 setInterval(()=>{if(db)render();},60000);
-try{db=await openDb();await reload();const due=records.filter(r=>r.kind==='docs'&&reminder(r).due);if(due.length)toast(`${due.length} document(s) need attention. Open Reminders.`);
+try{db=await openDb();await reload();const due=records.filter(isNoteReminder);if(due.some(r=>validDate(r.remindDate)&&r.remindDate<=today()))toast('You have notes to review. Open Reminders.');
  if('caches' in window&&await caches.has('deck-organizer-offline-vessel-assist-v1'))$('offlineStatus').textContent='Offline files saved. Use Prepare offline OCR to verify them after an update.';
 }catch(e){$('list').replaceChildren(node('p',e.message,'error'));$('add').disabled=true;}

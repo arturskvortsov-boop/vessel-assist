@@ -164,8 +164,6 @@ class _HelpFeedbackScreenState extends State<HelpFeedbackScreen> {
                           ? 'Requests are sent when Vessel Assist is open and online.'
                           : 'Delivery is not configured. Requests stay on this device.',
                     ),
-                    if (outbox.pendingFeedback > 0)
-                      Text('Waiting to send: ${outbox.pendingFeedback}'),
                     if (outbox.rejectedFeedback.isNotEmpty)
                       ExpansionTile(
                         title: Text(
