@@ -83,8 +83,9 @@ class _EngineRoomBackgroundState extends State<EngineRoomBackground>
           ),
         ),
 
-        // 3. Контент.
-        widget.child,
+        // 3. Контент. Positioned.fill даёт child ограниченную высоту,
+        // иначе ListView внутри Stack (loose) не скроллится.
+        Positioned.fill(child: widget.child),
       ],
     );
   }

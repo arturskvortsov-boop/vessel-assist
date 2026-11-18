@@ -124,8 +124,9 @@ class _NauticalBackgroundState extends State<NauticalBackground> with TickerProv
                   ),
                 ),
         
-        // 5. Контент
-        widget.child,
+                // 5. Контент. Positioned.fill даёт child ограниченную высоту,
+        // иначе ListView внутри Stack (loose) не скроллится.
+        Positioned.fill(child: widget.child),
       ],
     );
   }

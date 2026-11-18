@@ -37,7 +37,9 @@ class NeutralBackground extends StatelessWidget {
             ),
           ),
         ),
-        child,
+        // Positioned.fill даёт child ограниченную высоту,
+        // иначе ListView внутри Stack (loose) не скроллится.
+        Positioned.fill(child: child),
       ],
     );
   }

@@ -85,7 +85,7 @@ class AppScaffold extends StatelessWidget {
     // border и т.д.) вернули палитру этого раздела.
     PaletteState.set(section);
 
-    final content = centerContent
+        Widget content = centerContent
         ? Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: maxWidth),
@@ -93,6 +93,14 @@ class AppScaffold extends StatelessWidget {
             ),
           )
         : body;
+
+    // При extendBody: true body уходит под нижнюю навигацию, и последний
+    // пункт списка скрывается за кнопками. SafeArea(bottom) поднимает
+    // контент над навигацией (Scaffold при extendBody кладёт высоту
+    // навигации в MediaQuery.padding.bottom для body).
+    if (bottomNavigationBar != null) {
+      content = SafeArea(top: false, bottom: true, child: content);
+    }
 
         // Если экран передал свой FAB — показываем его, иначе (при showHomeFab)
     // показываем колонку кнопок: Поиск + Домой (якорь).
