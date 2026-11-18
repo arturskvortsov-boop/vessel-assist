@@ -30,9 +30,15 @@ class _DeckMenuScreenState extends State<DeckMenuScreen> {
     return AppScaffold(
       title: 'Bridge & Deck',
       section: AppSection.bridge,
-      body: PageTransitionSwitcher(
+            body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,
+        // StackFit.expand даёт вкладкам (ListView) ограниченную высоту,
+        // иначе ListView не скроллится.
+                layoutBuilder: (List<Widget> entries) => Stack(
+                  fit: StackFit.expand,
+                  children: entries,
+                ),
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
           return FadeThroughTransition(
             animation: primaryAnimation,

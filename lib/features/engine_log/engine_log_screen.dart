@@ -33,9 +33,15 @@ class _EngineLogScreenState extends State<EngineLogScreen> {
       title: 'Engine Operations',
       background: AppBackground.engineRoom,
       section: AppSection.engine,
-      body: PageTransitionSwitcher(
+            body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 400),
         reverse: false,
+        // StackFit.expand даёт вкладкам (ListView) ограниченную высоту,
+        // иначе ListView не скроллится.
+                layoutBuilder: (List<Widget> entries) => Stack(
+                  fit: StackFit.expand,
+                  children: entries,
+                ),
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
           return FadeThroughTransition(
             animation: primaryAnimation,
