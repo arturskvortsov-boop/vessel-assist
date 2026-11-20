@@ -58,20 +58,11 @@ class BoltReferenceScreen extends StatefulWidget {
 }
 
 class _BoltReferenceScreenState extends State<BoltReferenceScreen> {
-  String _query = '';
+  BoltSpec _selected = boltSpecs.first;
 
   @override
   Widget build(BuildContext context) {
     PaletteState.set(AppSection.admin);
-    final q = _query.trim().toLowerCase();
-    final filtered = q.isEmpty
-        ? boltSpecs
-        : boltSpecs
-            .where((b) =>
-                b.size.toLowerCase().contains(q) ||
-                b.d.toString().contains(q))
-            .toList();
-
     return AppScaffold(
       title: 'Bolts & Threads',
       section: AppSection.admin,
@@ -79,25 +70,63 @@ class _BoltReferenceScreenState extends State<BoltReferenceScreen> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
-          child: Column(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Search (M-size, diameter)',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (v) => setState(() => _query = v),
+              DropdownButtonFormField<String>(
+                initialValue: _selected.size,
+                isExpanded: true,
+                decoration: const InputDecoration(labelText: 'Bolt size'),
+                items: [
+                  for (final b in boltSpecs)
+                    DropdownMenuItem(
+                      value: b.size,
+                      child: Text('${b.size}  ·  Ø${b.d} mm'),
+                    ),
+                ],
+                onChanged: (size) {
+                  if (size == null) return;
+                  setState(() {
+                    _selected = boltSpecs.firstWhere((b) => b.size == size);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              AppSectionCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          _selected.size,
+                          style: TextStyle(
+                            color: accent,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Ø${_selected.d} mm',
+                          style: const TextStyle(color: textMuted, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _row('Pitch — coarse', '${_selected.pitchCoarse} mm'),
+                    _row('Pitch — fine', '${_selected.pitchFine} mm'),
+                    _row('Spanner (A/F)', '${_selected.spanner} mm'),
+                    _row('Hex key', '${_selected.hex} mm'),
+                    _row('Tap drill', '${_selected.tapDrill} mm'),
+                  ],
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) =>
-                      _BoltCard(spec: filtered[index]),
-                ),
+              const SizedBox(height: 12),
+              const Text(
+                'Pitch and spanner: ISO 4032; hex keys: ISO 4762. '
+                'Tap drill = nominal diameter − pitch.',
+                style: TextStyle(color: textMuted, fontSize: 11, height: 1.4),
               ),
             ],
           ),
@@ -105,59 +134,24 @@ class _BoltReferenceScreenState extends State<BoltReferenceScreen> {
       ),
     );
   }
-}
-
-class _BoltCard extends StatelessWidget {
-  final BoltSpec spec;
-  const _BoltCard({required this.spec});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSectionCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                spec.size,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Ø${spec.d} mm',
-                style: const TextStyle(color: textMuted, fontSize: 13),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _row('Pitch coarse', '${spec.pitchCoarse} mm'),
-          _row('Pitch fine', '${spec.pitchFine} mm'),
-          _row('Spanner (A/F)', '${spec.spanner} mm'),
-          _row('Hex key', '${spec.hex} mm'),
-          _row('Tap drill', '${spec.tapDrill} mm'),
-        ],
-      ),
-    );
-  }
 
   Widget _row(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: textMuted, fontSize: 13)),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(color: textMuted, fontSize: 14),
+            ),
+          ),
           Text(
             value,
             style: const TextStyle(
               color: text,
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
           ),

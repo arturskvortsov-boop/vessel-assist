@@ -53,21 +53,11 @@ class PipeReferenceScreen extends StatefulWidget {
 }
 
 class _PipeReferenceScreenState extends State<PipeReferenceScreen> {
-  String _query = '';
+  PipeSpec _selected = pipeSpecs.first;
 
   @override
   Widget build(BuildContext context) {
     PaletteState.set(AppSection.admin);
-    final q = _query.trim().toLowerCase();
-    final filtered = q.isEmpty
-        ? pipeSpecs
-        : pipeSpecs
-            .where((p) =>
-                p.size.toLowerCase().contains(q) ||
-                p.inch.contains(q) ||
-                p.dn.toString().contains(q))
-            .toList();
-
     return AppScaffold(
       title: 'Pipe Sizes',
       section: AppSection.admin,
@@ -75,25 +65,61 @@ class _PipeReferenceScreenState extends State<PipeReferenceScreen> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
-          child: Column(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Search (size, inch, DN)',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (v) => setState(() => _query = v),
+              DropdownButtonFormField<String>(
+                initialValue: _selected.size,
+                isExpanded: true,
+                decoration: const InputDecoration(labelText: 'Pipe size'),
+                items: [
+                  for (final p in pipeSpecs)
+                    DropdownMenuItem(
+                      value: p.size,
+                      child: Text('${p.size}  (${p.inch}")  ·  DN ${p.dn}'),
+                    ),
+                ],
+                onChanged: (size) {
+                  if (size == null) return;
+                  setState(() {
+                    _selected = pipeSpecs.firstWhere((p) => p.size == size);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              AppSectionCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          _selected.size,
+                          style: TextStyle(
+                            color: accent,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${_selected.inch}"  ·  DN ${_selected.dn}',
+                          style: const TextStyle(color: textMuted, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _row('JIS outside diameter', '${_selected.jisOD} mm'),
+                    _row('SGP wall thickness', '${_selected.sgpWall} mm'),
+                    _row('ASME outside diameter', '${_selected.asmeOD} mm'),
+                  ],
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) =>
-                      _PipeCard(spec: filtered[index]),
-                ),
+              const SizedBox(height: 12),
+              const Text(
+                'Dimensions: JIS G 3452 (SGP) / ASME B36.10. '
+                'Values are nominal and for reference only.',
+                style: TextStyle(color: textMuted, fontSize: 11, height: 1.4),
               ),
             ],
           ),
@@ -101,57 +127,24 @@ class _PipeReferenceScreenState extends State<PipeReferenceScreen> {
       ),
     );
   }
-}
-
-class _PipeCard extends StatelessWidget {
-  final PipeSpec spec;
-  const _PipeCard({required this.spec});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSectionCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                spec.size,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${spec.inch}"  ·  DN ${spec.dn}',
-                style: const TextStyle(color: textMuted, fontSize: 13),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _row('JIS OD', '${spec.jisOD} mm'),
-          _row('SGP wall', '${spec.sgpWall} mm'),
-          _row('ASME OD', '${spec.asmeOD} mm'),
-        ],
-      ),
-    );
-  }
 
   Widget _row(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: textMuted, fontSize: 13)),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(color: textMuted, fontSize: 14),
+            ),
+          ),
           Text(
             value,
             style: const TextStyle(
               color: text,
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
           ),
