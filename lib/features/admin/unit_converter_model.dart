@@ -27,12 +27,25 @@ const unitCategories = <String, List<Unit>>{
     Unit('Fathom (fm)', 1.8288),
     Unit('Cable (0.1 NM)', 185.2),
   ],
-  'Speed': [
+    'Speed': [
     Unit('Knot (kn)', 0.5144444444444445),
     Unit('Metre per second (m/s)', 1),
     Unit('Kilometre per hour (km/h)', 0.2777777777777778),
     Unit('Mile per hour (mph)', 0.44704),
     Unit('Foot per second (ft/s)', 0.3048),
+  ],
+  'Depth': [
+    Unit('Metre (m)', 1),
+    Unit('Foot (ft)', 0.3048),
+    Unit('Fathom (fm, 6 ft)', 1.8288),
+    Unit('Centimetre (cm)', 0.01),
+    Unit('Inch (in)', 0.0254),
+  ],
+  'Anchor chain': [
+    Unit('Shackle / length (27.5 m)', 27.5),
+    Unit('Metre (m)', 1),
+    Unit('Fathom (fm, 1.83 m)', 1.8288),
+    Unit('Foot (ft)', 0.3048),
   ],
   'Mass': [
     Unit('Metric tonne (t, MT)', 1000),

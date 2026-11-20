@@ -13,6 +13,8 @@ import '../features/splash_screen.dart';
 import '../features/admin/admin_menu_screen.dart';
 import '../features/admin/scan_to_pdf_screen.dart';
 import '../features/admin/unit_converter_screen.dart';
+import '../features/admin/pipe_reference_screen.dart';
+import '../features/admin/bolt_reference_screen.dart';
 import '../features/admin/photo_compress_screen.dart';
 import '../features/admin/date_time_stamper_screen.dart';
 import '../features/deck/deck_menu_screen.dart';
@@ -163,9 +165,17 @@ final appRouter = GoRouter(
         GoRoute(path: 'organizer', pageBuilder: (context, state) => _buildPage(state, const DeckOrganizerScreen())),
         GoRoute(path: 'scan_to_pdf', pageBuilder: (context, state) => _buildPage(state, const ScanToPdfScreen())),
         GoRoute(path: 'date_time_stamper', pageBuilder: (context, state) => _buildPage(state, const DateTimeStamperScreen())),
-        GoRoute(
+                GoRoute(
           path: 'unit_converter',
           pageBuilder: (context, state) => _buildPage(state, const UnitConverterScreen()),
+        ),
+        GoRoute(
+          path: 'pipe_reference',
+          pageBuilder: (context, state) => _buildPage(state, const PipeReferenceScreen()),
+        ),
+        GoRoute(
+          path: 'bolt_reference',
+          pageBuilder: (context, state) => _buildPage(state, const BoltReferenceScreen()),
         ),
         GoRoute(
           path: 'compress_photos',

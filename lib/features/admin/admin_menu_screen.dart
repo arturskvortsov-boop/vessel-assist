@@ -50,12 +50,26 @@ class AdminMenuScreen extends StatelessWidget {
             icon: Icons.date_range_outlined,
             route: '/admin/date_time_stamper',
           ),
-          _buildMenuCard(
+                    _buildMenuCard(
             context: context,
             title: 'Unit Converter',
-            subtitle: 'Convert maritime and everyday units',
+            subtitle: 'Speed, distance, depth, chain & more',
             icon: Icons.swap_horiz,
             route: '/admin/unit_converter',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Pipe Sizes',
+            subtitle: 'JIS / ASME pipe dimensions (15A–500A)',
+            icon: Icons.plumbing,
+            route: '/admin/pipe_reference',
+          ),
+          _buildMenuCard(
+            context: context,
+            title: 'Bolts & Threads',
+            subtitle: 'Metric bolts, pitch & tap drill (M3–M64)',
+            icon: Icons.hardware,
+            route: '/admin/bolt_reference',
           ),
           _buildMenuCard(
             context: context,
